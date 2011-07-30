@@ -7,8 +7,8 @@ function id($obj) {
   return $obj;
 }
 
-function handleException(Exception $e) {
+function handle_exception(Exception $e) {
   echo 'An error has occurred within dagd! Sorry about that!';
   die();
 }
-set_exception_handler('handleException');
+set_exception_handler('handle_exception');
