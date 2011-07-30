@@ -1,7 +1,12 @@
 <?php
+
+// Resources that help us do cool things.
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 require_once dirname(dirname(__FILE__)).'/route.php';
-require_once dirname(dirname(__FILE__)).'/applications/ip/init.php';
+require_once dirname(dirname(__FILE__)).'/resources/index_resources.php';
+
+// All of the applications that we route too.
+require_application('ip');
 
 if (!$_GET['__path__']) {
   throw new Exception(

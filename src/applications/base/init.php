@@ -6,4 +6,5 @@ abstract class DaGdBaseClass {
     return 'Override this method to make stuff happen!';
   }
 
+  
 }
