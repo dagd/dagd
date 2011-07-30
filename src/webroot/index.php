@@ -1,6 +1,7 @@
 <?php
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 require_once dirname(dirname(__FILE__)).'/route.php';
+require_once dirname(dirname(__FILE__)).'/applications/ip/init.php';
 
 if (!$_GET['__path__']) {
   throw new Exception(
@@ -28,3 +29,7 @@ echo '<pre>'.print_r($route_matches, true).'</pre>';
 echo '<br />';
 echo '<pre>CONTROLLER: '.$controller_match.'</pre>';
 echo "\n";
+echo '<br />Passing off to controller.<br />';
+$instance = new ReflectionClass($controller_match);
+$instance = $instance->newInstanceArgs($route_matches);
+echo $instance->render();
