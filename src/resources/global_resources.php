@@ -9,5 +9,6 @@ function id($obj) {
 
 function handleException(Exception $e) {
   echo 'An error has occurred within dagd! Sorry about that!';
+  die();
 }
 set_exception_handler('handleException');
