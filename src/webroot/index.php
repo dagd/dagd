@@ -10,6 +10,7 @@ require_once dirname(dirname(__FILE__)).'/resources/index_resources.php';
 // All of the applications that we route too.
 require_application('ip');
 require_application('useragent');
+require_application('comingsoon');
 
 if (!$_GET['__path__']) {
   throw new Exception(
