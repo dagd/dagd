@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(dirname(__FILE__)).'/config.php';
+
 // This is essentially stolen from Facebook's libphutil, but it allows
 // for doing: id(new Foo())->bar();  ... whereas (new Foo())->bar() is invalid
 // in php.
@@ -13,3 +15,9 @@ function handle_exception(Exception $e) {
   die();
 }
 set_exception_handler('handle_exception');
+
+function is_text_useragent() {
+  return preg_match(
+    '#(?:'.DaGdConfig::get('general.text_useragent_search').')#',
+    $_SERVER['HTTP_USER_AGENT']);
+}
