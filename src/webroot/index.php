@@ -31,6 +31,7 @@ foreach ($routes as $route => $controller) {
 if (!$route_matches) {
   header('HTTP/1.0 404 Not Found');
   echo '404 - route not found.';
+  die();
 }
 
 if ($DEBUG) {
