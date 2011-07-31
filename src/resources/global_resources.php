@@ -9,6 +9,7 @@ function id($obj) {
 
 function handle_exception(Exception $e) {
   echo 'An error has occurred within dagd! Sorry about that!';
+  header('HTTP/1.0 500 Internal Server Error');
   die();
 }
 set_exception_handler('handle_exception');
