@@ -1,5 +1,7 @@
 <?php
 
+$DEBUG=false;
+
 // Resources that help us do cool things.
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 require_once dirname(dirname(__FILE__)).'/route.php';
@@ -7,6 +9,7 @@ require_once dirname(dirname(__FILE__)).'/resources/index_resources.php';
 
 // All of the applications that we route too.
 require_application('ip');
+require_application('useragent');
 
 if (!$_GET['__path__']) {
   throw new Exception(
@@ -30,11 +33,14 @@ if (!$route_matches) {
   echo '404 - route not found.';
 }
 
-echo '<pre>'.print_r($route_matches, true).'</pre>';
-echo '<br />';
-echo '<pre>CONTROLLER: '.$controller_match.'</pre>';
-echo "\n";
-echo '<br />Passing off to controller.<br />';
+if ($DEBUG) {
+  echo '<pre>'.print_r($route_matches, true).'</pre>';
+  echo '<br />';
+  echo '<pre>CONTROLLER: '.$controller_match.'</pre>';
+  echo "\n";
+  echo '<br />Passing off to controller.<br />';
+}
+
 $instance = new ReflectionClass($controller_match);
 $instance = $instance->newInstanceArgs($route_matches);
-echo $instance->render();
+echo $instance->finalize();
