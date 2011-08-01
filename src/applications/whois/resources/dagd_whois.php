@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__).'/../../../resources/global_resources.php';
+
 class DaGdWhois {
   private $query;
   private $whois_server;
@@ -31,6 +33,11 @@ class DaGdWhois {
    * @returns <bool> true if successful, false if not.
    */
   public function fetchWhoisServer() {
+    $hardcoded_tld_map = DaGdConfig::get('whois.hardcode_map');
+    if (array_key_exists($this->tld(), $hardcoded_tld_map)) {
+      $this->whois_server = $hardcoded_tld_map[$this->tld()];
+      return true;
+    }
     $sock = fsockopen($this->tld().'.whois-servers.net', 43);
     if (!$sock) {
       return false;
