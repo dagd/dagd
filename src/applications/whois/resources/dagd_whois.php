@@ -38,6 +38,10 @@ class DaGdWhois {
       $this->whois_server = $hardcoded_tld_map[$this->tld()];
       return true;
     }
+    if (is_numeric($this->tld())) {
+      $this->whois_server = 'whois.arin.net';
+      return true;
+    }
     $sock = fsockopen($this->tld().'.whois-servers.net', 43);
     if (!$sock) {
       return false;
