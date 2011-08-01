@@ -1,7 +1,5 @@
 <?php
 
-$DEBUG=false;
-
 // Resources that help us do cool things.
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 require_once dirname(dirname(__FILE__)).'/route.php';
@@ -11,6 +9,9 @@ require_once dirname(dirname(__FILE__)).'/resources/index_resources.php';
 require_application('ip');
 require_application('useragent');
 require_application('comingsoon');
+require_application('whois');
+
+$DEBUG = DaGdConfig::get('general.debug');
 
 if (!$_GET['__path__']) {
   throw new Exception(

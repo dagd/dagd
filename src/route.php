@@ -4,7 +4,7 @@ $routes = array(
   '/$' => 'DaGdComingSoonController',
   '/ua$' => 'DaGdUserAgentController',
   '/ip/?$' => 'DaGdIPController',
-  '/w/(.+)/?$' => 'DaGdComingSoonController',
+  '/w/(.+)/?$' => 'DaGdWhoisController',
   '/up/(.+)/?$' => 'DaGdComingSoonController',
 
   // Keep this last, these are referenced in order.

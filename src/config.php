@@ -2,6 +2,7 @@
 // This is the general config file for DaGd stuff.
 class DaGdConfig {
   private static $config = array(
+    'general.debug' => false,
     'general.text_useragent_search' => 'Wget|curl|libcurl|Elinks',
   );
 
