@@ -4,6 +4,12 @@ class DaGdConfig {
   private static $config = array(
     'general.debug' => false,
     'general.text_useragent_search' => 'Wget|curl|libcurl|Elinks',
+    'general.applications' => array(
+      'ip',
+      'useragent',
+      'comingsoon',
+      'whois',
+    ),
 
     // A hardcoded map of whois servers to use for certain domains.
     'whois.hardcode_map' => array(

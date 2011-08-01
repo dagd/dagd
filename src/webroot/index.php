@@ -6,10 +6,10 @@ require_once dirname(dirname(__FILE__)).'/route.php';
 require_once dirname(dirname(__FILE__)).'/resources/index_resources.php';
 
 // All of the applications that we route too.
-require_application('ip');
-require_application('useragent');
-require_application('comingsoon');
-require_application('whois');
+$applications = DaGdConfig::get('general.applications');
+foreach ($applications as $application) {
+  require_application($application);
+}
 
 $DEBUG = DaGdConfig::get('general.debug');
 
