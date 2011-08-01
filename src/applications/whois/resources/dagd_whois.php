@@ -3,6 +3,7 @@
 class DaGdWhois {
   private $query;
   private $whois_server;
+  private $skip_detail = false;
   
   public function __construct($query) {
     $this->query = $query;
@@ -36,17 +37,21 @@ class DaGdWhois {
     }
     fwrite($sock, 'domain '.$this->query."\r\n");
     $whois_server = null;
-    while ($line = fgets($sock)) {
+    $whois_info = '';
+    while (!feof($sock)) {
+      $line = fgets($sock);
       if (preg_match('#Whois Server: (.*)#i', $line, $whois_server)) {
         break;
       }
+      $whois_info .= $line;
     }
     fclose($sock);
     if ($whois_server) {
       $this->whois_server = $whois_server[1];
       return true;
     } else {
-      return false;
+      $this->skip_detail = true;
+      return $whois_info;
     }
   }
 
@@ -81,7 +86,11 @@ class DaGdWhois {
    * @returns <string> whois info!
    */
   public function performQuery() {
-    $this->fetchWhoisServer();
-    return $this->fetchWhoisDetails();
+    $whois_server = $this->fetchWhoisServer();
+    if ($this->skip_detail) {
+      return $whois_server;
+    } else {
+      return $this->fetchWhoisDetails();
+    }
   }
 }
