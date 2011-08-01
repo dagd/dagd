@@ -10,6 +10,10 @@ function id($obj) {
 }
 
 function handle_exception(Exception $e) {
+  $debug = DaGdConfig::get('general.debug');
+  if ($debug) {
+    echo $e."<br />\n";
+  }
   echo 'An error has occurred within dagd! Sorry about that!';
   header('HTTP/1.0 500 Internal Server Error (Exception)');
   die();
