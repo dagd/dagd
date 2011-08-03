@@ -8,6 +8,7 @@ class DaGdConfig {
       'ip',
       'useragent',
       'comingsoon',
+      'aboutus',
       'whois',
     ),
 

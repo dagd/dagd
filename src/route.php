@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__).'/resources/global_resources.php';
 $routes = array(
-  '/$' => 'DaGdComingSoonController',
+  '/$' => 'DaGdAboutUsController',
   '/ua$' => 'DaGdUserAgentController',
   '/ip/?$' => 'DaGdIPController',
   '/w/(.+)/?$' => 'DaGdWhoisController',
