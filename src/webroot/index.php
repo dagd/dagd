@@ -3,6 +3,7 @@
 // Resources that help us do cool things.
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 require_once dirname(dirname(__FILE__)).'/resources/index_resources.php';
+require_once dirname(dirname(__FILE__)).'/resources/dagdmarkup.php';
 
 // All of the applications that we route too.
 $applications = DaGdConfig::get('general.applications');
