@@ -18,7 +18,7 @@ abstract class DaGdBaseClass {
    * to a CLI browser. By default handle things normally.
    */
   public function renderCLI() {
-    return $this->render();
+    return strip_tags($this->render());
   }
 
   public function finalize() {
