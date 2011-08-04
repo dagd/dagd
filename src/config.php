@@ -3,7 +3,10 @@
 class DaGdConfig {
   private static $config = array(
     'general.debug' => false,
-    'general.text_useragent_search' => 'Wget|curl|libcurl|Elinks',
+
+    // I am not including ELinks here, because it can support linking
+    // and some simple things like bolding text.
+    'general.text_useragent_search' => 'Wget|curl|libcurl',
     'general.applications' => array(
       'ip',
       'useragent',

@@ -1,11 +1,11 @@
 <?php
 class DaGdAboutUsController extends DaGdBaseClass {
+
+  protected $wrap_pre = false;
+  protected $escape = false;
+  
   public function render() {
 
-    // We use html below.
-    $this->escape = false;
-    $this->auto_adapt = false;
-    
     $content = <<<HTML
       da.gd is an open source collection of PHP applications which
       give information about networking, IPs and domains.<br /><br />
@@ -22,6 +22,25 @@ class DaGdAboutUsController extends DaGdBaseClass {
       
 HTML;
 
+    return $content;
+  }
+
+  public function renderCLI() {
+    
+    $content = <<<HTML
+      da.gd is an open source collection of PHP applications which
+      give information about networking, IPs and domains.
+
+      The source of dagd is located on Github, and is fairly
+      easy to hack on, if you read a bit.
+
+      Current features include:
+      Whois /w/google.com, /w/127.0.0.1)
+      Show your current IP (/ip)
+      Show your useragent (/ua)
+      
+HTML;
+      
     return $content;
   }
 }
