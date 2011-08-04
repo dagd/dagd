@@ -2,7 +2,6 @@
 
 // Resources that help us do cool things.
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
-require_once dirname(dirname(__FILE__)).'/route.php';
 require_once dirname(dirname(__FILE__)).'/resources/index_resources.php';
 
 // All of the applications that we route too.
@@ -23,6 +22,7 @@ $requested_path = $_GET['__path__'];
 
 $route_matches = null;
 $controller_match = null;
+$routes = DaGdConfig::get('general.routemap');
 foreach ($routes as $route => $controller) {
   if(preg_match('#^'.$route.'#', $requested_path, $route_matches)) {
     $controller_match = $controller;

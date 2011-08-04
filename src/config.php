@@ -14,6 +14,13 @@ class DaGdConfig {
       'aboutus',
       'whois',
     ),
+    'general.routemap' => array(
+      '/$' => 'DaGdAboutUsController',
+      '/ua$' => 'DaGdUserAgentController',
+      '/ip/?$' => 'DaGdIPController',
+      '/w/(.+)/?$' => 'DaGdWhoisController',
+      '/up/(.+)/?$' => 'DaGdComingSoonController'),
+
 
     // A hardcoded map of whois servers to use for certain domains.
     'whois.hardcode_map' => array(
