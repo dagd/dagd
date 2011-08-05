@@ -6,21 +6,19 @@ class DaGdAboutUsController extends DaGdBaseClass {
   
   public function render() {
     
-    $content = "da.gd is an open source collection of PHP applications which
-give information about networking, IPs and domains.
+    $content = "da.gd is a collection of PHP applications released as
+[open source software](http://github.com/codeblock/dagd),  which aim to provide
+information about networking, IPs, and domains.
 
-The source of dagd is located on
-[Github](http://github.com/codeblock/dagd), and is fairly easy to hack on,
-if you don't mind reading a bit.
+Current commands:
+Whois: ([/w/google.com](/w/google.com), [/w/127.0.0.1](/w/127.0.0.1))
+Your current IP: ([/ip](/ip))
+Your current useragent: ([/ua](/ua))
+[Wikipedia](http://en.wikipedia.org/) edit count: ([/wp/Phuzion](/wp/Phuzion))
 
-Current features include:
-***Whois*** ([/w/google.com](/w/google.com), [/w/127.0.0.1](/w/127.0.0.1))
-Show your ***current IP*** ([/ip](/ip))
-Show your ***useragent*** ([/ua](/ua))
-
-Note that you can add \"```?strip```\" to the end of any given URL to strip the
-newline (\\n) which otherwise ends the response.
-e.g. [/ip?strip](/ip?strip)";
+Add \"```?strip```\" to the end of any URL to strip the newline which otherwise
+ends the response. (e.g. [/ip?strip](/ip?strip)). This is useful for scripts
+which need to poll your current IP, which break with a newline character.";
 
     $markup = new DaGdMarkup($content);
     return $markup->render();
