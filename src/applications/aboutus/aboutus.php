@@ -16,7 +16,11 @@ if you don't mind reading a bit.
 Current features include:
 ***Whois*** ([/w/google.com](/w/google.com), [/w/127.0.0.1](/w/127.0.0.1))
 Show your ***current IP*** ([/ip](/ip))
-Show your ***useragent*** ([/ua](/ua))";
+Show your ***useragent*** ([/ua](/ua))
+
+Note that you can add \"```?strip```\" to the end of any given URL to strip the
+newline (\\n) which otherwise ends the response.
+e.g. [/ip?strip](/ip?strip)";
 
     $markup = new DaGdMarkup($content);
     return $markup->render();

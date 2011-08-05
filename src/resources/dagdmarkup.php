@@ -55,6 +55,18 @@ final class DaGdMarkup {
     return $this;
   }
 
+  /*
+   * ```a command of some sort```
+   * <code>a command of some sort</code>
+   */
+  private function codify() {
+    $this->content = preg_replace(
+      '#```(.+?)```#',
+      '<code>$1</code>',
+      $this->content);
+    return $this;
+  }
+
   private function toString() {
     if ($this->nl2br) {
       return nl2br($this->content);
@@ -69,6 +81,7 @@ final class DaGdMarkup {
       ->boldify()
       ->underlineify()
       ->italify()
+      ->codify()
       ->toString();
   }
 

@@ -50,4 +50,7 @@ if ($DEBUG) {
 $instance = new ReflectionClass($controller_match);
 $instance = $instance->newInstanceArgs($route_matches);
 echo $instance->finalize();
-echo "\n"; // Ewwww, hardcode for now.
+
+if (!isset($_GET['strip'])) {
+  echo "\n";
+}
