@@ -11,6 +11,8 @@ foreach ($applications as $application) {
   require_application($application);
 }
 
+ini_set('user_agent', DaGdConfig::get('general.useragent'));
+
 $DEBUG = DaGdConfig::get('general.debug');
 
 if (!$_GET['__path__']) {
