@@ -4,6 +4,7 @@
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 require_once dirname(dirname(__FILE__)).'/resources/index_resources.php';
 require_once dirname(dirname(__FILE__)).'/resources/dagdmarkup.php';
+require_once dirname(dirname(__FILE__)).'/resources/sql.php';
 
 // All of the applications that we route too.
 $applications = DaGdConfig::get('general.applications');
@@ -12,8 +13,6 @@ foreach ($applications as $application) {
 }
 
 ini_set('user_agent', DaGdConfig::get('general.useragent'));
-
-$DEBUG = DaGdConfig::get('general.debug');
 
 if (!$_GET['__path__']) {
   throw new Exception(
@@ -33,6 +32,7 @@ foreach ($routes as $route => $controller) {
   }
 }
 
+$DEBUG = DaGdConfig::get('general.debug');
 if (!$route_matches) {
   header('HTTP/1.0 404 Not Found');
   echo '404 - route not found.';
@@ -41,16 +41,14 @@ if (!$route_matches) {
   }
 }
 
-if ($DEBUG) {
-  echo '<pre>'.print_r($route_matches, true).'</pre>';
-  echo '<br />';
-  echo '<pre>CONTROLLER: '.$controller_match.'</pre>';
-  echo "\n";
-  echo '<br />Passing off to controller.<br />';
-}
+debug('Route matches', print_r($route_matches, true));
+debug('Controller', $controller_match);
+debug('Pass-off', 'Passing off to controller.');
 
 $instance = new ReflectionClass($controller_match);
-$instance = $instance->newInstanceArgs($route_matches);
+$instance = $instance->newInstance();
+$instance->setRouteMatches($route_matches);
+debug('Response from Controller', '');
 echo $instance->finalize();
 
 if (!isset($_GET['strip'])) {

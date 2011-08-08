@@ -15,6 +15,7 @@ class DaGdConfig {
       'aboutus',
       'whois',
       'wpeditcount',
+      'shorten',
     ),
     'general.routemap' => array(
       '/$' => 'DaGdAboutUsController',
@@ -22,7 +23,8 @@ class DaGdConfig {
       '/ip/?$' => 'DaGdIPController',
       '/w/(.+)/?$' => 'DaGdWhoisController',
       '/wp/(.+)/?$' => 'DaGdWPEditController',
-      '/up/(.+)/?$' => 'DaGdComingSoonController'),
+      '/up/(.+)/?$' => 'DaGdComingSoonController',
+      '/(.+?)?/?$' => 'DaGdShortenController'),
 
 
     // A hardcoded map of whois servers to use for certain domains.
@@ -30,6 +32,12 @@ class DaGdConfig {
       // tld (WITHOUT '.') => server
       'ly' => 'whois.nic.ly',
     ),
+
+    // MySQL settings
+    'mysql.host' => 'localhost',
+    'mysql.user' => 'root',
+    'mysql.password' => '',
+    'mysql.database' => 'dagd',
     
   );
 

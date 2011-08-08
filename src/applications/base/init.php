@@ -6,8 +6,21 @@ abstract class DaGdBaseClass {
 
   // Wrap the response in <pre>...</pre> in non-cli browsers.
   protected $wrap_pre = true;
+
+  // This is "global" for now, and probably needs to be refactored.
+  protected $db_connection;
+
+  // This contains matches that the router finds in the accessed URL.
+  protected $route_matches = null;
   
-  public function __construct() {}
+  public function __construct() {
+    global $__db_handler;
+    $this->db_connection = $__db_handler;
+  }
+
+  public function setRouteMatches($matches=null) {
+    $this->route_matches = $matches;
+  }
 
   public function render() {
     return 'Override this method to make stuff happen!';

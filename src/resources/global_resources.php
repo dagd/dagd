@@ -25,3 +25,13 @@ function is_text_useragent() {
     '#(?:'.DaGdConfig::get('general.text_useragent_search').')#',
     $_SERVER['HTTP_USER_AGENT']);
 }
+
+function debug($title, $text=null) {
+  $debug = DaGdConfig::get('general.debug');
+  if ($debug) {
+    echo '<h5>'.$title.'</h5>';
+    if ($text) {
+      echo '<div style="color: red;"><pre>'.$text.'</pre></div><br />';
+    }
+  }
+}
