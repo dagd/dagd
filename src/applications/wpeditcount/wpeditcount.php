@@ -1,16 +1,12 @@
 <?php
 
 class DaGdWPEditController extends DaGdBaseClass {
-  private $query;
-  
-  public function __construct($path, $query) {
-    $this->query = $query;
-  }
     
   public function render() {
+    $query = $this->route_matches[1];
     $counts = file_get_contents(
       'http://en.wikipedia.org/w/api.php?action=query&list=users'.
-      '&usprop=editcount&format=json&ususers='.urlencode($this->query));
+      '&usprop=editcount&format=json&ususers='.urlencode($query));
     $json_counts = json_decode($counts, true);
     $json_counts = $json_counts['query']['users'];
     $total_edits = 0;
