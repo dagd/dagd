@@ -9,6 +9,7 @@ class DaGdConfig {
     'general.text_useragent_search' => 'Wget|curl|libcurl',
     'general.useragent' => 'da.gd/1.0',
     'general.applications' => array(
+      'base', // This absolutely MUST be first.
       'ip',
       'useragent',
       'comingsoon',
