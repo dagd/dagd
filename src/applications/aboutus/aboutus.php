@@ -7,7 +7,7 @@ class DaGdAboutUsController extends DaGdBaseClass {
   public function render() {
     
     $content = "da.gd is a collection of PHP applications released as
-[open source software](http://github.com/codeblock/dagd),  which aim to provide
+[open source software](http://github.com/codeblock/dagd), which aim to provide
 information about networking, IPs, and domains.
 
 Current commands:
