@@ -24,8 +24,8 @@ class DaGdConfig {
       '/ip/?$' => 'DaGdIPController',
       '/w/(.+)/?$' => 'DaGdWhoisController',
       '/wp/(.+)/?$' => 'DaGdWPEditController',
-      '/up/(.+)/?$' => 'DaGdComingSoonController',
-      '/(.+?)?/?$' => 'DaGdShortenController'),
+      '/up/(.+)/?$' => 'DaGdComingSoonController'),
+      #'/(.+?)?/?$' => 'DaGdShortenController'),
 
 
     // A hardcoded map of whois servers to use for certain domains.
