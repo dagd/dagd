@@ -4,7 +4,7 @@
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 require_once dirname(dirname(__FILE__)).'/resources/index_resources.php';
 require_once dirname(dirname(__FILE__)).'/resources/dagdmarkup.php';
-require_once dirname(dirname(__FILE__)).'/resources/sql.php';
+// require_once dirname(dirname(__FILE__)).'/resources/sql.php';
 
 // All of the applications that we route too.
 $applications = DaGdConfig::get('general.applications');
