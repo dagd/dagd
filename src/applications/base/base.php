@@ -38,6 +38,7 @@ abstract class DaGdBaseClass {
     $response = null;
 
     if (is_text_useragent()) {
+      header('Content-type: text/plain');
       $response = $this->renderCLI();
     } else {
       $response = $this->render();
