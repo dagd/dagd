@@ -2,11 +2,12 @@
 
 // Resources that help us do cool things.
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
-require_once dirname(dirname(__FILE__)).'/resources/index_resources.php';
-require_once dirname(dirname(__FILE__)).'/resources/dagdmarkup.php';
-// require_once dirname(dirname(__FILE__)).'/resources/sql.php';
+require_once dirname(__FILE__).'/resources/php/index_resources.php';
 
 // All of the applications that we route too.
+// This is a tad inefficient as we actually load every app's code into
+// mem on each page load, and don't end up using it. If this ends up biting us
+// at some point, we can optimize this.
 $applications = DaGdConfig::get('general.applications');
 foreach ($applications as $application) {
   require_application($application);

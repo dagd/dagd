@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(dirname(__FILE__)).'/config.php';
+require_once dirname(__FILE__).'/dagdmarkup.php';
 
 // This is essentially stolen from Facebook's libphutil, but it allows
 // for doing: id(new Foo())->bar();  ... whereas (new Foo())->bar() is invalid
