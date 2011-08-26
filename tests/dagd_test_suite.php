@@ -67,6 +67,8 @@ function test_regex($test_path, $pattern) {
 function fail($text, $exit = true) {
   echo chr(27)."[1;31m".'*** '.$text.' ***'.chr(27)."[0m"."\n";
   if ($exit) {
+    echo "Exiting with status code '1' - to bypass a git pre-commit hook,\n";
+    echo "pass `--no-verify` to your `git commit` command.\n";
     exit(1);
   }
 }
