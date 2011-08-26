@@ -2,8 +2,14 @@
 // Sorry, this probably isn't as neat as you expected. But this is our test suite. :P
 
 
-define('TEXT_UA', 'curl/7.19.7 (x86_64-redhat-linux-gnu) libcurl/7.19.7 '.
-  'NSS/3.12.9.0 zlib/1.2.3 libidn/1.18 libssh2/1.2.2');
+define(
+  'TEXT_UA',
+  'curl/7.19.7 (x86_64-redhat-linux-gnu) libcurl/7.19.7 '.
+    'NSS/3.12.9.0 zlib/1.2.3 libidn/1.18 libssh2/1.2.2');
+
+define(
+  'FIREFOX_UA',
+  'Mozilla/5.0 (X11; Linux x86_64; rv:9.0a1) Gecko/20110824 Firefox/9.0a1');
 
 require_once dirname(dirname(__FILE__)).'/src/resources/global_resources.php';
 $TEST_URL = DaGdConfig::get('general.baseurl');
@@ -54,7 +60,6 @@ function test_content_type($test_path, $expected_mimetype, $useragent) {
 function test_regex($test_path, $pattern) {
   $content = retrieve($test_path);
   $match = preg_match($pattern, $content);
-  echo 'FOOO: '.$content;
   return test($match, 'must match pattern: '.$pattern);
 }
 
@@ -90,6 +95,7 @@ $content = retrieve();
 test($content, 'retrieve /');
 
 test_content_type('/', 'text/plain', TEXT_UA);
+test_content_type('/', 'text/html', FIREFOX_UA);
 
 // Check if the site contains the string 'Current commands'.
 $match = strstr($content, 'Current commands');
@@ -105,4 +111,4 @@ test_regex('/ip', '@[0-9]\.@');
 /*********** /wp/Phuzion ***********/
 
 // Make sure response is numeric only.
-test_regex('/wp/Phuzion', '@^[0-9]$+@');
+test_regex('/wp/Phuzion', '@^[0-9]+$@');
