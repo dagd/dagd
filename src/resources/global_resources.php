@@ -1,6 +1,10 @@
 <?php
 
-require_once dirname(dirname(__FILE__)).'/config.php';
+$config_file = getenv('DaGdConfigFile');
+if (!$config_file) {
+  $config_file = 'config.php';
+}
+require_once dirname(dirname(__FILE__)).'/'.$config_file;
 require_once dirname(__FILE__).'/dagdmarkup.php';
 
 function handle_exception(Exception $e) {

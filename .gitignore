@@ -2,3 +2,5 @@
 *#
 .#*
 *.swp
+config.prod.php
+config.stage.php
