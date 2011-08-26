@@ -15,9 +15,15 @@ function handle_exception(Exception $e) {
 set_exception_handler('handle_exception');
 
 function is_text_useragent() {
-  return preg_match(
-    '#(?:'.DaGdConfig::get('general.text_useragent_search').')#',
-    $_SERVER['HTTP_USER_AGENT']);
+  if (in_array('HTTP_USER_AGENT', $_SERVER)) {
+    return preg_match(
+      '#(?:'.DaGdConfig::get('general.text_useragent_search').')#',
+      $_SERVER['HTTP_USER_AGENT']);
+  } else {
+    // If the useragent field is not defined for whatever reason, assume it
+    // is a text/cli thing. Browsers are smart, they know how to send a UA. ;)
+    return true;
+  }
 }
 
 function debug($title, $text=null) {
