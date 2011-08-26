@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 // Sorry, this probably isn't as neat as you expected. But this is our test suite. :P
 
@@ -98,8 +99,7 @@ test_content_type('/', 'text/plain', TEXT_UA);
 test_content_type('/', 'text/html', FIREFOX_UA);
 
 // Check if the site contains the string 'Current commands'.
-$match = strstr($content, 'Current commands');
-test($match, 'must contain string: "Current commands"');
+test_regex('/', '@Current commands@');
 
 
 /*********** /ip ***********/
@@ -112,3 +112,9 @@ test_regex('/ip', '@[0-9]\.@');
 
 // Make sure response is numeric only.
 test_regex('/wp/Phuzion', '@^[0-9]+$@');
+
+
+/*********** /w/xxxxxxx ***********/
+
+// Ensure that whois is functioning.
+test_regex('/w/google.com', '@Mountain View@');
