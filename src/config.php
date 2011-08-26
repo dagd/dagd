@@ -3,6 +3,7 @@
 class DaGdConfig {
   private static $config = array(
     'general.debug' => false,
+    'general.baseurl' => 'http://da.gd', // DO *NOT* include trailing '/'.
 
     // I am not including ELinks here, because it can support linking
     // and some simple things like bolding text.
