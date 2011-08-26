@@ -2,6 +2,7 @@
 
 require_once dirname(dirname(__FILE__)).'/config.php';
 require_once dirname(__FILE__).'/dagdmarkup.php';
+require_once dirname(__FILE__).'/sql.php';
 
 function handle_exception(Exception $e) {
   $debug = DaGdConfig::get('general.debug');
