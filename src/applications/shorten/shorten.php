@@ -8,6 +8,7 @@ class DaGdShortenController extends DaGdBaseClass {
 
   private $long_url;
   private $short_url;
+  private $stored_url_id;
 
   private function isFreeShortURL() {
     $query = $this->db_connection->prepare(
@@ -24,24 +25,39 @@ class DaGdShortenController extends DaGdBaseClass {
 
   private function getLongURL() {
     $query = $this->db_connection->prepare(
-      'SELECT longurl FROM shorturls WHERE shorturl=?');
+      'SELECT id,longurl FROM shorturls WHERE shorturl=?');
     $query->bind_param('s', $this->route_matches[1]);
     $query->execute();
-    $query->bind_result($longurl);
+    $query->bind_result($this->stored_url_id, $this->long_url);
     $query->fetch();
     $query->close();
-
     return $longurl;
+  }
+
+  private function logURLAccess() {
+    $query = $this->db_connection->prepare(
+      'INSERT INTO shorturl_access(shorturl_id, ip, useragent) VALUES(?,?,?)');
+    $query->bind_param(
+      'iss',
+      $this->stored_url_id,
+      $_SERVER['REMOTE_ADDR'],
+      $_SERVER['HTTP_USER_AGENT']);
+    if ($query->execute()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public function render() {
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       if (count($this->route_matches) > 1) {
         // Attempt to access a stored URL
-        $long_url = $this->getLongURL();
-        if ($long_url) {
-          header('X-Original-URL: '.$long_url);
-          header('Location: '.$long_url);
+        $this->getLongURL();
+        if ($this->long_url) {
+          $this->logURLAccess();
+          header('X-Original-URL: '.$this->long_url);
+          header('Location: '.$this->long_url);
         } else {
           error404();
           return;
