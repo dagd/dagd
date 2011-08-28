@@ -77,7 +77,7 @@ Optional custom suffix (truncated at 10 chars): <input type="text" name="shortur
         }
       }
 
-      $this->short_url = htmlspecialchars($this->short_url);
+      $this->short_url = htmlspecialchars(urlencode($this->short_url));
       
       if (array_key_exists('url', $_POST) && strlen($_POST['url']) > 0) {
         // Something has at least been submitted. Is it valid?
@@ -85,7 +85,7 @@ Optional custom suffix (truncated at 10 chars): <input type="text" name="shortur
           // Good enough for now...probably needs some better checks.
 
           $this->long_url = $_POST['url'];
-          $this->long_url = htmlspecialchars($this->long_url);
+          $this->long_url = $this->long_url;
           
           $query = $this->db_connection->prepare(
             'INSERT INTO shorturls(shorturl, longurl, owner_ip) '.
