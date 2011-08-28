@@ -35,8 +35,7 @@ foreach ($routes as $route => $controller) {
 
 $DEBUG = DaGdConfig::get('general.debug');
 if (!$route_matches) {
-  header('HTTP/1.0 404 Not Found');
-  echo "404 - route not found.\n";
+  error404();
   if (!$DEBUG) {
     die();
   }
