@@ -20,8 +20,8 @@ class DaGdConfig {
       'shorten',
     ),
     'general.routemap' => array(
-      //'/$' => 'DaGdAboutUsController',
-      '/ua$' => 'DaGdUserAgentController',
+      '/about/?$' => 'DaGdAboutUsController',
+      '/ua/?$' => 'DaGdUserAgentController',
       '/ip/?$' => 'DaGdIPController',
       '/w/(.+)/?$' => 'DaGdWhoisController',
       '/wp/(.+)/?$' => 'DaGdWPEditController',
