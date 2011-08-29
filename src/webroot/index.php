@@ -45,6 +45,10 @@ debug('Route matches', print_r($route_matches, true));
 debug('Controller', $controller_match);
 debug('Pass-off', 'Passing off to controller.');
 
+$git_dir = dirname($_SERVER['SCRIPT_FILENAME']).'/../../.git/';
+$git_latest_commit = shell_exec('git --git-dir='.$git_dir.' log -1 --pretty=format:%h');
+header('X-Git-Commit: '.$git_latest_commit);
+
 $instance = new ReflectionClass($controller_match);
 $instance = $instance->newInstance();
 $instance->setRouteMatches($route_matches);
