@@ -31,7 +31,7 @@ class DaGdShortenController extends DaGdBaseClass {
     $query->bind_result($this->stored_url_id, $this->long_url);
     $query->fetch();
     $query->close();
-    return $longurl;
+    return;
   }
 
   private function logURLAccess() {
