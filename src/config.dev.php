@@ -1,7 +1,7 @@
 <?php
 // This is the general config file for DaGd stuff.
 class DaGdConfig {
-  private static $config = array(
+  public static $config = array(
     'general.debug' => false,
     'general.baseurl' => 'http://dagd.local', // DO *NOT* include trailing '/'.
 
