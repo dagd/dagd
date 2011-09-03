@@ -23,12 +23,18 @@ $rx_headers = null;
 
 function retrieve($test_path = '/') {
   global $TEST_URL, $path, $rx_headers;
+  $rx_headers = null;
   $path = $test_path;
-  $obtain = file_get_contents($TEST_URL.$path);
-  if ($obtain) {
-    $rx_headers = $http_response_header;
-  }
+  $obtain = @file_get_contents($TEST_URL.$path);
+  $rx_headers = $http_response_header;
   return strip_tags($obtain);
+}
+
+function test_response_code($test_path, $expected_code) {
+  global $rx_headers;
+  retrieve($test_path);
+  $match = preg_match('@'.$expected_code.'@', $rx_headers[0]);
+  return test($match, 'give correct HTTP Response code ('.$expected_code.')');
 }
 
 function test_content_type($test_path, $expected_mimetype, $useragent) {
@@ -113,7 +119,11 @@ test_regex('/ip', '@[0-9]\.@');
 /*********** /wp/Phuzion ***********/
 
 // Make sure response is numeric only.
-test_regex('/wp/Phuzion', '@^[0-9]+$@');
+test_regex('/ec/Phuzion', '@^[0-9]+$@');
+test_regex('/ec/Phuzion?lang=en', '@^[0-9]+$@');
+test_regex('/ec/Phuzion?lang=fr', '@^[0-9]+$@');
+test_response_code('/ec/Phuzion?lang=asdfasdf', 400);
+test_response_code('/ec/Phuzion?lang=asd123dsa', 400);
 
 
 /*********** /w/xxxxxxx ***********/

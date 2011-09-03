@@ -50,3 +50,11 @@ function error400($echo = '400 - bad request', $status_text = 'Bad Request') {
   header('HTTP/1.0 400 '.$status_text);
   echo $echo;
 }
+
+function request_or_default($key, $default = null) {
+  if (array_key_exists($key, $_REQUEST) && strlen($_REQUEST[$key])) {
+    return $_REQUEST[$key];
+  } else {
+    return $default;
+  }
+}

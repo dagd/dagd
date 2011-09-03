@@ -16,7 +16,7 @@ class DaGdConfig {
       'comingsoon',
       'aboutus',
       'whois',
-      'wpeditcount',
+      'editcount',
       'shorten',
     ),
     'general.routemap' => array(
@@ -24,7 +24,7 @@ class DaGdConfig {
       '/ua/?$' => 'DaGdUserAgentController',
       '/ip/?$' => 'DaGdIPController',
       '/w/(.+)/?$' => 'DaGdWhoisController',
-      '/wp/(.+)/?$' => 'DaGdWPEditController',
+      '/ec/(.+)/?$' => 'DaGdEditCountController',
       '/up/(.+)/?$' => 'DaGdComingSoonController',
       '/(.+?)?/?$' => 'DaGdShortenController'),
 
