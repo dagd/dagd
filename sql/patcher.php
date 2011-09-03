@@ -22,5 +22,4 @@ foreach (glob(dirname(__FILE__).'/*.sql') as $patch) {
   }
 }
 
-$patch_number++;
 file_put_contents(dirname(__FILE__).'/current_schema', $patch_number++);
