@@ -51,7 +51,7 @@ DROP TABLE IF EXISTS `shorturls`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `shorturls` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `shorturl` varchar(10) NOT NULL DEFAULT '',
+  `shorturl` varbinary(10) NOT NULL DEFAULT '',
   `longurl` text NOT NULL,
   `owner_ip` varchar(45) NOT NULL,
   `creation_dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -77,4 +77,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-08-28  4:50:38
+-- Dump completed on 2011-09-03 14:51:24
