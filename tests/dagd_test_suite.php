@@ -2,7 +2,6 @@
 <?php
 // Sorry, this probably isn't as neat as you expected. But this is our test suite. :P
 
-
 define(
   'TEXT_UA',
   'curl/7.19.7 (x86_64-redhat-linux-gnu) libcurl/7.19.7 '.
@@ -20,6 +19,10 @@ if (count($argv) > 1) {
 
 $path = null;
 $rx_headers = null;
+$tests_completed = array(
+  'attempted' => 0,
+  'successful' => 0,
+  'failed' => 0);
 
 function retrieve($test_path = '/') {
   global $TEST_URL, $path, $rx_headers;
@@ -87,12 +90,15 @@ function pass($text, $exit = false) {
 }
 
 function test($condition, $summary) {
-  global $path;
+  global $path, $tests_completed;
+  $tests_completed['attempted']++;
   if ($condition) {
     pass('Test PASSED ['.$path.']: '.$summary);
+    $tests_completed['successful']++;
     return true;
   } else {
     fail('Test FAILED ['.$path.']: '.$summary);
+    $tests_completed['failed']++;
     return false;
   }
 }
@@ -130,3 +136,7 @@ test_response_code('/ec/Phuzion?lang=asd123dsa', 400);
 
 // Ensure that whois is functioning.
 test_regex('/w/google.com', '@Mountain View@');
+
+echo "Report: Completed {$tests_completed['attempted']} tests.\n";
+echo "Report: {$tests_completed['successful']} were successful.\n";
+echo "Report: {$tests_completed['failed']} failed.\n";
