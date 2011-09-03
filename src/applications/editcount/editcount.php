@@ -6,12 +6,12 @@ class DaGdEditCountController extends DaGdBaseClass {
     $query = $this->route_matches[1];
 
     // Default to en.wikipedia.org.
-    if (($language = request_or_default('lang', 'en'))) {
-      if (!preg_match('/^[a-z]+$/i', $language)) {
-        error400('`lang` should only contain letters.');
-        return;
-      }
+    $language = request_or_default('lang', 'en');
+    if (!preg_match('/^[a-z]+$/i', $language)) {
+      error400('`lang` should only contain letters.');
+      return;
     }
+
 
     if (!count(dns_get_record($language.'.wikipedia.org'))) {
         error400($language.'.wikipedia.org is not a valid hostname.');
