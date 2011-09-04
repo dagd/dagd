@@ -23,21 +23,32 @@ if (!$_GET['__path__']) {
 
 $requested_path = $_GET['__path__'];
 
+/*
 if (is_text_useragent()) {
   // If a text useragent hits the site, check against text.redirects first.
   $text_redirects = DaGdConfig::get('text.redirects');
   foreach ($text_redirects as $request => $redirect) {
     if (preg_match('#^'.$request.'#', $requested_path)) {
       $new_route = preg_replace('#'.$request.'#', $redirect, $requested_path);
+      $query_string = $_SERVER['QUERY_STRING'];
+      $query_string = preg_replace('@__path__=(.+?)@', '', $query_string);
+      $new_route = $new_route.'?'.$query_string;
+      echo DaGdConfig::get('general.baseurl').$new_route."\n";
       header('Location: '.$new_route);
       return;
     }
   }
 }
+*/
 
 $route_matches = null;
 $controller_match = null;
-$routes = DaGdConfig::get('general.routemap');
+$routes = array();
+if (is_text_useragent()) {
+  $routes += DaGdConfig::get('general.cli_routemap');
+}
+$routes += DaGdConfig::get('general.routemap');
+
 foreach ($routes as $route => $controller) {
   if(preg_match('#^'.$route.'#', $requested_path, $route_matches)) {
     $controller_match = $controller;

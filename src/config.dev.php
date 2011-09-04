@@ -31,8 +31,8 @@ class DaGdConfig {
       '/(?:shorten|s|)/?(.+)?/?$' => 'DaGdShortenController'),
 
     // These redirects take place on CLI useragents only.
-    'text.redirects' => array(
-      '/$' => '/help',
+    'general.cli_routemap' => array(
+      '/$' => 'DaGdHelpController',
     ),
 
 
