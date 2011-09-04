@@ -30,6 +30,11 @@ class DaGdConfig {
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
       '/(?:shorten|s|)/?(.+)?/?$' => 'DaGdShortenController'),
 
+    // These redirects take place on CLI useragents only.
+    'text.redirects' => array(
+      '/$' => '/help',
+    ),
+
 
     // A hardcoded map of whois servers to use for certain domains.
     'whois.hardcode_map' => array(

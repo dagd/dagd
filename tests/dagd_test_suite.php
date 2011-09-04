@@ -113,7 +113,7 @@ test_content_type('/', 'text/plain', TEXT_UA);
 test_content_type('/', 'text/html', FIREFOX_UA);
 
 // Check if the site contains the string 'Current commands'.
-test_regex('/', '@Long URL@');
+test_regex('/', '@various conditions@');
 
 
 /*********** /ip ***********/
