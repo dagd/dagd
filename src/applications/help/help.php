@@ -19,7 +19,7 @@ class DaGdHelpController extends DaGdBaseClass {
     foreach ($routes as $path => $controller) {
       $instance = new ReflectionClass($controller);
       $instance = $instance->newInstance();
-      $return .= $instance->help($prefix, $separator, $request_sep);
+      $return .= $instance->help();
     }
     return $return;
   }
