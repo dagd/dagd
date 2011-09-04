@@ -17,7 +17,7 @@ class DaGdHelpController extends DaGdBaseClass {
     $return = '';
 
     $prefix = request_or_default('url_prefix', '/');
-    $separator = request_or_default('url_seperator', '/');
+    $separator = request_or_default('url_separator', '/');
     $request_sep = request_or_default('url_request_sep', null);
     
     foreach ($routes as $path => $controller) {
