@@ -77,6 +77,10 @@ class DaGdShortenController extends DaGdBaseClass {
           return;
         }
       } else {
+        if (is_text_useragent()) {
+          return $this->help();
+        }
+        
         $content = '***da.gd***
 <form method="POST" action="">
 Long URL: <input type="text" name="url" id="url" size="35" /><br />
