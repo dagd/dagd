@@ -18,6 +18,7 @@ class DaGdConfig {
       'whois',
       'editcount',
       'shorten',
+      'headers',
     ),
     'general.routemap' => array(
       '/about/?$' => 'DaGdAboutUsController',
@@ -26,6 +27,7 @@ class DaGdConfig {
       '/w/(.+)/?$' => 'DaGdWhoisController',
       '/ec/(.+)/?$' => 'DaGdEditCountController',
       '/up/(.+)/?$' => 'DaGdComingSoonController',
+      '/headers/?(.+)?/?$' => 'DaGdHeadersController',
       '/(.+?)?/?$' => 'DaGdShortenController'),
 
 

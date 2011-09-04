@@ -1,0 +1,32 @@
+<?php
+class DaGdHeadersController extends DaGdBaseClass {
+  public function render() {
+    $headers = array();
+    $response = '';
+    
+    if (count($this->route_matches) > 1) {
+      $site = $this->route_matches[1];
+
+      if (!preg_match('@^https?://@i', $site)) {
+        $site = 'http://'.$site;
+      }
+      
+      $headers = @get_headers($site);
+      if (!$headers) {
+        error400('Headers could not be retrieved for that domain.');
+        return;
+      }
+
+      foreach ($headers as $header) {
+        $response .= htmlspecialchars($header."\n");
+      }
+      
+    } else {
+      $headers = getallheaders();
+      foreach ($headers as $key => $value) {
+        $response .= htmlspecialchars($key.': '.$value."\n");
+      }
+    }
+    return $response;
+  }
+}
