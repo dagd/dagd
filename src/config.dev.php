@@ -28,8 +28,7 @@ class DaGdConfig {
       '/ec/(.+)/?$' => 'DaGdEditCountController',
       '/up/(.+)/?$' => 'DaGdComingSoonController',
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
-      '/(?:shorten|s)/?(.+)?/?$' => 'DaGdShortenController',
-      '/(.+?)?/?$' => 'DaGdShortenController'),
+      '/(?:shorten|s|)/?(.+)?/?$' => 'DaGdShortenController'),
 
 
     // A hardcoded map of whois servers to use for certain domains.
