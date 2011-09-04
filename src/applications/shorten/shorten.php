@@ -77,13 +77,16 @@ class DaGdShortenController extends DaGdBaseClass {
           return;
         }
       } else {
-        $content = '<form method="POST" action="">
-Long URL: <input type="text" name="url" size="35" /><br />
+        $content = '***da.gd***
+<form method="POST" action="">
+Long URL: <input type="text" name="url" id="url" size="35" /><br />
 Optional custom suffix (truncated at 10 chars): <input type="text" name="shorturl" size="20" /><br />
 <input type="submit" value="Shorten URL" /><br />
-[da.gd help](/help) | [open source](http://github.com/codeblock/dagd)';
+[help](/help) | [open source](http://github.com/codeblock/dagd)';
         $markup = new DaGdMarkup($content);
-        echo $markup->render();
+        $markup = $markup->render();
+        $markup .= '<script>window.onload = function() {document.getElementById("url").focus();}</script>';
+        echo $markup;
       }
     } else { // Submitted a URL
 
