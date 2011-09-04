@@ -61,7 +61,7 @@ class DaGdShortenController extends DaGdBaseClass {
   }
 
   public function render() {
-    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (!array_key_exists('url', $_REQUEST)) {
       if (count($this->route_matches) > 1) {
         // Attempt to access a stored URL
         $this->getLongURL();
@@ -82,17 +82,17 @@ Optional custom suffix (truncated at 10 chars): <input type="text" name="shortur
         $markup = new DaGdMarkup($content);
         echo $markup->render();
       }
-    } else { // POST
+    } else { // Submitted a URL
 
       // TODO: Break this into its own function.
-      if (array_key_exists('shorturl', $_POST) &&
-        strlen($_POST['shorturl']) > 0) {
+      if (array_key_exists('shorturl', $_REQUEST) &&
+        strlen($_REQUEST['shorturl'])) {
         $valid_char_pattern = '@^[\d\w]+$@i';
-        if (!preg_match($valid_char_pattern, $_POST['shorturl'])) {
+        if (!preg_match($valid_char_pattern, $_REQUEST['shorturl'])) {
           error400('Invalid short URL entered. Alphanumeric only, please.');
           return;
         } else {
-          $this->short_url = substr($_POST['shorturl'], 0, 10);
+          $this->short_url = substr($_REQUEST['shorturl'], 0, 10);
           if (!$this->isFreeShortURL()) {
             error400('That custom URL was already taken, go back and try again!');
             return;
@@ -107,12 +107,12 @@ Optional custom suffix (truncated at 10 chars): <input type="text" name="shortur
 
       $this->short_url = htmlspecialchars(urlencode($this->short_url));
       
-      if (array_key_exists('url', $_POST) && strlen($_POST['url']) > 0) {
+      if (array_key_exists('url', $_REQUEST) && strlen($_REQUEST['url']) > 0) {
         // Something has at least been submitted. Is it valid?
-        if (preg_match('@^https?://@', $_POST['url'])) {
+        if (preg_match('@^https?://@', $_REQUEST['url'])) {
           // Good enough for now...probably needs some better checks.
 
-          $this->long_url = $_POST['url'];
+          $this->long_url = $_REQUEST['url'];
           $this->long_url = $this->long_url;
           
           $query = $this->db_connection->prepare(
