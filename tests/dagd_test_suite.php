@@ -137,6 +137,15 @@ test_response_code('/ec/Phuzion?lang=asd123dsa', 400);
 // Ensure that whois is functioning.
 test_regex('/w/google.com', '@Mountain View@');
 
+
+/*********** /headers/xxxxxxx ***********/
+
+// Ensure that headers are seen.
+test_regex('/headers/', '@Host: @');
+test_regex('/headers/google.com', '@Server: gws@');
+test_regex('/headers/http://google.com/', '@Server: gws@');
+
+
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";
 echo "Report: {$tests_completed['failed']} failed.\n";
