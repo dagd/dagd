@@ -9,7 +9,10 @@ class DaGdShortenController extends DaGdBaseClass {
     'examples' => array(
       array(
         'arguments' => null,
-        'summary' => 'POST to / or fill out the form you see when you GET'),
+        'request' => array(
+          'url' => 'http://some_long_url',
+          'shorturl' => 'slu'),
+        'summary' => 'Shorten a URL'),
       array(
         'arguments' => array('g'),
         'summary' => 'An example short URL with a custom suffix'),
