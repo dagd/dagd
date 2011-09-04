@@ -81,7 +81,7 @@ class DaGdShortenController extends DaGdBaseClass {
 Long URL: <input type="text" name="url" size="35" /><br />
 Optional custom suffix (truncated at 10 chars): <input type="text" name="shorturl" size="20" /><br />
 <input type="submit" value="Shorten URL" /><br />
-[About da.gd](/about)';
+[da.gd help](/help)';
         $markup = new DaGdMarkup($content);
         echo $markup->render();
       }
