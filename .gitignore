@@ -2,5 +2,6 @@
 *#
 .#*
 *.swp
+tags
 config.prod.php
 config.stage.php
