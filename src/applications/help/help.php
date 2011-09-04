@@ -26,24 +26,25 @@ class DaGdHelpController extends DaGdBaseClass {
         $return .= '<ul>';
         foreach ($help['examples'] as $example) {
           $return .= '<li>    '.$prefix;
+          $return .= $help['path'];
           $arguments = $example['arguments'];
           if ($arguments) {
+            if ($help['path']) {
+              $return .= '/';
+            }
             $return .= implode($prefix, $arguments);
           }
           if (array_key_exists('request', $example)) {
             $iteration = 0;
             foreach ($example['request'] as $param => $param_example) {
-              if ($iteration === 0) {
-                $return .= '?';
-              } else {
-                $return .= '&';
-              }
+              $return .= ($iteration === 0) ? '?' : '&';
               $return .= $param.'='.$param_example;
+              $iteration++;
             }
           }
           
           if ($example['summary']) {
-            $return .= ': '.$example['summary'];
+            $return .= ' --> '.$example['summary'];
           }
           
           $return .= "</li>\n";
