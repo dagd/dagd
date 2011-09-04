@@ -1,6 +1,19 @@
 <?php
 
 class DaGdEditCountController extends DaGdBaseClass {
+  public static $__help__ = array(
+    'summary' => 'Gives wikipedia edit count for a user.',
+    'path' => 'ec',
+    'examples' => array(
+      array(
+        'arguments' => array('Phuzion'),
+        'summary' => 'en.wikipedia.org editcount for user "Phuzion"'),
+      array(
+        'arguments' => array('Phuzion'),
+        'request' => array(
+          'lang' => 'fr'),
+        'summary' => 'fr.wikipedia.org editcount for user "Phuzion"'),
+    ));
     
   public function render() {
     $query = $this->route_matches[1];

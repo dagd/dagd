@@ -12,6 +12,9 @@ abstract class DaGdBaseClass {
 
   // This contains matches that the router finds in the accessed URL.
   protected $route_matches = null;
+
+  // This is used for DaGdHelpController to generate its list of commands.
+  public static $__help__ = null;
   
   public function __construct() {
     global $__db_handler;

@@ -1,5 +1,17 @@
 <?php
 class DaGdHeadersController extends DaGdBaseClass {
+  public static $__help__ = array(
+    'summary' => 'Show HTTP headers for various conditions.',
+    'path' => 'headers',
+    'examples' => array(
+      array(
+        'arguments' => null,
+        'summary' => 'The headers your browser is sending in its request'),
+      array(
+        'arguments' => array('google.com'),
+        'summary' => 'The headers that "http://google.com/" sends'),
+    ));
+    
   public function render() {
     $headers = array();
     $response = '';

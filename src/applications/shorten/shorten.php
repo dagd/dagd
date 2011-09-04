@@ -3,6 +3,17 @@
 require_once dirname(__FILE__).'/resources/random_string.php';
 
 class DaGdShortenController extends DaGdBaseClass {
+  public static $__help__ = array(
+    'summary' => 'Shorten your long URLs.',
+    'path' => '',
+    'examples' => array(
+      array(
+        'arguments' => null,
+        'summary' => 'POST to / or fill out the form you see when you GET'),
+      array(
+        'arguments' => array('g'),
+        'summary' => 'An example short URL with a custom suffix'),
+    ));
 
   protected $wrap_pre = false;
 
