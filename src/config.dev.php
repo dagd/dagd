@@ -28,6 +28,7 @@ class DaGdConfig {
       '/ec/(.+)/?$' => 'DaGdEditCountController',
       '/up/(.+)/?$' => 'DaGdComingSoonController',
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
+      '/(?:shorten|s)/?(.+)?/?$' => 'DaGdShortenController',
       '/(.+?)?/?$' => 'DaGdShortenController'),
 
 
