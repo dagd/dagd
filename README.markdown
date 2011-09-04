@@ -3,17 +3,19 @@ What is da.gd?
 
 da.gd is a collection of quick-info tools written in PHP. It allows you to use `curl` (or any http client) to quickly retrieve information from an easy-to-remember url.
 
+The goal of this project is to just make an easy to use, little-of-everything tool that works on any device or in any script in any situation. So far, some interesting ideas have been requested (and implemented). If you have an idea for a feature you would like to see, please either (order of preference):
+
+- Fork, Add feature, Send pull request for review/merge.
+- Ask CodeBlock on irc (freenode). We also now have #dagd on irc.freenode.net.
+- File it in the issue tracker
+
+Because a goal of this project is to have it work for many purposes/situations, I encourage feedback, ideas, participation, and interaction with this project. Have some fun with it :)
+
 What currently works?
 =====================
 
-Currently /ip and /ua work.
- 
-    [ricky@rhelpad01 src]$ curl da.gd/ip
-    174.100.171.46
-    [ricky@rhelpad01 src]$ curl da.gd/ua
-    curl/7.19.7 (x86_64-redhat-linux-gnu) libcurl/7.19.7 NSS/3.12.9.0 zlib/1.2.3 libidn/1.18 libssh2/1.2.2
-
-Update (8/1/2011): /w/google.com works now, and whoises google.com.
+`curl da.gd/help` will give you a list of what is currenly available
+on the live site.
 
 What is planned?
 ================
