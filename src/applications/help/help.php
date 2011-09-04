@@ -16,8 +16,9 @@ class DaGdHelpController extends DaGdBaseClass {
     $routes = DaGdConfig::get('general.routemap');
     $return = '';
 
-    // TODO:  Get $_REQUEST['url_prefix'] and ['url_suffix'] here.
-    $prefix = '/';
+    $prefix = request_or_default('url_prefix', '/');
+    $separator = request_or_default('url_seperator', '/');
+    $request_sep = request_or_default('url_request_sep', null);
     
     foreach ($routes as $path => $controller) {
       $vars = get_class_vars($controller);
@@ -30,14 +31,18 @@ class DaGdHelpController extends DaGdBaseClass {
           $arguments = $example['arguments'];
           if ($arguments) {
             if ($help['path']) {
-              $return .= '/';
+              $return .= $separator;
             }
             $return .= implode($prefix, $arguments);
           }
           if (array_key_exists('request', $example)) {
             $iteration = 0;
             foreach ($example['request'] as $param => $param_example) {
-              $return .= ($iteration === 0) ? '?' : '&';
+              if($request_sep) {
+                $return .= ($iteration === 0) ? $request_sep : $request_sep;
+              } else {
+                $return .= ($iteration === 0) ? '?' : '&';
+              }
               $return .= $param.'='.$param_example;
               $iteration++;
             }
