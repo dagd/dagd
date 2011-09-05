@@ -26,7 +26,7 @@ class DaGdEditCountController extends DaGdBaseClass {
 
     // Default to english (en).
     $language = request_or_default('lang', 'en');
-    if (!preg_match('/^[/a-z]+$/i', $language)) {
+    if (!preg_match('@^[a-z]+$@i', $language)) {
       error400('`lang` should only contain letters.');
       return;
     }
@@ -47,10 +47,10 @@ class DaGdEditCountController extends DaGdBaseClass {
         return;
     }
 
-   // if (!count(dns_get_record($language.'.wikipedia.org'))) {
-   //     error400($language.'.wikipedia.org is not a valid hostname.');
-   //     return;
-   // }
+   if (!count(dns_get_record($language.'.'.$project.'.org'))) {
+     error400($language.'.'.$project.'.org is not a valid wikipedia subdomain.');
+     return;
+   }
     
     $counts = file_get_contents(
       'http://'.$language.'.'.$project.'.org/w/api.php?action=query&list=users'.
