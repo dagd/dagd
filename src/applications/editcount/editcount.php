@@ -30,15 +30,8 @@ class DaGdEditCountController extends DaGdBaseClass {
       error400('`lang` should only contain letters.');
       return;
     }
-    
-    // Default to wikipedia.org.
-    $project = request_or_default('proj', 'wikipedia.org');
-    if (!in_array($project, $wmprojects)) {
-        error400('`proj` needs to be a valid Wikimedia project.');
-        return;
-    }
 
-    $wmprojects = array(
+     $wmprojects = array(
       "wikipedia",
       "wiktionary",
       "wikisource",
@@ -46,6 +39,13 @@ class DaGdEditCountController extends DaGdBaseClass {
       "wikibooks",
       "wikiquote",
       "wikinews");
+
+    // Default to wikipedia.org.
+    $project = request_or_default('proj', 'wikipedia');
+    if (!in_array($project, $wmprojects)) {
+        error400('`proj` needs to be a valid Wikimedia project.');
+        return;
+    }
 
    // if (!count(dns_get_record($language.'.wikipedia.org'))) {
    //     error400($language.'.wikipedia.org is not a valid hostname.');
