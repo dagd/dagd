@@ -28,7 +28,7 @@ class DaGdConfig {
       '/ec/(.+)/?$' => 'DaGdEditCountController',
       '/up/(.+)/?$' => 'DaGdComingSoonController',
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
-      '/(?:shorten|s|)/?(.+)?/?$' => 'DaGdShortenController'),
+      '/(.+)?/?$' => 'DaGdShortenController'),
 
     // These redirects take place on CLI useragents only.
     'general.cli_routemap' => array(
