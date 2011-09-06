@@ -2,7 +2,7 @@
 // This is the general config file for DaGd stuff.
 class DaGdConfig {
   public static $config = array(
-    'general.debug' => true,
+    'general.debug' => false,
     'general.baseurl' => 'http://dagd.local', // DO *NOT* include trailing '/'.
 
     // I am not including ELinks here, because it can support linking
