@@ -2,7 +2,7 @@
 // This is the general config file for DaGd stuff.
 class DaGdConfig {
   public static $config = array(
-    'general.debug' => false,
+    'general.debug' => true,
     'general.baseurl' => 'http://dagd.local', // DO *NOT* include trailing '/'.
 
     // I am not including ELinks here, because it can support linking
@@ -28,7 +28,7 @@ class DaGdConfig {
       '/ec/(.+)/?$' => 'DaGdEditCountController',
       '/up/(.+)/?$' => 'DaGdComingSoonController',
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
-      '/(.+)?/?$' => 'DaGdShortenController'),
+      '/(?:shorten/|s/|)?(.+)?/?$' => 'DaGdShortenController'),
 
     // These redirects take place on CLI useragents only.
     'general.cli_routemap' => array(
