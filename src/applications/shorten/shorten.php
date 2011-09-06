@@ -97,7 +97,7 @@ Optional custom suffix (truncated at 10 chars): <input type="text" name="shortur
       // TODO: Break this into its own function.
       if (array_key_exists('shorturl', $_REQUEST) &&
         strlen($_REQUEST['shorturl'])) {
-        $valid_char_pattern = '@^[\d\w]+$@i';
+        $valid_char_pattern = '@^[\d\w-_]+$@i';
         if (!preg_match($valid_char_pattern, $_REQUEST['shorturl'])) {
           error400('Invalid short URL entered. Alphanumeric only, please.');
           return;
