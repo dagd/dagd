@@ -1,7 +1,12 @@
 #!/usr/bin/env php
 <?php
 require_once dirname(__FILE__).'/../src/resources/global_resources.php';
-$current_schema = (int)file_get_contents(dirname(__FILE__).'/current_schema');
+
+$current_schema = 0;
+if (file_exists(dirname(__FILE__).'/current_schema')) {
+  $current_schema = (int)file_get_contents(dirname(__FILE__).'/current_schema');
+}
+
 $patch_number = 0;
 
 foreach (glob(dirname(__FILE__).'/*.sql') as $patch) {
