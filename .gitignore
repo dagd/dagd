@@ -5,3 +5,4 @@
 tags
 config.prod.php
 config.stage.php
+sql/current_schema
