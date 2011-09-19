@@ -11,7 +11,7 @@ class DaGdShortenController extends DaGdBaseClass {
         'arguments' => null,
         'request' => array(
           'url' => 'http://some_long_url',
-          'shorturl' => 'slu'),
+          'shorturl' => 'slug'),
         'summary' => 'Shorten a URL'),
       array(
         'arguments' => array('g'),
