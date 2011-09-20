@@ -1,5 +1,4 @@
 <?php
-
 class DaGdPastebinController extends DaGdBaseClass {
   public static $__help__ = array(
     'summary' => 'Paste blurbs of code.',
@@ -26,7 +25,6 @@ class DaGdPastebinController extends DaGdBaseClass {
   protected $wrap_pre = false;
 
   private $paste_id;
-
   private function logPasteAccess() {
     $query = $this->db_connection->prepare(
       'INSERT INTO pastebin_access(paste_id, ip, useragent) VALUES(?,?,?)');
@@ -42,7 +40,70 @@ class DaGdPastebinController extends DaGdBaseClass {
     }
   }
 
+  private function create_paste() {
+    $query = $this->db_connection->prepare(
+      'INSERT INTO pastebin_pastes(ip, text) VALUES(?, ?)');
+    $query->bind_param(
+      'ss',
+      $_SERVER['REMOTE_ADDR'],
+      $this->paste_text);
+    if ($query->execute()) {
+      $this->paste_id = $query->insert_id;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private function fetch_paste() {
+    $query = $this->db_connection->prepare(
+      'SELECT text FROM pastebin_pastes WHERE id=?');
+    $query->bind_param('i', $this->paste_id);
+    $query->execute();
+    $query->bind_result($this->paste_text);
+    $query->fetch();
+    $query->close();
+    return;
+  }
+
+  private function generate_link() {
+    $link = DaGdConfig::get('general.baseurl').'/p/'.$this->paste_id;
+    return '<a href="'.$link.'">'.$link.'</a>';
+  }
+
   public function render() {
-    return 'Coming soon!';
+    if ($paste_text = request_or_default('text')) {
+      // A paste is being submitted.
+      $this->paste_text = $paste_text;
+      $this->create_paste();
+      echo $this->generate_link();
+      return;
+    } else {
+      // Trying to access one?
+      if (count($this->route_matches) > 1) {
+        // Yes
+        $this->paste_id = $this->route_matches[1];
+        $this->fetch_paste();
+        if ($this->paste_text) {
+          return $this->paste_text;
+        } else {
+          error404();
+          return;
+        }
+      } else {
+        // No, they're accessing the front page of Pastebin.
+        // This is going to need work. :D
+        $content = '***Pastebin***
+<form method="POST" action="">
+<textarea name="text" rows="10" cols="40"></textarea>
+<input type="submit" value="Pastebin it!" />
+</form>';
+        $markup = new DaGdMarkup($content);
+        $markup = $markup->render();
+        $markup .= '<script>window.onload = function() {document.getElementById("url").focus();}</script>';
+        echo $markup;
+        return;
+      }
+    }
   }
 }
