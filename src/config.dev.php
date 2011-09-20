@@ -30,7 +30,7 @@ class DaGdConfig {
       '/ec/(.+)/?$' => 'DaGdEditCountController',
       '/up/(.+)/?$' => 'DaGdComingSoonController',
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
-      '/(?:(?:pastebin|p)(?:/|$))?(\d+)?/?$' => 'DaGdPastebinController',
+      '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+)?/?$' => 'DaGdShortenController'),
 
     // These redirects take place on CLI useragents only.
