@@ -3,6 +3,7 @@
 class DaGdConfig {
   public static $config = array(
     'general.debug' => false,
+    'general.display_errors' => false,
     'general.baseurl' => 'http://dagd.local', // DO *NOT* include trailing '/'.
 
     // I am not including ELinks here, because it can support linking

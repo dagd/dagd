@@ -5,6 +5,14 @@ if (!$config_file) {
   $config_file = 'config.php';
 }
 require_once dirname(dirname(__FILE__)).'/'.$config_file;
+
+$display_errors = DaGdConfig::get('general.display_errors');
+if ($display_errors) {
+  ini_set('error_reporting', E_ALL);
+  ini_set('display_startup_errors', true);
+  ini_set('display_errors', true);
+}
+
 require_once dirname(__FILE__).'/dagdmarkup.php';
 require_once dirname(__FILE__).'/sql.php';
 
