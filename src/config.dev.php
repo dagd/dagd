@@ -19,6 +19,7 @@ class DaGdConfig {
       'whois',
       'editcount',
       'shorten',
+      'pastebin',
       'headers',
     ),
     'general.routemap' => array(
@@ -29,6 +30,7 @@ class DaGdConfig {
       '/ec/(.+)/?$' => 'DaGdEditCountController',
       '/up/(.+)/?$' => 'DaGdComingSoonController',
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
+      '/(?:(?:pastebin|p)(?:/|$))?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+)?/?$' => 'DaGdShortenController'),
 
     // These redirects take place on CLI useragents only.
