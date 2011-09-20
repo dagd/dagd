@@ -95,14 +95,13 @@ Optional custom suffix (truncated at 10 chars): <input type="text" name="shortur
     } else { // Submitted a URL
 
       // TODO: Break this into its own function.
-      if (array_key_exists('shorturl', $_REQUEST) &&
-        strlen($_REQUEST['shorturl'])) {
+      if ($short_url = request_or_default('shorturl')) {
         $valid_char_pattern = '@^[\d\w-_]+$@i';
-        if (!preg_match($valid_char_pattern, $_REQUEST['shorturl'])) {
+        if (!preg_match($valid_char_pattern, $short_url)) {
           error400('Invalid short URL entered. Alphanumeric only, please.');
           return;
         } else {
-          $this->short_url = substr($_REQUEST['shorturl'], 0, 10);
+          $this->short_url = substr($short_url, 0, 10);
           if (!$this->isFreeShortURL()) {
             error400('That custom URL was already taken, go back and try again!');
             return;
@@ -117,12 +116,12 @@ Optional custom suffix (truncated at 10 chars): <input type="text" name="shortur
 
       $this->short_url = htmlspecialchars(urlencode($this->short_url));
       
-      if (array_key_exists('url', $_REQUEST) && strlen($_REQUEST['url']) > 0) {
+      if ($long_url = request_or_default('url')) {
         // Something has at least been submitted. Is it valid?
-        if (preg_match('@^https?://@', $_REQUEST['url'])) {
+        if (preg_match('@^https?://@', $long_url)) {
           // Good enough for now...probably needs some better checks.
 
-          $this->long_url = $_REQUEST['url'];
+          $this->long_url = $long_url;
           $this->long_url = $this->long_url;
           
           $query = $this->db_connection->prepare(
