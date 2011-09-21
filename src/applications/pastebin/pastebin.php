@@ -22,8 +22,6 @@ class DaGdPastebinController extends DaGdBaseClass {
         'summary' => 'Show paste 7, highlighted as PHP with terminal colors'),
     ));
 
-  protected $wrap_pre = false;
-
   private $paste_id;
   private function logPasteAccess() {
     $query = $this->db_connection->prepare(
@@ -85,6 +83,9 @@ class DaGdPastebinController extends DaGdBaseClass {
         $this->paste_id = $this->route_matches[1];
         $this->fetch_paste();
         if ($this->paste_text) {
+          $this->wrap_pre = false;
+          $this->escape = false;
+          header('Content-type: text/plain');
           return $this->paste_text;
         } else {
           error404();
@@ -93,9 +94,9 @@ class DaGdPastebinController extends DaGdBaseClass {
       } else {
         // No, they're accessing the front page of Pastebin.
         // This is going to need work. :D
-        $content = '***Pastebin***
+        $content = '***da.gd Pastebin***
 <form method="POST" action="">
-<textarea name="text" rows="10" cols="40"></textarea>
+<textarea name="text" style="width: 90%; height: 90%;"></textarea>
 <input type="submit" value="Pastebin it!" />
 </form>';
         $markup = new DaGdMarkup($content);
