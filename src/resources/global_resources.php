@@ -29,8 +29,10 @@ set_exception_handler('handle_exception');
 
 function is_text_useragent() {
   if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+    $useragents = DaGdConfig::get('general.text_useragent_search');
+    $useragents = implode('|', $useragents);
     return preg_match(
-      '#(?:'.DaGdConfig::get('general.text_useragent_search').')#',
+      '#(?:'.$useragents.')#',
       $_SERVER['HTTP_USER_AGENT']);
   } else {
     // If the useragent field is not defined for whatever reason, assume it
