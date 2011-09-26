@@ -45,6 +45,7 @@ if (!$route_matches) {
   }
 }
 
+debug('REQUEST variables', print_r($_REQUEST, true));
 debug('Route matches', print_r($route_matches, true));
 debug('Controller', $controller_match);
 debug('Pass-off', 'Passing off to controller.');
