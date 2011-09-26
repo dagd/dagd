@@ -7,6 +7,9 @@ abstract class DaGdBaseClass {
   // Wrap the response in <pre>...</pre> in non-cli browsers.
   protected $wrap_pre = true;
 
+  // Enable text-UA specific html stripping?
+  protected $text_html_strip = true;
+
   // This is "global" for now, and probably needs to be refactored.
   protected $db_connection;
 
@@ -15,7 +18,7 @@ abstract class DaGdBaseClass {
 
   // This is used for DaGdHelpController to generate its list of commands.
   public static $__help__ = null;
-  
+
   public function __construct() {
     global $__db_handler;
     $this->db_connection = $__db_handler;
@@ -84,13 +87,13 @@ abstract class DaGdBaseClass {
   public function finalize() {
     $response = null;
 
-    if (is_text_useragent()) {
+    if ($this->text_html_strip && is_text_useragent()) {
       header('Content-type: text/plain');
       $response = $this->renderCLI();
     } else {
       $response = $this->render();
     }
-
+    
     if ($this->escape) {
       $response = htmlspecialchars($response);
     }

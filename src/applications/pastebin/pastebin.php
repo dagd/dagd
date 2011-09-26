@@ -22,6 +22,8 @@ class DaGdPastebinController extends DaGdBaseClass {
         'summary' => 'Show paste 7, highlighted as PHP with terminal colors'),
     ));
 
+  protected $text_html_strip = false;
+
   private $paste_id;
   private function logPasteAccess() {
     $query = $this->db_connection->prepare(
