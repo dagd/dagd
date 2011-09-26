@@ -59,6 +59,6 @@ $instance->setRouteMatches($route_matches);
 debug('Response from Controller', '');
 echo $instance->finalize();
 
-if (!isset($_GET['strip'])) {
+if (!isset($_REQUEST['strip'])) {
   echo "\n";
 }
