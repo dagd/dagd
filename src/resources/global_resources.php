@@ -27,8 +27,9 @@ function handle_exception(Exception $e) {
 }
 set_exception_handler('handle_exception');
 
-function is_text_useragent() {
-  if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+function is_text_useragent() {  
+  if (!isset($_REQUEST['text']) &&
+    array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
     $useragents = DaGdConfig::get('general.text_useragent_search');
     $useragents = implode('|', $useragents);
     return preg_match(
