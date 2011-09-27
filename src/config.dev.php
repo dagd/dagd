@@ -46,6 +46,10 @@ class DaGdConfig {
       '/$' => 'DaGdHelpController',
     ),
 
+    // These are extra headers that get applied globally
+    'general.extra_headers' => array(
+      'Cache-Control: no-cache',
+    ),
 
     // A hardcoded map of whois servers to use for certain domains.
     'whois.hardcode_map' => array(

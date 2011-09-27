@@ -50,6 +50,11 @@ debug('Route matches', print_r($route_matches, true));
 debug('Controller', $controller_match);
 debug('Pass-off', 'Passing off to controller.');
 
+// Extra headers
+$headers = DaGdConfig::get('general.extra_headers');
+foreach ($headers as $header) {
+  header($header);
+}
 $git_dir = dirname($_SERVER['SCRIPT_FILENAME']).'/../../.git/';
 $git_latest_commit = shell_exec('git --git-dir='.$git_dir.' log -1 --pretty=format:%h');
 header('X-Git-Commit: '.$git_latest_commit);
