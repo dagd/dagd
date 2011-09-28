@@ -1,5 +1,5 @@
 <?php
-class DaGdHeadersController extends DaGdBaseClass {
+final class DaGdHeadersController extends DaGdBaseClass {
   public static $__help__ = array(
     'summary' => 'Show HTTP headers for various conditions.',
     'path' => 'headers',

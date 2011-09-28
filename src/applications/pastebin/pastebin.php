@@ -1,5 +1,5 @@
 <?php
-class DaGdPastebinController extends DaGdBaseClass {
+final class DaGdPastebinController extends DaGdBaseClass {
   public static $__help__ = array(
     'summary' => 'Paste blurbs of code.',
     'path' => 'paste',

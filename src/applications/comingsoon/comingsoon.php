@@ -1,5 +1,5 @@
 <?php
-class DaGdComingSoonController extends DaGdBaseClass {
+final class DaGdComingSoonController extends DaGdBaseClass {
   public function render() {
     return 'This page is coming soon!';
   }

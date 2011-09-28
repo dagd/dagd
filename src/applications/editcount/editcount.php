@@ -1,6 +1,6 @@
 <?php
 
-class DaGdEditCountController extends DaGdBaseClass {
+final class DaGdEditCountController extends DaGdBaseClass {
   public static $__help__ = array(
     'summary' => 'Gives wikipedia edit count for a user.',
     'path' => 'ec',
