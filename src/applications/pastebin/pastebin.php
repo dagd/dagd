@@ -98,12 +98,12 @@ final class DaGdPastebinController extends DaGdBaseClass {
         // This is going to need work. :D
         $content = '***da.gd Pastebin***
 <form method="POST" action="">
-<textarea name="text" style="width: 90%; height: 90%;"></textarea>
+<textarea name="text" id="text" style="width: 90%; height: 90%;"></textarea>
 <input type="submit" value="Pastebin it!" />
 </form>';
         $markup = new DaGdMarkup($content);
         $markup = $markup->render();
-        $markup .= '<script>window.onload = function() {document.getElementById("url").focus();}</script>';
+        $markup .= '<script>window.onload = function() {document.getElementById("text").focus();}</script>';
         echo $markup;
         return;
       }
