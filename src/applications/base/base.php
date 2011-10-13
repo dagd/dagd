@@ -92,7 +92,8 @@ abstract class DaGdBaseClass {
 
     if ($this->text_html_strip && is_text_useragent()) {
       if ($this->text_content_type) {
-        header('Content-type: text/plain');
+        header('Content-type: text/plain; charset=utf-8');
+        header('X-Content-Type-Options: nosniff');
       }
       $response = $this->renderCLI();
     } else {

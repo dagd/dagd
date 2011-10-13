@@ -85,8 +85,9 @@ final class DaGdPastebinController extends DaGdBaseClass {
         if ($this->paste_text) {
           // NEVER EVER EVER EVER EVER EVER EVER remove this header() without
           // changing the lines below it. XSS is bad. :)
-          header('Content-type: text/plain');
+          header('Content-type: text/plain; charset=utf-8');
           header('X-Content-Type-Options: nosniff');
+
           $this->wrap_pre = false;
           $this->escape = false;
           $this->text_html_strip = false;
