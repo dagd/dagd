@@ -22,8 +22,6 @@ final class DaGdPastebinController extends DaGdBaseClass {
         'summary' => 'Show paste 7, highlighted as PHP with terminal colors'),
     ));
 
-  protected $text_html_strip = false;
-
   private $paste_id;
   private function logPasteAccess() {
     $query = $this->db_connection->prepare(
@@ -85,15 +83,25 @@ final class DaGdPastebinController extends DaGdBaseClass {
         $this->paste_id = $this->route_matches[1];
         $this->fetch_paste();
         if ($this->paste_text) {
+          // NEVER EVER EVER EVER EVER EVER EVER remove this header() without
+          // changing the lines below it. XSS is bad. :)
+          header('Content-type: text/plain');
+          header('X-Content-Type-Options: nosniff');
           $this->wrap_pre = false;
           $this->escape = false;
-          header('Content-type: text/plain');
+          $this->text_html_strip = false;
+          $this->text_content_type = false;
           return $this->paste_text;
         } else {
           error404();
           return;
         }
       } else {
+        if (is_text_useragent()) {
+          // No use in showing a form for text UAs. Rather, show help text.
+          return $this->help();
+        }
+
         // No, they're accessing the front page of Pastebin.
         // This is going to need work. :D
         $content = '***da.gd Pastebin***

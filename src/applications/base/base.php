@@ -16,6 +16,9 @@ abstract class DaGdBaseClass {
   // This contains matches that the router finds in the accessed URL.
   protected $route_matches = null;
 
+  // Set text/plain by default for all text-useragent responses.
+  protected $text_content_type = true;
+
   // This is used for DaGdHelpController to generate its list of commands.
   public static $__help__ = null;
 
@@ -88,7 +91,9 @@ abstract class DaGdBaseClass {
     $response = null;
 
     if ($this->text_html_strip && is_text_useragent()) {
-      header('Content-type: text/plain');
+      if ($this->text_content_type) {
+        header('Content-type: text/plain');
+      }
       $response = $this->renderCLI();
     } else {
       $response = $this->render();
