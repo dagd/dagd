@@ -37,10 +37,10 @@ final class DaGdShortenController extends DaGdBaseClass {
     return !(bool)$count;
   }
 
-  private function getLongURL() {
+  private function getLongURL($longurl) {
     $query = $this->db_connection->prepare(
       'SELECT id,longurl FROM shorturls WHERE shorturl=?');
-    $query->bind_param('s', $this->route_matches[1]);
+    $query->bind_param('s', $longurl);
     $query->execute();
     $query->bind_result($this->stored_url_id, $this->long_url);
     $query->fetch();
@@ -64,7 +64,7 @@ final class DaGdShortenController extends DaGdBaseClass {
   }
 
   private function redirect_from_shorturl() {
-    $this->getLongURL();
+    $this->getLongURL($this->route_matches[1]);
     if ($this->long_url) {
       $this->logURLAccess();
       header('X-Original-URL: '.$this->long_url);
@@ -159,9 +159,15 @@ final class DaGdShortenController extends DaGdBaseClass {
     
     // No 'url' was passed, so we are not creating a new short-url.
     if (count($this->route_matches) > 1) {
-      // Attempt to access a stored URL
-      $this->redirect_from_shorturl();
-      return;          
+      if (end($this->route_matches) == 'original') {
+        $this->escape = false;
+        $this->getLongURL($this->route_matches[1]);
+        return '<a href="'.$this->long_url.'">'.$this->long_url.'</a>';
+      } else {
+        // Attempt to access a stored URL
+        $this->redirect_from_shorturl();
+        return;
+      }
     } else {
       // We are not attempting to access a stored URL, but we also don't have
       // a 'url' - Show the form so that we can create a new short-url.
