@@ -16,7 +16,6 @@ class DaGdConfig {
       'Supybot',
     ),
 
-    
     'general.useragent' => 'da.gd/1.0',
     'general.applications' => array(
       'base', // This absolutely MUST be first.
@@ -29,6 +28,7 @@ class DaGdConfig {
       'shorten',
       'pastebin',
       'headers',
+      'up',
     ),
     'general.routemap' => array(
       '/help/?$' => 'DaGdHelpController',
@@ -36,7 +36,7 @@ class DaGdConfig {
       '/ip/?$' => 'DaGdIPController',
       '/w/(.+)/?$' => 'DaGdWhoisController',
       '/ec/(.+)/?$' => 'DaGdEditCountController',
-      '/up/(.+)/?$' => 'DaGdComingSoonController',
+      '/up/(.+)/?$' => 'DaGdIsItUpController',
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
@@ -62,7 +62,10 @@ class DaGdConfig {
     'mysql.user' => 'root',
     'mysql.password' => '',
     'mysql.database' => 'dagd',
-    
+
+    // IsItUp Settings
+    'isitup.max_redirects' => 5,
+    'isitup.timeout' => 3,
   );
 
   public static function get($key) {

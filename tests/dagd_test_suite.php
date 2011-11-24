@@ -145,6 +145,9 @@ test_regex('/headers/', '@Host: @');
 test_regex('/headers/google.com', '@Server: gws@');
 test_regex('/headers/http://google.com/', '@Server: gws@');
 
+test_regex('/up/google.com', '@^200$@');
+test_regex('/up/https://encrypted.google.com', '@^200$@');
+
 
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";
