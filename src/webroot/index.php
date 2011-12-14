@@ -25,6 +25,8 @@ $requested_path = $_GET['__path__'];
 $route_matches = null;
 $controller_match = null;
 $routes = array();
+$routes += DaGdConfig::get('general.redirect_map');
+
 if (is_text_useragent()) {
   $routes += DaGdConfig::get('general.cli_routemap');
 }

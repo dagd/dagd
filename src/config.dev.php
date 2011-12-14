@@ -46,6 +46,10 @@ class DaGdConfig {
       '/$' => 'DaGdHelpController',
     ),
 
+    'general.redirect_map' => array(
+      '/et/(\d+)/?$' => 'http://www.etsy.com/listing/$1/'),
+      
+
     // These are extra headers that get applied globally
     'general.extra_headers' => array(
       'Cache-Control: no-cache',
