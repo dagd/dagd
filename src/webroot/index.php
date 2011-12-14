@@ -31,9 +31,19 @@ if (is_text_useragent()) {
 $routes += DaGdConfig::get('general.routemap');
 
 foreach ($routes as $route => $controller) {
-  if(preg_match('#^'.$route.'#', $requested_path, $route_matches)) {
-    $controller_match = $controller;
-    break;
+  if (preg_match('#^'.$route.'#', $requested_path, $route_matches)) {
+    if (preg_match('#^https?://#', $controller)) {
+      // If the "controller" side starts with http://, we can just redirect.
+      // This lets us do things like '/foo/(.*)' => 'http://google.com/$1'
+      array_shift($route_matches);
+      $new_location = preg_replace('@^'.$route.'@', $controller, $requested_path);
+      debug('New Location', $new_location);
+      header('Location: '.$new_location);
+      return;
+    } else {
+      $controller_match = $controller;
+      break;
+    }
   }
 }
 
