@@ -39,6 +39,7 @@ foreach ($routes as $route => $controller) {
       // This lets us do things like '/foo/(.*)' => 'http://google.com/$1'
       array_shift($route_matches);
       $new_location = preg_replace('@^'.$route.'@', $controller, $requested_path);
+      $new_location .= build_given_querystring();
       debug('New Location', $new_location);
       header('Location: '.$new_location);
       return;

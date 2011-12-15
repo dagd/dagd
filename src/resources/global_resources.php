@@ -69,3 +69,33 @@ function request_or_default($key, $default = null) {
     return $default;
   }
 }
+
+/*
+ * Takes the given query string, minus __path__ used internally,
+ * and makes one that we can use for various things like redirecting.
+ * It also allows for empty values. ?foo&asdf=fdsa is valid.
+ *
+ * @returns string The query string, starting with a '?'.
+ */
+function build_given_querystring() {
+  $querystring = '?';
+  foreach ($_GET as $key => $value) {
+    if ($key != '__path__') {
+      $querystring .= $key;
+      if (!empty($value)) {
+        $querystring .= '='.$value;
+      }
+      $querystring .= '&';
+    }
+  }
+
+  foreach ($_POST as $key => $value) {
+    $querystring .= $key;
+    if (!empty($value)) {
+      $querystring .= '='.$value;
+    }
+    $querystring .= '&';
+  }
+
+  return rtrim($querystring, '&');
+}
