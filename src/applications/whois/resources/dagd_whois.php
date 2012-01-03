@@ -14,7 +14,7 @@ class DaGdWhois {
   /*
    * Given a domain (passed to the constructor), we need to use the tld of it
    * to connect to <tld>.whois-servers.net to get the real whois server.
-   * Using tihs, we end up making two whois queries, but it's the cleanest
+   * Using this, we end up making two whois queries, but it's the cleanest
    * way to do this.
    *
    * @returns <string> the tld of the domain passed to the constructor.
