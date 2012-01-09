@@ -46,6 +46,7 @@ class DaGdConfig {
       '/$' => 'DaGdHelpController',
     ),
 
+    // These are just full-out redirects.
     'general.redirect_map' => array(
       '/et/(\d+)/?$' => 'http://www.etsy.com/listing/$1'),
       
