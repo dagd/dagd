@@ -29,6 +29,7 @@ class DaGdConfig {
       'pastebin',
       'headers',
       'up',
+      'host',
     ),
     'general.routemap' => array(
       '/help/?$' => 'DaGdHelpController',
@@ -37,6 +38,7 @@ class DaGdConfig {
       '/w/(.+)/?$' => 'DaGdWhoisController',
       '/ec/(.+)/?$' => 'DaGdEditCountController',
       '/up/(.+)/?$' => 'DaGdIsItUpController',
+      '/host/(.+)/?$' => 'DaGdHostController',
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
