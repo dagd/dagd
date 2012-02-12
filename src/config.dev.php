@@ -14,6 +14,7 @@ class DaGdConfig {
       'curl',
       'libcurl',
       'Supybot',
+      'Ruby',
     ),
 
     'general.useragent' => 'da.gd/1.0',
