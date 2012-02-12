@@ -27,7 +27,7 @@ function handle_exception(Exception $e) {
 }
 set_exception_handler('handle_exception');
 
-function is_text_useragent() {  
+function is_text_useragent() {
   if (!isset($_REQUEST['text']) &&
     array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
     $useragents = DaGdConfig::get('general.text_useragent_search');
@@ -36,6 +36,12 @@ function is_text_useragent() {
       '#(?:'.$useragents.')#',
       $_SERVER['HTTP_USER_AGENT']);
   } else {
+
+    // Force text useragent response to be off...
+    if ($_REQUEST['text'] == '0') {
+      return false;
+    }
+
     // If the useragent field is not defined for whatever reason, assume it
     // is a text/cli thing. Browsers are smart, they know how to send a UA. ;)
     return true;
