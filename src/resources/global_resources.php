@@ -38,7 +38,7 @@ function is_text_useragent() {
   } else {
 
     // Force text useragent response to be off...
-    if ($_REQUEST['text'] == '0') {
+    if (request_or_default('text')) {
       return false;
     }
 
