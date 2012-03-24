@@ -22,11 +22,7 @@ What is planned?
 
 Eventually the following will work.
 
-- /up/google.com - return 'up' if google.com is up, or 'down' if it's not.
 - /i/google.com - return info about google.com (including up/down), such as the title of the page.
-- / - eventually da.gd itself will be a URL shortener.
 - /port/google.com/80 - check if port 80 is open on google.com - this will be limited if implemented.
 - /bl/127.0.0.1 - check to see if an IP is on a dnsbl. (Thanks for the idea @Ttech!)
-- /host/google.com - return the IP address of google.com.
-- /host/127.0.0.1 - return the hostname/reverse dns of 127.0.0.1.
 - Any other ideas you would like to see.
