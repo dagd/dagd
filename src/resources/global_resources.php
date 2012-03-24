@@ -37,8 +37,11 @@ function is_text_useragent() {
       $_SERVER['HTTP_USER_AGENT']);
   } else {
 
-    // Force text useragent response to be off...
-    if (request_or_default('text')) {
+    // Force text useragent response to be on/off...
+    $force_text = request_or_default('text');
+    if ($force_text != 0 || $force_text == null) {
+      return true;
+    } else {
       return false;
     }
 
@@ -48,7 +51,7 @@ function is_text_useragent() {
   }
 }
 
-function debug($title, $text=null) {
+function debug($title, $text = null) {
   $debug = DaGdConfig::get('general.debug');
   if ($debug) {
     echo '<h5>'.$title.'</h5>';
