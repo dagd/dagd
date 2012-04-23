@@ -16,6 +16,5 @@ before_install:
   - sudo a2enmod php5
   - sudo chmod -R 777 ~
   - sudo /etc/init.d/apache2 restart
-  - curl http://dagd.local/
   - sudo tail /var/log/apache2/error.log
 script: ./tests/dagd_test_suite.php
