@@ -12,5 +12,6 @@ before_install:
   - echo "127.0.0.1 dagd.local" | sudo tee --append /etc/hosts
   - sudo ln -s /etc/apache2/sites-available/dagd /etc/apache2/sites-enabled/dagd
   - mysql -e 'create database dagd;'
+  - sudo a2enmod rewrite
   - sudo /etc/init.d/apache2 restart
 script: ./tests/dagd_test_suite.php
