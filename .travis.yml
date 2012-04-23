@@ -1,0 +1,16 @@
+language: php
+php:
+  - 5.3
+  - 5.4
+env:
+  - DaGdConfigFile='config.dev.php'
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install apache2
+  - sed 1,1d documentation/recommended_apache_setup.markdown | sudo tee /etc/apach2/sites-available/dagd
+  - sudo sed -i "s/DocumentRoot.*/DocumentRoot $(pwd | sed 's/\//\\\//g')/g" /etc/apach2/sites-available/dagd
+  - echo "127.0.0.1 dagd.local" | sudo tee --apend /etc/hosts
+  - sudo ln -s /etc/apach2/sites-available/dagd /etc/apach2/sites-enabled/dagd
+  - mysql -e 'create database dagd;'
+  - sudo /etc/init.d/apache2 restart
+script: ./tests/dagd_test_suite.php
