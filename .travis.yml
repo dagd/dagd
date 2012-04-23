@@ -8,7 +8,7 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install apache2 libapache2-mod-php5 php5-mysql curl php5-curl
   - sed 1,1d documentation/recommended_apache_setup.markdown | sudo tee /etc/apache2/sites-available/dagd
-  - sudo sed -i "s/DocumentRoot.*/DocumentRoot $(pwd | sed 's/\//\\\//g')/g" /etc/apache2/sites-available/dagd
+  - sudo sed -i "s/DocumentRoot.*/DocumentRoot $(pwd | sed 's/\//\\\//g')\/src\/webroot/g" /etc/apache2/sites-available/dagd
   - echo "127.0.0.1 dagd.local" | sudo tee --append /etc/hosts
   - sudo ln -s /etc/apache2/sites-available/dagd /etc/apache2/sites-enabled/dagd
   - mysql -e 'create database dagd;'
