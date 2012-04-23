@@ -14,6 +14,7 @@ before_install:
   - mysql -e 'create database dagd;'
   - sudo a2enmod rewrite
   - sudo a2enmod php5
-  - curl http://dagd.local/
   - sudo /etc/init.d/apache2 restart
+  - curl http://dagd.local/
+  - sudo tail /var/log/apache2/error.log
 script: ./tests/dagd_test_suite.php
