@@ -39,7 +39,7 @@ final class DaGdShortenController extends DaGdBaseClass {
 
   private function getLongURL($longurl) {
     $query = $this->db_connection->prepare(
-      'SELECT id,longurl FROM shorturls WHERE shorturl=?');
+      'SELECT id,longurl FROM shorturls WHERE shorturl=? AND enabled=1');
     $query->bind_param('s', $longurl);
     $query->execute();
     $query->bind_result($this->stored_url_id, $this->long_url);
