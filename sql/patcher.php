@@ -37,6 +37,10 @@ if (count($patches_to_apply)) {
           $result->free();
         }
       } while ($__db_handler->next_result());
+    } else {
+      echo 'ERROR: '.$__db_handler->error."\n";
+      echo "*** EXITING ***\n";
+      exit(1);
     }
   }
 } else {
