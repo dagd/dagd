@@ -1,10 +1,11 @@
 <?php
 
 $config_file = getenv('DaGdConfigFile');
-if (!$config_file) {
-  $config_file = 'config.php';
+
+if (!$config_file ||
+    !@include_once(dirname(dirname(__FILE__))).'/'.$config_file) {
+  throw new Exception("No configuration file could be loaded.");
 }
-require_once dirname(dirname(__FILE__)).'/'.$config_file;
 
 $display_errors = DaGdConfig::get('general.display_errors');
 if ($display_errors) {
