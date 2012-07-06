@@ -49,6 +49,18 @@ final class DaGdShortenController extends DaGdBaseClass {
     return;
   }
 
+  private function getNonCustomShortURL($longurl) {
+    $query = $this->db_connection->prepare(
+      'SELECT id,shorturl FROM shorturls WHERE longurl=? AND enabled=1 AND '.
+      'custom_shorturl=0 ORDER BY id DESC LIMIT 1');
+    $query->bind_param('s', $longurl);
+    $query->execute();
+    $query->bind_result($this->stored_url_id, $this->short_url);
+    $query->fetch();
+    $query->close();
+    return;
+  }
+
   private function logURLAccess() {
     $query = $this->db_connection->prepare(
       'INSERT INTO shorturl_access(shorturl_id, ip, useragent) VALUES(?,?,?)');
@@ -113,9 +125,12 @@ final class DaGdShortenController extends DaGdBaseClass {
         }
       }
     } else {
-      $this->short_url = randstr(rand(4, 5));
-      while (!$this->isFreeShortURL()) {
-        $this->short_url = randstr(4, 5);
+      $this->getNonCustomShortURL($this->long_url);
+      if (!$this->short_url) {
+        $this->short_url = randstr(rand(4, 5));
+        while (!$this->isFreeShortURL()) {
+          $this->short_url = randstr(4, 5);
+        }
       }
     }
 
