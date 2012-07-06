@@ -23,6 +23,7 @@ final class DaGdShortenController extends DaGdBaseClass {
   private $long_url;
   private $short_url;
   private $stored_url_id;
+  private $custom_url = false;
 
   private function isFreeShortURL() {
     $query = $this->db_connection->prepare(
@@ -79,13 +80,14 @@ final class DaGdShortenController extends DaGdBaseClass {
 
   private function store_shorturl() {
     $query = $this->db_connection->prepare(
-      'INSERT INTO shorturls(shorturl, longurl, owner_ip) '.
-      'VALUES(?, ?, ?);');
+      'INSERT INTO shorturls(shorturl, longurl, owner_ip, custom_shorturl) '.
+      'VALUES(?, ?, ?, ?);');
     $query->bind_param(
-      'sss',
+      'sssi',
       $this->short_url,
       $this->long_url,
-      $_SERVER['REMOTE_ADDR']);
+      $_SERVER['REMOTE_ADDR'],
+      $this->custom_url);
     
     if ($query->execute()) {
       return true;
@@ -98,6 +100,7 @@ final class DaGdShortenController extends DaGdBaseClass {
   
   private function set_shorturl_or_400() {
     if ($short_url = request_or_default('shorturl')) {
+      $this->custom_url = true;
       $valid_char_pattern = '@^[\d\w-_]+$@i';
       if (!preg_match($valid_char_pattern, $short_url)) {
         error400('Invalid short URL entered. Alphanumeric only, please.');
