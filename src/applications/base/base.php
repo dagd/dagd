@@ -98,11 +98,10 @@ abstract class DaGdBaseClass {
       $response = $this->renderCLI();
     } else {
       $response = $this->render();
-    }
-    
-    if ($this->escape) {
-      $response = htmlspecialchars($response);
-    }
+      if ($this->escape) {
+        $response = htmlspecialchars($response);
+      }
+    }    
 
     if (!is_text_useragent() && $this->wrap_pre) {
       $response = '<pre>'.$response.'</pre>';
