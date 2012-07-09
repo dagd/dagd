@@ -29,6 +29,16 @@ $routes += DaGdConfig::get('general.redirect_map');
 
 if (is_text_useragent()) {
   $routes += DaGdConfig::get('general.cli_routemap');
+} elseif(!isset($_REQUEST['nohtml'])) {
+  echo '<!doctype html>';
+  echo '<html><head>';
+  echo '<title>da.gd</title>';
+  echo '<style type="text/css">';
+  echo 'body { font-family: sans-serif; }';
+  echo '</style>';
+  echo '<meta name="description" content="Simple URL '.
+    'shortener and domain/network toolset." />';
+  echo'</head><body>';
 }
 $routes += DaGdConfig::get('general.routemap');
 
@@ -77,6 +87,10 @@ $instance = $instance->newInstance();
 $instance->setRouteMatches($route_matches);
 debug('Response from Controller', '');
 echo $instance->finalize();
+
+if (!is_text_useragent() && !isset($_REQUEST['nohtml'])) {
+  echo '</body></html>';
+}
 
 if (!isset($_REQUEST['strip'])) {
   echo "\n";
