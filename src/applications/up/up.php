@@ -6,7 +6,7 @@ final class DaGdIsItUpController extends DaGdBaseClass {
     'examples' => array(
       array(
         'arguments' => array('google.com'),
-        'summary' => null),
+        'summary' => 'Get the HTTP response code for the given site'),
     ));
 
   public function render() {
