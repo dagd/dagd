@@ -197,11 +197,10 @@ final class DaGdShortenController extends DaGdBaseClass {
       // Not a text useragent because we didn't return above.
       // Bring in the form. // TODO: html in strings = bad.
       $content = '***da.gd***
-<form method="POST" action="/">
+<form method="POST" action="">
 Long URL: <input type="text" name="url" id="url" size="35" /><br />
 Optional custom suffix (truncated at 10 chars): <input type="text" name="shorturl" size="20" /><br />
 <input type="submit" value="Shorten URL" /><br />
-</form>
 [help](/help) | [open source](http://github.com/codeblock/dagd)';
       $markup = new DaGdMarkup($content);
       $markup = $markup->render();
