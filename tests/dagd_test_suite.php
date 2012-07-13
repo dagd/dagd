@@ -73,7 +73,7 @@ function test_regex($test_path, $pattern) {
   return test($match, 'must match pattern: '.$pattern);
 }
 
-function fail($text, $exit = true) {
+function fail($text, $exit = false) {
   echo chr(27)."[1;31m".'*** '.$text.' ***'.chr(27)."[0m"."\n";
   if ($exit) {
     echo "Exiting with status code '1' - to bypass a git pre-commit hook,\n";
@@ -145,12 +145,21 @@ test_regex('/headers/', '@Host: @');
 test_regex('/headers/google.com', '@Server: gws@');
 test_regex('/headers/http://google.com/', '@Server: gws@');
 
+
+/*********** /up/xxxxxxx ***********/
+
 test_regex('/up/google.com', '@^200$@');
 test_regex('/up/https://encrypted.google.com', '@^200$@');
+
 
 /*********** /et/xxxxxxx ***********/
 test_response_code('/et/75009720', 302);
 
+
+/*********** /host/xxxxxxx ***********/
+test_regex('/host/google.com', '@2607:f8b0@');
+test_regex('/host/facebook.com', '@69.171@');
+test_regex('/host/facebook.com', '@face:b00c@');
 
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";

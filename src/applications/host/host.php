@@ -10,7 +10,17 @@ final class DaGdHostController extends DaGdBaseClass {
     ));
   
   public function render() {
-    $ips = gethostbynamel($this->route_matches[1]);
+    $records = dns_get_record($this->route_matches[1], DNS_A + DNS_AAAA);
+    $ips = array();
+
+    foreach ($records as $record) {
+      if (array_key_exists('ip', $record)) {
+        $ips[] = $record['ip'];
+      } elseif (array_key_exists('ipv6', $record)) {
+        $ips[] = $record['ipv6'];
+      }
+    }
+
     if (!empty($ips)) {
       echo implode(', ', $ips);
     } else {
