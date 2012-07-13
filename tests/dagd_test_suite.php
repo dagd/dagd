@@ -67,10 +67,15 @@ function test_content_type($test_path, $expected_mimetype, $useragent) {
   return test($correctness, 'return correct mimetype ('.$expected_mimetype.')');
 }
 
-function test_regex($test_path, $pattern) {
+function test_regex($test_path, $pattern, $not_include = false) {
   $content = retrieve($test_path);
-  $match = preg_match($pattern, $content);
-  return test($match, 'must match pattern: '.$pattern);
+  if ($not_include) {
+    $match = !preg_match($pattern, $content);
+    return test($match, 'must NOT match pattern: '.$pattern);
+  } else {
+    $match = preg_match($pattern, $content);
+    return test($match, 'must match pattern: '.$pattern);
+  }
 }
 
 function fail($text, $exit = false) {
@@ -160,6 +165,7 @@ test_response_code('/et/75009720', 302);
 test_regex('/host/google.com', '@2607:f8b0@');
 test_regex('/host/facebook.com', '@69.171@');
 test_regex('/host/facebook.com', '@face:b00c@');
+test_regex('/host/facebook.com?noipv6', '@face:b00c@', true);
 
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";
