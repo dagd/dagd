@@ -101,7 +101,41 @@ abstract class DaGdBaseClass {
       if ($this->escape) {
         $response = htmlspecialchars($response);
       }
-    }    
+    }
+
+    if ($save_response = request_or_default('save')) {
+      $save_response = substr($save_response, 0, 10);
+      // Save the response to recall it later.
+      // See if the access string is taken or not.
+      $query = $this->db_connection->prepare(
+        'SELECT COUNT(*) FROM dagd.saved_responses WHERE access=?');
+      $query->bind_param('s', $save_response);
+      $query->execute();
+      $query->bind_result($count);
+      $query->fetch();
+      $query->close();
+      $taken = (bool)$count;
+
+      if (!$taken) {
+        $query = $this->db_connection->prepare(
+          'INSERT INTO dagd.saved_responses(access, ip, response) '.
+          'VALUES(?,?,?)');
+        $query->bind_param(
+          'sss',
+          $save_response,
+          $_SERVER['REMOTE_ADDR'],
+          $response);
+        if ($query->execute()) {
+          $link = DaGdConfig::get('general.baseurl').'/recall/'.$save_response;
+          $response = '<a href="'.$link.'">'.$link.'</a>';
+        } else {
+          return error400('An error occurred saving the output data.');
+        }
+      } else {
+        return error400('That unique identifier (save=) has already been '.
+                        'used.');
+      }
+    }
 
     if (!is_text_useragent() && $this->wrap_pre) {
       $response = '<pre>'.$response.'</pre>';
