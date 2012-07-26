@@ -29,7 +29,7 @@ final class DaGdPastebinController extends DaGdBaseClass {
     $query->bind_param(
       'iss',
       $this->paste_id,
-      $_SERVER['REMOTE_ADDR'],
+      client_ip(),
       $_SERVER['HTTP_USER_AGENT']);
     if ($query->execute()) {
       return true;
@@ -43,7 +43,7 @@ final class DaGdPastebinController extends DaGdBaseClass {
       'INSERT INTO pastebin_pastes(ip, text) VALUES(?, ?)');
     $query->bind_param(
       'ss',
-      $_SERVER['REMOTE_ADDR'],
+      client_ip(),
       $this->paste_text);
     if ($query->execute()) {
       $this->paste_id = $query->insert_id;

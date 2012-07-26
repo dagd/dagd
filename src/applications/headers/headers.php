@@ -36,6 +36,11 @@ final class DaGdHeadersController extends DaGdBaseClass {
     } else {
       $headers = getallheaders();
       foreach ($headers as $key => $value) {
+        if (strpos($key, 'X-Forwarded-') === 0 ||
+            $key == 'X-DaGd-Proxy') {
+          continue;
+        }
+        
         $response .= htmlspecialchars($key.': '.$value."\n");
       }
     }

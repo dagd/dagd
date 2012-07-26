@@ -147,6 +147,8 @@ test_regex('/w/google.com', '@Mountain View@');
 
 // Ensure that headers are seen.
 test_regex('/headers/', '@Host: @');
+test_regex('/headers/', '@X-Forwarded-@', true);
+test_regex('/headers/', '@X-DaGd-Proxy:@', true);
 test_regex('/headers/google.com', '@Server: gws@');
 test_regex('/headers/http://google.com/', '@Server: gws@');
 

@@ -67,7 +67,7 @@ final class DaGdShortenController extends DaGdBaseClass {
     $query->bind_param(
       'iss',
       $this->stored_url_id,
-      $_SERVER['REMOTE_ADDR'],
+      client_ip(),
       $_SERVER['HTTP_USER_AGENT']);
     if ($query->execute()) {
       return true;
@@ -98,7 +98,7 @@ final class DaGdShortenController extends DaGdBaseClass {
       'sssi',
       $this->short_url,
       $this->long_url,
-      $_SERVER['REMOTE_ADDR'],
+      client_ip(),
       $this->custom_url);
     
     if ($query->execute()) {

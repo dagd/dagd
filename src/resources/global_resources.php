@@ -80,6 +80,14 @@ function request_or_default($key, $default = null) {
   }
 }
 
+function server_or_default($key, $default = null) {
+  if (array_key_exists($key, $_SERVER) && strlen($_SERVER[$key])) {
+    return $_SERVER[$key];
+  } else {
+    return $default;
+  }
+}
+
 /*
  * Takes the given query string, minus __path__ used internally,
  * and makes one that we can use for various things like redirecting.
@@ -108,4 +116,16 @@ function build_given_querystring() {
   }
 
   return rtrim($querystring, '&');
+}
+
+/** Get the IP for a client.
+ *  Use the header X-Forwarded-For if it exists.
+ */
+function client_ip() {
+  if (server_or_default('HTTP_DAGD_PROXY') == "1" &&
+      $ip = server_or_default('HTTP_X_FORWARDED_FOR')) {
+    return $ip;
+  } else {
+    return $_SERVER['REMOTE_ADDR'];
+  }
 }
