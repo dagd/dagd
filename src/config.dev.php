@@ -31,7 +31,6 @@ class DaGdConfig {
       'headers',
       'up',
       'host',
-      'recall',
     ),
     'general.routemap' => array(
       '/help/?$' => 'DaGdHelpController',
@@ -41,7 +40,6 @@ class DaGdConfig {
       '/ec/(.+)/?$' => 'DaGdEditCountController',
       '/up/(.+)/?$' => 'DaGdIsItUpController',
       '/host/(.+)/?$' => 'DaGdHostController',
-      '/recall/(.+)/?$' => 'DaGdRecallController',
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),

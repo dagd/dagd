@@ -1,6 +1,0 @@
-CREATE TABLE dagd.saved_responses (
-  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  access VARBINARY(10) NOT NULL,
-  ip VARCHAR(45) NOT NULL,
-  response TEXT NOT NULL
-) ENGINE=InnoDB;
