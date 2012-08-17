@@ -62,7 +62,13 @@ class DaGdConfig {
     // A hardcoded map of whois servers to use for certain domains.
     'whois.hardcode_map' => array(
       // tld (WITHOUT '.') => server
-      'ly' => 'whois.nic.ly',
+      'ly' => array(
+        'server' => 'whois.nic.ly',
+      ),
+      'de' => array(
+        'server' => 'whois.denic.de',
+        'query' => '-T dn,ace',
+      ),
     ),
 
     // MySQL settings

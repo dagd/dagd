@@ -3,12 +3,14 @@
 require_once dirname(__FILE__).'/../../../resources/global_resources.php';
 
 class DaGdWhois {
+  private $domain;
   private $query;
   private $whois_server;
   private $skip_detail = false;
   
-  public function __construct($query) {
-    $this->query = $query;
+  public function __construct($domain) {
+    $this->domain = $domain;
+    $this->query = '';
   }
 
   /*
@@ -20,7 +22,7 @@ class DaGdWhois {
    * @returns <string> the tld of the domain passed to the constructor.
    */
   private function tld() {
-    $tld = explode('.', $this->query);
+    $tld = explode('.', $this->domain);
     $tld = end($tld);
     return $tld;
   }
@@ -35,7 +37,11 @@ class DaGdWhois {
   public function fetchWhoisServer() {
     $hardcoded_tld_map = DaGdConfig::get('whois.hardcode_map');
     if (array_key_exists($this->tld(), $hardcoded_tld_map)) {
-      $this->whois_server = $hardcoded_tld_map[$this->tld()];
+      $custom_tld = $hardcoded_tld_map[$this->tld()];
+      $this->whois_server = $custom_tld['server'];
+      if (array_key_exists('query', $custom_tld)) {
+        $this->query = $custom_tld['query'].' ';
+      }
       return true;
     }
     if (is_numeric($this->tld())) {
@@ -46,7 +52,7 @@ class DaGdWhois {
     if (!$sock) {
       return false;
     }
-    fwrite($sock, 'domain '.$this->query."\r\n");
+    fwrite($sock, 'domain '.$this->domain."\r\n");
     $whois_server = null;
     $whois_info = '';
     while (!feof($sock)) {
@@ -78,7 +84,7 @@ class DaGdWhois {
     if (!$sock) {
       return false;
     }
-    fwrite($sock, $this->query."\r\n");
+    fwrite($sock, $this->query.$this->domain."\r\n");
     $response = '';
     while (!feof($sock)) {
       $response .= fgets($sock);
