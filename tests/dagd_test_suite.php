@@ -24,11 +24,18 @@ $tests_completed = array(
   'successful' => 0,
   'failed' => 0);
 
-function retrieve($test_path = '/') {
+function retrieve($test_path = '/', $ignore_errors = false) {
   global $TEST_URL, $path, $rx_headers;
   $rx_headers = null;
   $path = $test_path;
-  $obtain = @file_get_contents($TEST_URL.$path);
+  $context = stream_context_create(
+    array(
+      'http' => array(
+        'ignore_errors' => $ignore_errors,
+      ),
+    )
+  );
+  $obtain = @file_get_contents($TEST_URL.$path, false, $context);
   $rx_headers = $http_response_header;
   return strip_tags($obtain);
 }
@@ -68,7 +75,7 @@ function test_content_type($test_path, $expected_mimetype, $useragent) {
 }
 
 function test_regex($test_path, $pattern, $not_include = false) {
-  $content = retrieve($test_path);
+  $content = retrieve($test_path, true);
   if ($not_include) {
     $match = !preg_match($pattern, $content);
     return test($match, 'must NOT match pattern: '.$pattern);
@@ -169,6 +176,10 @@ test_regex('/host/google.com', '@2607:f8b0@');
 test_regex('/host/facebook.com', '@69.171@');
 test_regex('/host/facebook.com', '@face:b00c@');
 test_regex('/host/facebook.com?noipv6', '@face:b00c@', true);
+
+/*********** /break/ ***********/
+test_response_code('/break', 500);
+test_regex('/break', '@An error has occurred@');
 
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";

@@ -2,6 +2,7 @@
 // This is the general config file for DaGd stuff.
 class DaGdConfig {
   public static $config = array(
+    'general.environment' => 'development',
     'general.debug' => false,
     'general.display_errors' => false,
     'general.baseurl' => 'http://dagd.local', // DO *NOT* include trailing '/'.
@@ -31,6 +32,7 @@ class DaGdConfig {
       'headers',
       'up',
       'host',
+      'break',
     ),
     'general.routemap' => array(
       '/help/?$' => 'DaGdHelpController',
@@ -41,6 +43,7 @@ class DaGdConfig {
       '/up/(.+)/?$' => 'DaGdIsItUpController',
       '/host/(.+)/?$' => 'DaGdHostController',
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
+      '/break/?$' => 'DaGdBreakController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
 

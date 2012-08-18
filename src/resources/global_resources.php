@@ -41,17 +41,20 @@ function handle_exception(Exception $e) {
   if ($really_send_email) {
     mail(
       implode(',', $mail_to),
-      '[DAGD Exception] '.$e->message,
+      '[DAGD Exception] '.$e->getMessage(),
       'Greetings,
 You are receiving this email because da.gd has had an exception, which caused
 us to render a 500 error.
 
 The following exception was raised and uncaught:
-'.$e->message.'
+'.$e->getMessage().'
 
-It happened in file: '.$e->file.'
-on line: '.$e->line.'
-around the following code: '.$e->code.'
+It happened in file: '.$e->getFile().'
+on line: '.$e->getLine().'
+around the following code: '.$e->getCode().'
+
+Trace:
+'.$e->getTraceAsString().'
 
 Please commit a fix for this as soon as possible.
 Thanks,
