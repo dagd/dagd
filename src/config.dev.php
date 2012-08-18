@@ -76,6 +76,17 @@ class DaGdConfig {
       ),
     ),
 
+    // Should error emails get sent out?
+    'exceptions.email' => true,
+    
+    // Only send emails in non-debug mode. 'exceptions.email' must be true.
+    'exceptions.email_in_debug' => false,
+
+    // The list of people to email on exceptions.
+    'exceptions.mail_to' => array(
+      'ricky@elrod.me',
+    ),
+
     // MySQL settings
     'mysql.host' => 'localhost',
     'mysql.user' => 'root',

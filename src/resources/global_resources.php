@@ -19,11 +19,45 @@ require_once dirname(__FILE__).'/sql.php';
 
 function handle_exception(Exception $e) {
   $debug = DaGdConfig::get('general.debug');
+  $email = DaGdConfig::get('exceptions.email');
+  $email_in_debug = DaGdConfig::get('exceptions.email_in_debug');
+  $mail_to = DaGdConfig::get('exceptions.mail_to');
+  $really_send_email = false;
+
   if ($debug) {
+    if ($email && $email_in_debug) {
+      $really_send_email = true;
+    }      
     echo $e."<br />\n";
+  } else {
+    if ($email) {
+      $really_send_email = true;
+    }
   }
+
   echo 'An error has occurred within dagd! Sorry about that!';
   header('HTTP/1.0 500 Internal Server Error (Exception)');
+
+  if ($really_send_email) {
+    mail(
+      implode(',', $mail_to),
+      '[DAGD Exception] '.$e->message,
+      'Greetings,
+You are receiving this email because da.gd has had an exception, which caused
+us to render a 500 error.
+
+The following exception was raised and uncaught:
+'.$e->message.'
+
+It happened in file: '.$e->file.'
+on line: '.$e->line.'
+around the following code: '.$e->code.'
+
+Please commit a fix for this as soon as possible.
+Thanks,
+Your friendly da.gd server',
+      'From: php@da.gd');
+  }
   die();
 }
 set_exception_handler('handle_exception');
