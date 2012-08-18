@@ -38,11 +38,18 @@ class DaGdWhois {
     $hardcoded_tld_map = DaGdConfig::get('whois.hardcode_map');
     if (array_key_exists($this->tld(), $hardcoded_tld_map)) {
       $custom_tld = $hardcoded_tld_map[$this->tld()];
-      $this->whois_server = $custom_tld['server'];
+
+      // We can have a custom query without having a custom server...
       if (array_key_exists('query', $custom_tld)) {
         $this->query = $custom_tld['query'].' ';
       }
-      return true;
+
+      // But if we specify our own server, there's no point in looking for
+      // a different one.
+      if (array_key_exists('server', $custom_tld)) {
+        $this->whois_server = $custom_tld['server'];
+        return true;
+      }
     }
     if (is_numeric($this->tld())) {
       $this->whois_server = 'whois.arin.net';

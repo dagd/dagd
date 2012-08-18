@@ -142,6 +142,7 @@ test_response_code('/ec/Phuzion?lang=asd123dsa', 400);
 // Ensure that whois is functioning.
 test_regex('/w/google.com', '@Mountain View@');
 test_regex('/w/fbco.de', '@Menlo Park@');
+test_regex('/w/da.gd', '@Ricky@');
 
 
 /*********** /headers/xxxxxxx ***********/

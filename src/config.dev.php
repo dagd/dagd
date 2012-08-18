@@ -62,6 +62,11 @@ class DaGdConfig {
     // A hardcoded map of whois servers to use for certain domains.
     'whois.hardcode_map' => array(
       // tld (WITHOUT '.') => server
+      'gd' => array(
+        // Bit of a hack, the whois-servers.net answers .gd directly for
+        // some reason, so we trick fetchWhoisServer().
+        'server' => 'gd.whois-servers.net',
+      ),
       'ly' => array(
         'server' => 'whois.nic.ly',
       ),
