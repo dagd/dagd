@@ -15,11 +15,16 @@ final class DaGdHelpController extends DaGdBaseClass {
   public function render() {
     $routes = DaGdConfig::get('general.routemap');
     $return = '';
+    $controllers_visited = array();
     
     foreach ($routes as $path => $controller) {
+      if (in_array($controller, $controllers_visited)) {
+        continue;
+      }
       $instance = new ReflectionClass($controller);
       $instance = $instance->newInstance();
       $return .= $instance->help();
+      $controllers_visited[] = $controller;
     }
     return $return;
   }
