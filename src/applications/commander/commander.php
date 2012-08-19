@@ -52,6 +52,11 @@ final class DaGdCommanderController extends DaGdBaseClass {
   public function render() {
     if ($this->route_matches[1] == 'store') {
       // We are storing a command. Do some sanity checks.
+      $valid_char_pattern = '@^[\d\w-_]+$@i';
+      if (!preg_match($valid_char_pattern, $this->route_matches[2])) {
+        error400('Invalid command. Alphanumeric only, please.');
+        return false;
+      }
       if (strstr($this->route_matches[3], '$PARAMETERS') === false) {
         error400(
           'You must include a place for parameters to go, in the new URL. '.
