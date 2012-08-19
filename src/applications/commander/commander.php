@@ -1,0 +1,94 @@
+<?php
+
+final class DaGdCommanderController extends DaGdBaseClass {
+  public static $__help__ = array(
+    'summary' => 'A very simple yubnub replacement.',
+    'path' => 'c',
+    'examples' => array(
+      array(
+        'summary' => 'Add a command to the database',
+        'arguments' => array(
+          'store',
+          'g',
+          'https://www.google.com/search?q=$PARAMETERS',
+        ),
+      ),
+      array(
+        'arguments' => array(
+          'g',
+          'foobar',
+        ),
+        'summary' => 'Redirect to https://www.google.com/search?q=foobar'),
+    ));
+
+  private $command;
+  private $url;
+
+  private function addCommand() {
+    $query = $this->db_connection->prepare(
+      'INSERT INTO command_redirects(author_ip, command, url) VALUES(?, ?, ?)');
+    $query->bind_param(
+      'sss',
+      client_ip(),
+      $this->route_matches[2],
+      $this->route_matches[3]);
+    if ($query->execute()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private function getURL($command) {
+    $query = $this->db_connection->prepare(
+      'SELECT url FROM command_redirects WHERE command=? AND enabled=1');
+    $query->bind_param('s', $command);
+    $query->execute();
+    $query->bind_result($this->url);
+    $query->fetch();
+    $query->close();
+  }
+
+  public function render() {
+    if ($this->route_matches[1] == 'store') {
+      // We are storing a command. Do some sanity checks.
+      if (strstr($this->route_matches[3], '$PARAMETERS') === false) {
+        error400(
+          'You must include a place for parameters to go, in the new URL. '.
+          'that is, you must include the string "$PARAMETERS" in the new '.
+          'URL.');
+        return false;
+      } else {
+        // TODO: might be better to use a unique constraint here, and not check
+        // ourselves. That way we only make one query and just report the error
+        // back.
+        $this->getURL($this->route_matches[2]);
+        if ($this->url !== null) {
+          error400(
+            'That command has already been defined. Try using a new name.');
+          return false;
+        }
+        if ($this->addCommand()) {
+          return 'Success.';
+        } else {
+          error400('Something failed :( ... Try again later.');
+          return false;
+        }
+      }
+    } else {
+      // Accessing a command?
+      $this->getURL($this->route_matches[1]);
+      if ($this->url === null) {
+        error400('That command was not found.');
+        return false;
+      } else {
+        $url = str_replace(
+          '$PARAMETERS',
+          $this->route_matches[2],
+          $this->url);
+        header('Location: '.$url);
+        return true;
+      }
+    }
+  }
+}

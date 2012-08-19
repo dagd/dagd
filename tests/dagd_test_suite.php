@@ -2,6 +2,8 @@
 <?php
 // Sorry, this probably isn't as neat as you expected. But this is our test suite. :P
 
+echo "*** NOTE: This test suite expects to be run on a clean database. ***\n";
+
 define(
   'TEXT_UA',
   'curl/7.19.7 (x86_64-redhat-linux-gnu) libcurl/7.19.7 '.
@@ -44,7 +46,10 @@ function test_response_code($test_path, $expected_code) {
   global $rx_headers;
   retrieve($test_path);
   $match = preg_match('@'.$expected_code.'@', $rx_headers[0]);
-  return test($match, 'give correct HTTP Response code ('.$expected_code.')');
+  return test(
+    $match,
+    'give correct HTTP Response code ('.$expected_code.' ?= '.
+    $rx_headers[0].')');
 }
 
 function test_content_type($test_path, $expected_mimetype, $useragent) {
@@ -180,6 +185,31 @@ test_regex('/host/facebook.com?noipv6', '@face:b00c@', true);
 /*********** /break/ ***********/
 test_response_code('/break', 500);
 test_regex('/break', '@An error has occurred@');
+
+/*********** /c/store/xxxxxxx/xxxxxxx ***********/
+test_response_code(
+  '/c/store/g/https://www.google.com/search%3Fq%3D$PARAMETERS',
+  200);
+test_response_code(
+  '/c/store/g/https://www.google.com/search%3Fq%3D$PARAMETERS',
+  400);
+test_regex(
+  '/c/store/g1/https://www.google.com/search%3Fq%3D$PARAMETERS',
+  '@Success@');
+test_regex(
+  '/c/store/g1/https://www.google.com/search%3Fq%3D$PARAMETERS',
+  '@already been defined@');
+test_regex(
+  '/c/store/g2/https://www.google.com/search%3Fq%3Dfoobar',
+  '@must include the string@');
+test_response_code(
+  '/c/store/g2/https://www.google.com/search%3Fq%3Dfoobar',
+  400);
+
+/*********** /c/xxxxxxx/xxxxxxx ***********/
+test_response_code('/c/g/foobar', 302);
+test_response_code('/c/nonexistent/foobar', 400);
+test_regex('/c/nonexistent/foobar', '@was not found@');
 
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";

@@ -9,7 +9,6 @@ class DaGdConfig {
 
     // This array is imploded by | into a regex. Escape any | or # used in it.
     // I am not including ELinks here, because it can support linking
-    'general.text_useragent_search' => 'Wget|curl|libcurl|Supybot',
     'general.text_useragent_search' => array(
       'Wget',
       'curl',
@@ -33,6 +32,7 @@ class DaGdConfig {
       'up',
       'host',
       'break',
+      'commander',
     ),
     'general.routemap' => array(
       '/help/?$' => 'DaGdHelpController',
@@ -44,6 +44,8 @@ class DaGdConfig {
       '/host/(.+)/?$' => 'DaGdHostController',
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
       '/break/?$' => 'DaGdBreakController',
+      '/c/(store)/(.+?)/(.+?)/?$' => 'DaGdCommanderController',
+      '/c/(.+?)/(.+?)/?$' => 'DaGdCommanderController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
 
