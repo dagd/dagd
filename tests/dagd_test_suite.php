@@ -212,6 +212,9 @@ test_response_code('/c/g%20foobar', 302);
 test_response_code('/c/nonexistent/foobar', 400);
 test_regex('/c/nonexistent/foobar', '@was not found@');
 
+/*********** /c/ ***********/
+test_regex('/c/', '@Redirect@');
+
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";
 echo "Report: {$tests_completed['failed']} failed.\n";

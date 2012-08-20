@@ -95,27 +95,17 @@ final class DaGdCommanderController extends DaGdBaseClass {
     } else {
       if (count($this->route_matches) == 1) {
         $results = $this->getAllCommands();
-        $return = '***Enabled Commands***
-<table>
-<tr>
-<th align="left" style="padding: 10px;">Command</th>
-<th align="left" style="padding: 10px;">Redirects to</th>
-<th align="left" style="padding: 10px;">Added At</th>
-</tr>';
+        $return = "***Enabled Commands***<dl>\n";
         foreach ($results as $result) {
-          $return .= '<tr>';
-          $return .= '<td style="padding: 10px;">'.
-            htmlspecialchars($result[0]).'</td>';
-          $return .= '<td style="padding: 10px;">'.
-            htmlspecialchars($result[1]).'</td>';
-          $return .= '<td style="padding: 10px;">'.
-            htmlspecialchars($result[2]).'</td>';
-          $return .= '</tr>';
+          $return .= '<dt>'.htmlspecialchars($result[0])."</dt>\n";
+          $return .= '<dd>   Redirect: '.htmlspecialchars($result[1])."</dd>\n";
+          $return .= '<dd>   Added: '.htmlspecialchars($result[2])."</dd>\n";
         }
-        $return .= '</table>';
+        $return .= '</dl>';
         $markup = new DaGdMarkup($return);
         $markup->nl2br = false;
         $this->escape = false;
+        $this->wrap_pre = false;
         return $markup->render();
       } else {
         // Accessing a command?

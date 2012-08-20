@@ -83,7 +83,7 @@ class DaGdConfig {
     ),
 
     // Should error emails get sent out?
-    'exceptions.email' => true,
+    'exceptions.email' => false,
     
     // Only send emails in non-debug mode. 'exceptions.email' must be true.
     'exceptions.email_in_debug' => false,
