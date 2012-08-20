@@ -5,6 +5,8 @@ This is what my development sandbox's /etc/httpd/conf.d/dagd.local.conf looks li
       ServerName dagd.local
     
       DocumentRoot /home/ricky/devel/da.gd/src/webroot/
+
+      AllowEncodedSlashes On
     
       RewriteEngine on
       RewriteRule ^(.*)$          /index.php?__path__=$1  [L,QSA]
