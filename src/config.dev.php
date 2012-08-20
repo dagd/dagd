@@ -45,7 +45,7 @@ class DaGdConfig {
       '/headers/?(.+)?/?$' => 'DaGdHeadersController',
       '/break/?$' => 'DaGdBreakController',
       '/c/(store)/(.+?)/(.+?)/?$' => 'DaGdCommanderController',
-      '/c/(.+?)/(.+?)/?$' => 'DaGdCommanderController',
+      '/c/(.+?)(?:/| )(.+?)/?$' => 'DaGdCommanderController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
 

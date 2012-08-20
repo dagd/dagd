@@ -208,6 +208,7 @@ test_response_code(
 
 /*********** /c/xxxxxxx/xxxxxxx ***********/
 test_response_code('/c/g/foobar', 302);
+test_response_code('/c/g%20foobar', 302);
 test_response_code('/c/nonexistent/foobar', 400);
 test_regex('/c/nonexistent/foobar', '@was not found@');
 
