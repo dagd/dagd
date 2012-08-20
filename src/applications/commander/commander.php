@@ -49,6 +49,18 @@ final class DaGdCommanderController extends DaGdBaseClass {
     $query->close();
   }
 
+  private function getAllCommands() {
+    $rows = array();
+    $result = $this->db_connection->query(
+      'SELECT command, url, creation_dt FROM command_redirects WHERE '.
+      'enabled=1');
+    while ($row = $result->fetch_row()) {
+      $rows[] = $row;
+    }
+    $result->close();
+    return $rows;
+  }
+
   public function render() {
     if ($this->route_matches[1] == 'store') {
       // We are storing a command. Do some sanity checks.
@@ -81,18 +93,44 @@ final class DaGdCommanderController extends DaGdBaseClass {
         }
       }
     } else {
-      // Accessing a command?
-      $this->getURL($this->route_matches[1]);
-      if ($this->url === null) {
-        error400('That command was not found.');
-        return false;
+      if (count($this->route_matches) == 1) {
+        $results = $this->getAllCommands();
+        $return = '***Enabled Commands***
+<table>
+<tr>
+<th align="left" style="padding: 10px;">Command</th>
+<th align="left" style="padding: 10px;">Redirects to</th>
+<th align="left" style="padding: 10px;">Added At</th>
+</tr>';
+        foreach ($results as $result) {
+          $return .= '<tr>';
+          $return .= '<td style="padding: 10px;">'.
+            htmlspecialchars($result[0]).'</td>';
+          $return .= '<td style="padding: 10px;">'.
+            htmlspecialchars($result[1]).'</td>';
+          $return .= '<td style="padding: 10px;">'.
+            htmlspecialchars($result[2]).'</td>';
+          $return .= '</tr>';
+        }
+        $return .= '</table>';
+        $markup = new DaGdMarkup($return);
+        $markup->nl2br = false;
+        $this->escape = false;
+        return $markup->render();
       } else {
-        $url = str_replace(
-          '$PARAMETERS',
-          $this->route_matches[2],
-          $this->url);
-        header('Location: '.$url);
-        return true;
+        // Accessing a command?
+        $this->getURL($this->route_matches[1]);
+        if ($this->url === null) {
+          error400('That command was not found.');
+          return false;
+        } else {
+          $url = str_replace(
+            '$PARAMETERS',
+            $this->route_matches[2],
+            $this->url);
+          header('Location: '.$url);
+          return true;
+        }
       }
     }
   }
