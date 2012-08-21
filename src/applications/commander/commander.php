@@ -54,10 +54,10 @@ final class DaGdCommanderController extends DaGdBaseClass {
     $result = $this->db_connection->query(
       'SELECT command, url, creation_dt FROM command_redirects WHERE '.
       'enabled=1');
-    while ($row = $result->fetch_row()) {
+    while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
       $rows[] = $row;
     }
-    $result->close();
+    $result->free();
     return $rows;
   }
 
@@ -94,12 +94,15 @@ final class DaGdCommanderController extends DaGdBaseClass {
       }
     } else {
       if (count($this->route_matches) == 1) {
-        $results = $this->getAllCommands();
+        $rows = $this->getAllCommands();
         $return = "***Enabled Commands***<dl>\n";
-        foreach ($results as $result) {
-          $return .= '<dt>'.htmlspecialchars($result[0])."</dt>\n";
-          $return .= '<dd>   Redirect: '.htmlspecialchars($result[1])."</dd>\n";
-          $return .= '<dd>   Added: '.htmlspecialchars($result[2])."</dd>\n";
+
+        foreach ($rows as $row) {
+          $return .= '<dt>'.htmlspecialchars($row['command'])."</dt>\n";
+          $return .= '<dd>   Redirect: '.htmlspecialchars($row['url']).
+            "</dd>\n";
+          $return .= '<dd>   Added: '.htmlspecialchars($row['creation_dt']).
+            "</dd>\n";
         }
         $return .= '</dl>';
         $markup = new DaGdMarkup($return);
