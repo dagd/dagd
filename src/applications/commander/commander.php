@@ -69,29 +69,23 @@ final class DaGdCommanderController extends DaGdBaseClass {
         error400('Invalid command. Alphanumeric only, please.');
         return false;
       }
-      if (strstr($this->route_matches[3], '$PARAMETERS') === false) {
+
+      // TODO: might be better to use a unique constraint here, and not check
+      // ourselves. That way we only make one query and just report the error
+      // back.
+      $this->getURL($this->route_matches[2]);
+      if ($this->url !== null) {
         error400(
-          'You must include a place for parameters to go, in the new URL. '.
-          'that is, you must include the string "$PARAMETERS" in the new '.
-          'URL.');
+          'That command has already been defined. Try using a new name.');
         return false;
-      } else {
-        // TODO: might be better to use a unique constraint here, and not check
-        // ourselves. That way we only make one query and just report the error
-        // back.
-        $this->getURL($this->route_matches[2]);
-        if ($this->url !== null) {
-          error400(
-            'That command has already been defined. Try using a new name.');
-          return false;
-        }
-        if ($this->addCommand()) {
-          return 'Success.';
-        } else {
-          error400('Something failed :( ... Try again later.');
-          return false;
-        }
       }
+      if ($this->addCommand()) {
+        return 'Success.';
+      } else {
+        error400('Something failed :( ... Try again later.');
+        return false;
+      }
+
     } elseif (count($this->route_matches) <= 2) {
       $rows = $this->getAllCommands();
       if (end($this->route_matches) == 'json') {

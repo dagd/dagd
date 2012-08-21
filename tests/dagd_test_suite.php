@@ -199,12 +199,6 @@ test_regex(
 test_regex(
   '/c/store/g1/https://www.google.com/search%3Fq%3D$PARAMETERS',
   '@already been defined@');
-test_regex(
-  '/c/store/g2/https://www.google.com/search%3Fq%3Dfoobar',
-  '@must include the string@');
-test_response_code(
-  '/c/store/g2/https://www.google.com/search%3Fq%3Dfoobar',
-  400);
 
 /*********** /c/xxxxxxx/xxxxxxx ***********/
 test_response_code('/c/g/foobar', 302);
@@ -214,8 +208,8 @@ test_regex('/c/nonexistent/foobar', '@was not found@');
 
 /*********** /c/[xxxxxxx] ***********/
 test_regex('/c/', '@Redirect@');
-test_regex('/c/json', '@{"command":@');
-test_regex('/c/json/', '@{"command":@');
+test_regex('/c/json', '@{"g":@');
+test_regex('/c/json/', '@"g1":@');
 test_content_type('/c/json/', 'application/json', TEXT_UA);
 test_content_type('/c/json/', 'application/json', FIREFOX_UA);
 test_content_type('/c/json', 'application/json', TEXT_UA);
