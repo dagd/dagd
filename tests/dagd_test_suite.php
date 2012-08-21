@@ -212,8 +212,18 @@ test_response_code('/c/g%20foobar', 302);
 test_response_code('/c/nonexistent/foobar', 400);
 test_regex('/c/nonexistent/foobar', '@was not found@');
 
-/*********** /c/ ***********/
+/*********** /c/[xxxxxxx] ***********/
 test_regex('/c/', '@Redirect@');
+test_regex('/c/json', '@{"command":@');
+test_regex('/c/json/', '@{"command":@');
+test_content_type('/c/json/', 'application/json', TEXT_UA);
+test_content_type('/c/json/', 'application/json', FIREFOX_UA);
+test_content_type('/c/json', 'application/json', TEXT_UA);
+test_content_type('/c/json', 'application/json', FIREFOX_UA);
+test_content_type('/c', 'text/html', FIREFOX_UA);
+test_content_type('/c/', 'text/html', FIREFOX_UA);
+test_content_type('/c', 'text/plain', TEXT_UA);
+test_content_type('/c/', 'text/plain', TEXT_UA);
 
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";

@@ -46,7 +46,7 @@ class DaGdConfig {
       '/break/?$' => 'DaGdBreakController',
       '/c/(store)/(.+?)/(.+?)/?$' => 'DaGdCommanderController',
       '/c/(.+?)(?:/| )(.+?)/?$' => 'DaGdCommanderController',
-      '/c/?$' => 'DaGdCommanderController',
+      '/c/?(json|)?/?$' => 'DaGdCommanderController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
 

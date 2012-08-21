@@ -92,9 +92,14 @@ final class DaGdCommanderController extends DaGdBaseClass {
           return false;
         }
       }
-    } else {
-      if (count($this->route_matches) == 1) {
-        $rows = $this->getAllCommands();
+    } elseif (count($this->route_matches) <= 2) {
+      $rows = $this->getAllCommands();
+      if (end($this->route_matches) == 'json') {
+        header('Content-Type: application/json');
+        $this->escape = false;
+        $this->wrap_pre = false;
+        return json_encode($rows);
+      } else {
         $return = "***Enabled Commands***<dl>\n";
 
         foreach ($rows as $row) {
@@ -104,26 +109,27 @@ final class DaGdCommanderController extends DaGdBaseClass {
           $return .= '<dd>   Added: '.htmlspecialchars($row['creation_dt']).
             "</dd>\n";
         }
+
         $return .= '</dl>';
         $markup = new DaGdMarkup($return);
         $markup->nl2br = false;
         $this->escape = false;
         $this->wrap_pre = false;
         return $markup->render();
+      }
+    } else {
+      // Accessing a command?
+      $this->getURL($this->route_matches[1]);
+      if ($this->url === null) {
+        error400('That command was not found.');
+        return false;
       } else {
-        // Accessing a command?
-        $this->getURL($this->route_matches[1]);
-        if ($this->url === null) {
-          error400('That command was not found.');
-          return false;
-        } else {
-          $url = str_replace(
-            '$PARAMETERS',
-            $this->route_matches[2],
-            $this->url);
-          header('Location: '.$url);
-          return true;
-        }
+        $url = str_replace(
+          '$PARAMETERS',
+          $this->route_matches[2],
+          $this->url);
+        header('Location: '.$url);
+        return true;
       }
     }
   }
