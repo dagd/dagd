@@ -95,10 +95,14 @@ final class DaGdCommanderController extends DaGdBaseClass {
     } elseif (count($this->route_matches) <= 2) {
       $rows = $this->getAllCommands();
       if (end($this->route_matches) == 'json') {
+        $commands = array();
+        foreach ($rows as $row) {
+          $commands[$row['command']] = $row['url'];
+        }
         header('Content-Type: application/json');
         $this->escape = false;
         $this->wrap_pre = false;
-        return json_encode($rows);
+        return json_encode($commands);
       } else {
         $return = "***Enabled Commands***<dl>\n";
 
