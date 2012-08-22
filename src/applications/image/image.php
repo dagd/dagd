@@ -12,10 +12,21 @@ final class DaGdImageController extends DaGdBaseClass {
           'png',
         ),
       ),
+      array(
+        'summary' => 'Generate a JPEG that is 20x20 pixels with a background',
+        'arguments' => array(
+          '20*20',
+          'jpg',
+        ),
+        'request' => array(
+          'bgcolor' => '7ca931',
+        ),
+      ),
     ));
 
   private $width;
   private $height;
+  private $bgcolor;
   private $filetype;
 
   public function render() {
@@ -51,6 +62,27 @@ final class DaGdImageController extends DaGdBaseClass {
       $this->filetype = $default_filetype;
     }
 
+    $r = '55';
+    $g = '55';
+    $b = '55';
+
+    if ($bgcolor = request_or_default('bgcolor')) {
+      if (strlen($bgcolor) == 6) {
+        $r = $bgcolor[0].$bgcolor[1];
+        $g = $bgcolor[2].$bgcolor[3];
+        $b = $bgcolor[4].$bgcolor[5];
+      } elseif (strlen($bgcolor) == 3) {
+        $r = $bgcolor[0].$bgcolor[0];
+        $g = $bgcolor[1].$bgcolor[1];
+        $b = $bgcolor[2].$bgcolor[2];
+      }
+    }
+
+    $this->bgcolor = array(
+      hexdec($r),
+      hexdec($g),
+      hexdec($b));
+
     $this->escape = false;
     $this->wrap_pre = false;
     $this->text_html_strip = false;
@@ -59,7 +91,10 @@ final class DaGdImageController extends DaGdBaseClass {
     // Generate the image.
     header('Content-Type: '.$imagetypes[$this->filetype]['contenttype']);
     $image = imagecreate($this->width, $this->height);
-    imagecolorallocate($image, 0, 0, 0);
+    imagecolorallocate($image,
+      $this->bgcolor[0],
+      $this->bgcolor[1],
+      $this->bgcolor[2]);
     $text = $this->width.'x'.$this->height;
     $text_color = imagecolorallocate($image, 255, 255, 255);
     imagestring($image, 1, 5, 5, $text, $text_color);
