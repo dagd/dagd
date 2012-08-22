@@ -106,8 +106,8 @@ class DaGdConfig {
     'isitup.timeout' => 3,
 
     // Image settings
-    'image.max_height' => 10000,
-    'image.max_width' => 10000,
+    'image.max_height' => 7000,
+    'image.max_width' => 7000,
     'image.default_filetype' => 'png', // Must be a key of the below array.
     'image.imagetypes' => array(
       // extension => ('contenttype' => $a, 'phpfunction' => $b)
