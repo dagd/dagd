@@ -48,7 +48,7 @@ class DaGdConfig {
       '/c/(store)/(.+?)/(.+?)/?$' => 'DaGdCommanderController',
       '/c/(.+?)(?:/| )(.+?)/?$' => 'DaGdCommanderController',
       '/c/?(json|)?/?$' => 'DaGdCommanderController',
-      '/image/([0-9x*]+)/?(\w+)?/?$' => 'DaGdImageController',
+      '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => 'DaGdImageController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
 
