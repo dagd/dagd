@@ -33,6 +33,7 @@ class DaGdConfig {
       'host',
       'break',
       'commander',
+      'image',
     ),
     'general.routemap' => array(
       '/help/?$' => 'DaGdHelpController',
@@ -47,6 +48,7 @@ class DaGdConfig {
       '/c/(store)/(.+?)/(.+?)/?$' => 'DaGdCommanderController',
       '/c/(.+?)(?:/| )(.+?)/?$' => 'DaGdCommanderController',
       '/c/?(json|)?/?$' => 'DaGdCommanderController',
+      '/image/([0-9x*]+)/?(\w+)?/?$' => 'DaGdImageController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
 
@@ -102,6 +104,30 @@ class DaGdConfig {
     // IsItUp Settings
     'isitup.max_redirects' => 5,
     'isitup.timeout' => 3,
+
+    // Image settings
+    'image.max_height' => 10000,
+    'image.max_width' => 10000,
+    'image.default_filetype' => 'png', // Must be a key of the below array.
+    'image.imagetypes' => array(
+      // extension => ('contenttype' => $a, 'phpfunction' => $b)
+      'png' => array(
+        'contenttype' => 'image/png',
+        'phpfunction' => 'imagepng',
+      ),
+      'jpg' => array(
+        'contenttype' => 'image/jpeg',
+        'phpfunction' => 'imagejpeg',
+      ),
+      'jpeg' => array(
+        'contenttype' => 'image/jpeg',
+        'phpfunction' => 'imagejpeg',
+      ),
+      'gif' => array(
+        'contenttype' => 'image/gif',
+        'phpfunction' => 'imagegif',
+      ),
+    ),
   );
 
   public static function get($key) {

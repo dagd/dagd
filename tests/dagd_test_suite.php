@@ -219,6 +219,16 @@ test_content_type('/c/', 'text/html', FIREFOX_UA);
 test_content_type('/c', 'text/plain', TEXT_UA);
 test_content_type('/c/', 'text/plain', TEXT_UA);
 
+/*********** /image/xxxxxxx/[xxxxxxx] ***********/
+test_content_type('/image/200x200/', 'image/png', TEXT_UA);
+test_content_type('/image/200x200/', 'image/png', FIREFOX_UA);
+test_content_type('/image/400x100/jpeg/', 'image/jpeg', TEXT_UA);
+test_content_type('/image/400x100/jpg/', 'image/jpeg', TEXT_UA);
+test_content_type('/image/400x100/jpeg', 'image/jpeg', TEXT_UA);
+test_content_type('/image/400x100', 'image/png', TEXT_UA);
+test_response_code('/image/300', 400);
+test_response_code('/image/3000000000x120102102', 400);
+
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";
 echo "Report: {$tests_completed['failed']} failed.\n";
