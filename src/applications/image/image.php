@@ -34,6 +34,9 @@ final class DaGdImageController extends DaGdBaseClass {
     $max_height = DaGdConfig::get('image.max_height');
     $default_filetype = DaGdConfig::get('image.default_filetype');
     $imagetypes = DaGdConfig::get('image.imagetypes');
+    $fontpath = DaGdConfig::get('image.fontpath');
+    $bg_color_rgb = DaGdConfig::get('image.default_bg_rgb');
+    $text_color_rgb = DaGdConfig::get('image.default_text_rgb');
 
     $split = preg_split('@(?:x|\*)@', $this->route_matches[1]);
     if (count($split) !== 2) {
@@ -62,9 +65,9 @@ final class DaGdImageController extends DaGdBaseClass {
       $this->filetype = $default_filetype;
     }
 
-    $r = '55';
-    $g = '55';
-    $b = '55';
+    $r = $bg_color_rgb[0];
+    $g = $bg_color_rgb[1];
+    $b = $bg_color_rgb[2];
 
     if ($bgcolor = request_or_default('bgcolor')) {
       if (strlen($bgcolor) == 6) {
@@ -91,13 +94,26 @@ final class DaGdImageController extends DaGdBaseClass {
     // Generate the image.
     header('Content-Type: '.$imagetypes[$this->filetype]['contenttype']);
     $image = imagecreate($this->width, $this->height);
-    imagecolorallocate($image,
+    imagecolorallocate(
+      $image,
       $this->bgcolor[0],
       $this->bgcolor[1],
       $this->bgcolor[2]);
+
     $text = $this->width.'x'.$this->height;
-    $text_color = imagecolorallocate($image, 255, 255, 255);
-    imagestring($image, 1, 5, 5, $text, $text_color);
+
+    $positions = imagettfbbox(30, 0, $fontpath, $text);
+    $center_x = ceil(($this->width - $positions[2]) / 2);
+    $center_y = ceil(($this->height - $positions[5]) / 2);
+
+    $color = imagecolorallocate(
+      $image,
+      $text_color_rgb[0],
+      $text_color_rgb[1],
+      $text_color_rgb[2]);
+
+    imagettftext($image, 30, 0, $center_x, $center_y, $color, $fontpath, $text);
+
     call_user_func($imagetypes[$this->filetype]['phpfunction'], $image);
     imagedestroy($image);
   }

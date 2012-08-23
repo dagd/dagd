@@ -108,6 +108,10 @@ class DaGdConfig {
     // Image settings
     'image.max_height' => 7000,
     'image.max_width' => 7000,
+    'image.fontpath' => '/usr/share/fonts/dejavu/DejaVuSansMono.ttf',
+    'image.fontsize' => 20,
+    'image.default_bg_rgb' => array(44, 44, 44),
+    'image.default_text_rgb' => array(150, 150, 150),
     'image.default_filetype' => 'png', // Must be a key of the below array.
     'image.imagetypes' => array(
       // extension => ('contenttype' => $a, 'phpfunction' => $b)
