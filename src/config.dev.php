@@ -131,6 +131,14 @@ class DaGdConfig {
         'contenttype' => 'image/gif',
         'phpfunction' => 'imagegif',
       ),
+      'xbm' => array(
+        'contenttype' => 'image/x-xbitmap',
+        'phpfunction' => 'imagexbm',
+      ),
+      'wbmp' => array(
+        'contenttype' => 'image/vnd.wap.wbmp',
+        'phpfunction' => 'imagewbmp',
+      ),
     ),
   );
 
