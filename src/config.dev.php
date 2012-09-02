@@ -34,6 +34,7 @@ class DaGdConfig {
       'break',
       'commander',
       'image',
+      'status',
     ),
     'general.routemap' => array(
       '/help/?$' => 'DaGdHelpController',
@@ -48,6 +49,7 @@ class DaGdConfig {
       '/c/(store)/(.+?)/(.+?)/?$' => 'DaGdCommanderController',
       '/c/(.+?)(?:/| )(.+?)/?$' => 'DaGdCommanderController',
       '/c/?(json|)?/?$' => 'DaGdCommanderController',
+      '/status/(\d+)/?(.+)?/?' => 'DaGdStatusController',
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => 'DaGdImageController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),

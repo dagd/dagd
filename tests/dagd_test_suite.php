@@ -232,6 +232,11 @@ test_content_type('/image/400x100/gif', 'image/gif', FIREFOX_UA);
 test_response_code('/image/300', 400);
 test_response_code('/image/3000000000x120102102', 400);
 
+/*********** /status/xxxxxxx/[xxxxxxx] ***********/
+test_response_code('/status/404', 404);
+test_response_code('/status/605', 605);
+test_response_code('/status/123/hi', 123);
+
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";
 echo "Report: {$tests_completed['failed']} failed.\n";
