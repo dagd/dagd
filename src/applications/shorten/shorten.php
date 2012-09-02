@@ -118,6 +118,19 @@ final class DaGdShortenController extends DaGdBaseClass {
         error400('Invalid short URL entered. Alphanumeric only, please.');
         return false;
       } else {
+        $routes = DaGdConfig::get('general.routemap');
+        foreach ($routes as $route => $controller) {
+          if ($controller == 'DaGdShortenController') {
+            continue;
+          }
+          $route = substr($route, 1);
+          if (preg_match('@^'.$route.'@', $short_url)) {
+            error400(
+              'That URL conflicts with other da.gd URLs. Please use another '.
+              'URL.');
+            return false;
+          }
+        }
         $this->short_url = substr($short_url, 0, 10);
         if (!$this->isFreeShortURL()) {
           error400('That custom URL was already taken, go back and try again!');
