@@ -51,7 +51,7 @@ class DaGdConfig {
       '/c/?(json|)?/?$' => 'DaGdCommanderController',
       '/status/(\d+)/?(.+)?/?' => 'DaGdStatusController',
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => 'DaGdImageController',
-      '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
+      '/(?:p|paste|pastebin)/(\d+)?/?$' => 'DaGdPastebinController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
 
     // These redirects take place on CLI useragents only.
