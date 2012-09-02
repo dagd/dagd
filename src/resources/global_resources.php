@@ -100,12 +100,12 @@ function debug($title, $text = null) {
 }
 
 function error404($echo = '404 - route not found', $status_text = 'Not Found') {
-  header('HTTP/1.0 404 '.$status_text);
+  header('HTTP/1.1 404 '.$status_text);
   echo $echo;
 }
 
 function error400($echo = '400 - bad request', $status_text = 'Bad Request') {
-  header('HTTP/1.0 400 '.$status_text);
+  header('HTTP/1.1 400 '.$status_text);
   echo $echo;
 }
 
