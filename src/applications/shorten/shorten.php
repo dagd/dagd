@@ -24,6 +24,7 @@ final class DaGdShortenController extends DaGdBaseClass {
   private $short_url;
   private $stored_url_id;
   private $custom_url = false;
+  private $store_url = true;
 
   private function isFreeShortURL() {
     $query = $this->db_connection->prepare(
@@ -91,6 +92,9 @@ final class DaGdShortenController extends DaGdBaseClass {
   }
 
   private function store_shorturl() {
+    if (!$this->store_url) {
+      return true;
+    }
     $query = $this->db_connection->prepare(
       'INSERT INTO shorturls(shorturl, longurl, owner_ip, custom_shorturl) '.
       'VALUES(?, ?, ?, ?);');
@@ -139,7 +143,9 @@ final class DaGdShortenController extends DaGdBaseClass {
       }
     } else {
       $this->getNonCustomShortURL($this->long_url);
-      if (!$this->short_url) {
+      if ($this->short_url) {
+        $this->store_url = false;
+      } else {
         $this->short_url = randstr(rand(4, 5));
         while (!$this->isFreeShortURL()) {
           $this->short_url = randstr(4, 5);
