@@ -51,7 +51,7 @@ class DaGdWhois {
         return true;
       }
     }
-    if (is_numeric($this->tld())) {
+    if (filter_var($this->domain, FILTER_VALIDATE_IP)) {
       $this->whois_server = 'whois.arin.net';
       return true;
     }
