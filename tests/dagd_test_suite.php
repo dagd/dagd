@@ -155,6 +155,7 @@ test_response_code('/ec/Phuzion?lang=asd123dsa', 400);
 test_regex('/w/google.com', '@Mountain View@');
 test_regex('/w/fbco.de', '@Menlo Park@');
 test_regex('/w/da.gd', '@Ricky@');
+test_regex('/w/4.2.2.2', '@Level 3 Communications@');
 
 
 /*********** /headers/xxxxxxx ***********/
@@ -181,6 +182,7 @@ test_regex('/host/google.com', '@2607:f8b0@');
 test_regex('/host/facebook.com', '@69.171@');
 test_regex('/host/facebook.com', '@face:b00c@');
 test_regex('/host/facebook.com?noipv6', '@face:b00c@', true);
+test_regex('/host/66.220.158.70', '@facebook.com@');
 
 /*********** /break/ ***********/
 test_response_code('/break', 500);
