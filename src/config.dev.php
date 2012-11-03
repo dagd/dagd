@@ -69,6 +69,11 @@ class DaGdConfig {
       'Cache-Control: no-cache',
     ),
 
+    // Required PHP extensions
+    'general.required_extensions' => array(
+      'gd',
+    ),
+
     // A hardcoded map of whois servers to use for certain domains.
     'whois.hardcode_map' => array(
       // tld (WITHOUT '.') => server

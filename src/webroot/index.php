@@ -21,6 +21,14 @@ if (!$_GET['__path__']) {
     'Your rewrite rules are incorrect!');
 }
 
+$required_extensions = DaGdConfig::get('general.required_extensions');
+foreach ($required_extensions as $extension) {
+  if (!extension_loaded($extension)) {
+    throw new Exception(
+      'Missing extension is required: '.$extension);
+  }
+}
+
 $requested_path = $_GET['__path__'];
 $route_matches = null;
 $controller_match = null;
