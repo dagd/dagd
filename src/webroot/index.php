@@ -17,7 +17,7 @@ ini_set('user_agent', DaGdConfig::get('general.useragent'));
 
 if (!$_GET['__path__']) {
   throw new Exception(
-    'No __path__ GET variable was found.'.
+    'No __path__ GET variable was found. '.
     'Your rewrite rules are incorrect!');
 }
 
