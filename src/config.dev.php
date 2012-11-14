@@ -35,6 +35,7 @@ class DaGdConfig {
       'commander',
       'image',
       'status',
+      'isp',
     ),
     'general.routemap' => array(
       '/help/?$' => 'DaGdHelpController',
@@ -52,6 +53,7 @@ class DaGdConfig {
       '/status/(\d+)/?(.+)?/?' => 'DaGdStatusController',
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => 'DaGdImageController',
       '/(?:p|paste|pastebin)/(\d+)?/?$' => 'DaGdPastebinController',
+      '/isp/?(.+)?/?$' => 'DaGdISPController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
 
     // These redirects take place on CLI useragents only.
