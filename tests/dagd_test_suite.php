@@ -239,6 +239,14 @@ test_response_code('/status/404', 404);
 test_response_code('/status/605', 605);
 test_response_code('/status/123/hi', 123);
 
+/*********** /isp/[xxxxxxx] ***********/
+test_regex(
+  '/isp/127.0.0.1',
+  '@Internet Assigned Numbers Authority@');
+test_regex(
+  '/isp/69.171.237.16',
+  '@Facebook');
+
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";
 echo "Report: {$tests_completed['failed']} failed.\n";
