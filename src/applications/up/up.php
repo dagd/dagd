@@ -17,15 +17,15 @@ final class DaGdIsItUpController extends DaGdBaseClass {
       $curl = curl_init();
 
       // Configurable options (via config file)
-      $agent = DaGdConfig::get('general.useragent');            
+      $agent = DaGdConfig::get('general.useragent');
       curl_setopt($curl, CURLOPT_URL, $query);
-      
+
       $timeout = DaGdConfig::get('isitup.timeout');
       curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
 
       $max_redirects = DaGdConfig::get('isitup.max_redirects');
       curl_setopt($curl, CURLOPT_MAXREDIRS, $max_redirects);
-      
+
       curl_setopt($curl, CURLOPT_USERAGENT, $agent);
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($curl, CURLOPT_HEADER, true);
@@ -34,7 +34,7 @@ final class DaGdIsItUpController extends DaGdBaseClass {
       curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
       curl_setopt($curl, CURLOPT_SSLVERSION, 3);
       curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-      curl_exec($curl); 
+      curl_exec($curl);
       $http_response = curl_getinfo($curl, CURLINFO_HTTP_CODE);
       return $http_response;
     }

@@ -13,7 +13,7 @@ final class DaGdWhoisController extends DaGdBaseClass {
         'arguments' => array('127.0.0.1'),
         'summary' => null),
     ));
-   
+
   public function render() {
     $query = $this->route_matches[1];
     $whois_client = new DaGdWhois($query);

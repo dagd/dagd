@@ -27,7 +27,7 @@ function handle_exception(Exception $e) {
   if ($debug) {
     if ($email && $email_in_debug) {
       $really_send_email = true;
-    }      
+    }
     echo $e."<br />\n";
   } else {
     if ($email) {

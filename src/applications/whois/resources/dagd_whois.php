@@ -4,13 +4,12 @@ require_once dirname(__FILE__).'/../../../resources/global_resources.php';
 
 class DaGdWhois {
   private $domain;
-  private $query;
+  private $query = '';
   private $whois_server;
   private $skip_detail = false;
-  
+
   public function __construct($domain) {
     $this->domain = $domain;
-    $this->query = '';
   }
 
   /*

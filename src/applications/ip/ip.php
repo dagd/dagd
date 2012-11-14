@@ -8,7 +8,7 @@ final class DaGdIPController extends DaGdBaseClass {
         'arguments' => null,
         'summary' => null),
     ));
-  
+
   public function render() {
     return client_ip();
   }

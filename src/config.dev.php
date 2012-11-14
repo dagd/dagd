@@ -64,7 +64,6 @@ class DaGdConfig {
     // These are just full-out redirects.
     'general.redirect_map' => array(
       '/et/(\d+)/?$' => 'http://www.etsy.com/listing/$1'),
-      
 
     // These are extra headers that get applied globally
     'general.extra_headers' => array(
@@ -95,7 +94,7 @@ class DaGdConfig {
 
     // Should error emails get sent out?
     'exceptions.email' => false,
-    
+
     // Only send emails in non-debug mode. 'exceptions.email' must be true.
     'exceptions.email_in_debug' => false,
 

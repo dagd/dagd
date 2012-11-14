@@ -11,12 +11,12 @@ final class DaGdHelpController extends DaGdBaseClass {
 
   protected $wrap_pre = false;
   protected $escape = false;
-  
+
   public function render() {
     $routes = DaGdConfig::get('general.routemap');
     $return = '';
     $controllers_visited = array();
-    
+
     foreach ($routes as $path => $controller) {
       if (in_array($controller, $controllers_visited)) {
         continue;

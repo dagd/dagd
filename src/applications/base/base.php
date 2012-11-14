@@ -41,7 +41,7 @@ abstract class DaGdBaseClass {
     $prefix = request_or_default('url_prefix', '/');
     $separator = request_or_default('url_separator', '/');
     $request_sep = request_or_default('url_request_sep', null);
-    
+
     $return = '';
     if ($help = $this::$__help__) {
       $return .= '<h3>'.$help['summary']."</h3>\n";
@@ -71,14 +71,14 @@ abstract class DaGdBaseClass {
             $iteration++;
           }
         }
-        
+
         $return .= "</li>\n";
       }
       $return .= "</ul>\n";
     }
     return $return;
   }
-  
+
   /*
    * A function that, when overridden, returns a certain version of a response
    * to a CLI browser. By default handle things normally.
@@ -101,12 +101,12 @@ abstract class DaGdBaseClass {
       if ($this->escape) {
         $response = htmlspecialchars($response);
       }
-    }    
+    }
 
     if (!is_text_useragent() && $this->wrap_pre) {
       $response = '<pre>'.$response.'</pre>';
     }
-    
+
     return $response;
   }
 }

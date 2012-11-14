@@ -34,7 +34,7 @@ final class DaGdShortenController extends DaGdBaseClass {
     $query->bind_result($count);
     $query->fetch();
     $query->close();
-    
+
     // If we do *NOT* get one above (!), then it is free, and we return true.
     return !(bool)$count;
   }
@@ -104,7 +104,7 @@ final class DaGdShortenController extends DaGdBaseClass {
       $this->long_url,
       client_ip(),
       $this->custom_url);
-    
+
     if ($query->execute()) {
       return true;
     } else {
@@ -113,7 +113,6 @@ final class DaGdShortenController extends DaGdBaseClass {
     }
   }
 
-  
   private function set_shorturl_or_400() {
     if ($short_url = request_or_default('shorturl')) {
       $this->custom_url = true;
@@ -163,7 +162,7 @@ final class DaGdShortenController extends DaGdBaseClass {
       error400('Error: Cannot create something out of nothing.');
       return false;
     }
-    
+
     if ($long_url = request_or_default('url')) {
       // Something has at least been submitted. Is it valid?
       if (preg_match('@^https?://@', $long_url)) {
@@ -180,7 +179,7 @@ final class DaGdShortenController extends DaGdBaseClass {
       return false;
     }
   }
-  
+
   public function render() {
     if (array_key_exists('url', $_REQUEST)) {
       if ($this->set_longurl_or_400() && $this->set_shorturl_or_400()) {
@@ -193,7 +192,7 @@ final class DaGdShortenController extends DaGdBaseClass {
       }
       return;
     }
-    
+
     // No 'url' was passed, so we are not creating a new short-url.
     if (count($this->route_matches) > 1) {
       if (end($this->route_matches) == 'original') {

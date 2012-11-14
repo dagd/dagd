@@ -11,7 +11,7 @@ final class DaGdHostController extends DaGdBaseClass {
         'arguments' => array('127.0.0.1'),
         'summary' => 'Get the hostname for the PTR of 127.0.0.1')
     ));
-  
+
   public function render() {
     if (filter_var($this->route_matches[1], FILTER_VALIDATE_IP)) {
       // Treat it like an IP.

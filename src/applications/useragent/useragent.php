@@ -8,7 +8,7 @@ final class DaGdUserAgentController extends DaGdBaseClass {
         'arguments' => null,
         'summary' => null),
     ));
-  
+
   public function render() {
     return $_SERVER['HTTP_USER_AGENT'];
   }

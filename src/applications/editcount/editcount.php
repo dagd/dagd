@@ -18,9 +18,9 @@ final class DaGdEditCountController extends DaGdBaseClass {
         'request' => array(
           'lang' => 'en',
           'proj' => 'wikiquote'),
-        'summary' => 'en.wikiquote.org editcount for user "Phuzion"'),  
+        'summary' => 'en.wikiquote.org editcount for user "Phuzion"'),
     ));
-    
+
   public function render() {
     $query = $this->route_matches[1];
 
@@ -51,7 +51,7 @@ final class DaGdEditCountController extends DaGdBaseClass {
      error400($language.'.'.$project.'.org is not a valid wikipedia subdomain.');
      return;
    }
-    
+
     $counts = file_get_contents(
       'http://'.$language.'.'.$project.'.org/w/api.php?action=query&list=users'.
       '&usprop=editcount&format=json&ususers='.urlencode($query));
