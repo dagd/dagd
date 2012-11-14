@@ -182,7 +182,7 @@ test_regex('/host/google.com', '@2607:f8b0@');
 test_regex('/host/facebook.com', '@69.171@');
 test_regex('/host/facebook.com', '@face:b00c@');
 test_regex('/host/facebook.com?noipv6', '@face:b00c@', true);
-test_regex('/host/66.220.158.70', '@facebook.com@');
+test_regex('/host/69.171.237.16', '@facebook.com@');
 
 /*********** /break/ ***********/
 test_response_code('/break', 500);
@@ -245,7 +245,7 @@ test_regex(
   '@Internet Assigned Numbers Authority@');
 test_regex(
   '/isp/69.171.237.16',
-  '@Facebook');
+  '@Facebook@');
 
 echo "Report: Completed {$tests_completed['attempted']} tests.\n";
 echo "Report: {$tests_completed['successful']} were successful.\n";
