@@ -52,12 +52,14 @@ abstract class DaGdBaseClass {
           $return .= $example['summary'].':   ';
         }
         $return .= $prefix.$help['path'];
-        $arguments = $example['arguments'];
-        if ($arguments) {
-          if ($help['path']) {
-            $return .= $separator;
+        if (array_key_exists('arguments', $example)) {
+          $arguments = $example['arguments'];
+          if ($arguments) {
+            if ($help['path']) {
+              $return .= $separator;
+            }
+            $return .= implode($prefix, $arguments);
           }
-          $return .= implode($prefix, $arguments);
         }
         if (array_key_exists('request', $example)) {
           $iteration = 0;
