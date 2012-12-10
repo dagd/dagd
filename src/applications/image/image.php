@@ -101,6 +101,9 @@ final class DaGdImageController extends DaGdBaseClass {
       $this->bgcolor[2]);
 
     $text = request_or_default('text', $this->width.'x'.$this->height);
+    if ($text == 'off') {
+      $text = '';
+    }
 
     $positions = imagettfbbox(30, 0, $fontpath, $text);
     $center_x = ceil(($this->width - $positions[2]) / 2);
