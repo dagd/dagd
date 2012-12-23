@@ -174,7 +174,11 @@ function id($a) {
   return $a;
 }
 
-DaGdTest::$test_url = 'http://dagd.local/';
+if (count($argv) > 1) {
+  DaGdTest::$test_url = $argv[1];
+} else {
+  DaGdTest::$test_url = 'http://dagd.local/';
+}
 
 /*********** / ***********/
 
