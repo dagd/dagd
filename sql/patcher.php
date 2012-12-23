@@ -38,7 +38,7 @@ if (count($patches_to_apply)) {
         if ($result = $__db_handler->store_result()) {
           $result->free();
         }
-      } while ($__db_handler->next_result());
+      } while ($__db_handler->more_results() && $__db_handler->next_result());
     } else {
       echo 'ERROR: '.$__db_handler->error."\n";
       echo "*** EXITING ***\n";
