@@ -12,7 +12,7 @@ before_install:
   - echo "127.0.0.1 dagd.local" | sudo tee --append /etc/hosts
   - sudo ln -s /etc/apache2/sites-available/dagd /etc/apache2/sites-enabled/dagd
   - mysql -e 'create database dagd;'
-  - ./sql/patcher.php
+  - ./sql/patcher.php --yes
   - sudo a2enmod rewrite
   - sudo a2enmod php5
   - sudo chmod -R 777 ~

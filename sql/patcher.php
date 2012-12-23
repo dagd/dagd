@@ -25,8 +25,10 @@ if (count($patches_to_apply)) {
   // Ask for a confirmation of what we're about to do.
   echo "The following patches will be applied:\n";
   echo implode("\n", $patches_to_apply)."\n";
-  echo "*** PRESS CTRL-C TO ABORT, OR ENTER TO CONTINUE ***";
-  fgets(STDIN);
+  if (idx($argv, 1) != '--yes') {
+    echo "*** PRESS CTRL-C TO ABORT, OR ENTER TO CONTINUE ***";
+    fgets(STDIN);
+  }
 
   foreach ($patches_to_apply as $patch) {
     echo "Applying SQL patch {$patch}...\n";

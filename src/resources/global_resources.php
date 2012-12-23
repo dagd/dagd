@@ -109,20 +109,20 @@ function error400($echo = '400 - bad request', $status_text = 'Bad Request') {
   echo $echo;
 }
 
-function request_or_default($key, $default = null) {
-  if (array_key_exists($key, $_REQUEST) && strlen($_REQUEST[$key])) {
-    return $_REQUEST[$key];
+function idx($array, $key, $default = null) {
+  if (array_key_exists($key, $array) && strlen($array[$key])) {
+    return $array[$key];
   } else {
     return $default;
   }
 }
 
+function request_or_default($key, $default = null) {
+  return idx($_REQUEST, $key, $default);
+}
+
 function server_or_default($key, $default = null) {
-  if (array_key_exists($key, $_SERVER) && strlen($_SERVER[$key])) {
-    return $_SERVER[$key];
-  } else {
-    return $default;
-  }
+  return idx($_SERVER, $key, $default);
 }
 
 /*
