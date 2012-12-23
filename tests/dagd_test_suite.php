@@ -179,8 +179,7 @@ test_response_code('/et/75009720', 302);
 
 /*********** /host/xxxxxxx ***********/
 test_regex('/host/google.com', '@2607:f8b0@');
-test_regex('/host/facebook.com', '@69.171@');
-test_regex('/host/facebook.com', '@face:b00c@');
+test_regex('/host/google.com', '@74\.125@');
 test_regex('/host/facebook.com?noipv6', '@face:b00c@', true);
 test_regex('/host/69.171.237.16', '@facebook.com@');
 
