@@ -352,3 +352,9 @@ echo chr(27)."[1;32m Passed        : ".$results['pass'].chr(27)."[0m"."\n";
 echo chr(27)."[1;31m Failed        : ".$results['fail'].chr(27)."[0m"."\n";
 echo chr(27)."[1;33m Tolerated Fail: ".$results['tolerated fail'].chr(27)."[0m".
   "\n";
+
+if (count($results['fail']) != 0) {
+  exit(1);
+} else {
+  exit(0);
+}
