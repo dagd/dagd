@@ -52,7 +52,7 @@ class DaGdConfig {
       '/c/?(json|)?/?$' => 'DaGdCommanderController',
       '/status/(\d+)/?(.+)?/?' => 'DaGdStatusController',
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => 'DaGdImageController',
-      '/(?:p|paste|pastebin)/(\d+)?/?$' => 'DaGdPastebinController',
+      '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/isp/?(.+)?/?$' => 'DaGdISPController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
 

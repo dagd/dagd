@@ -1,7 +1,8 @@
 <?php
 final class DaGdPastebinController extends DaGdBaseClass {
   public static $__help__ = array(
-    'summary' => 'Paste blurbs of code.',
+    'summary' =>
+      'Paste blurbs of code. This service will be removed in late January 2013.',
     'path' => 'paste',
     'examples' => array(
       array(
@@ -70,11 +71,9 @@ final class DaGdPastebinController extends DaGdBaseClass {
   }
 
   public function render() {
-    if ($paste_text = request_or_default('text')) {
-      // A paste is being submitted.
-      $this->paste_text = $paste_text;
-      $this->create_paste();
-      echo $this->generate_link();
+    if (server_or_default('REQUEST_METHOD') == 'POST') {
+      error400(
+        'This service has been deprecated, no new pastes are being accepted.');
       return;
     } else {
       // Trying to access one?
@@ -103,16 +102,12 @@ final class DaGdPastebinController extends DaGdBaseClass {
           return $this->help();
         }
 
-        // No, they're accessing the front page of Pastebin.
-        // This is going to need work. :D
-        $content = '***da.gd Pastebin***
-<form method="POST" action="">
-<textarea name="text" id="text" style="width: 90%; height: 90%;"></textarea>
-<input type="submit" value="Pastebin it!" />
-</form>';
+        $content = '
+          ***da.gd Pastebin***
+          This feature is being deprecated and no new pastes are being accepted.
+        ';
         $markup = new DaGdMarkup($content);
         $markup = $markup->render();
-        $markup .= '<script>window.onload = function() {document.getElementById("text").focus();}</script>';
         echo $markup;
         return;
       }
