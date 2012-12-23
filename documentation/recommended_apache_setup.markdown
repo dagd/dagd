@@ -6,6 +6,9 @@ This is what my development sandbox's /etc/httpd/conf.d/dagd.local.conf looks li
     
       DocumentRoot /home/ricky/devel/da.gd/src/webroot/
 
+      ErrorLog logs/da.gd-error_log
+      CustomLog logs/da.gd-access_log combined
+
       AllowEncodedSlashes On
     
       RewriteEngine on

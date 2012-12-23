@@ -243,9 +243,9 @@ id(new DaGdResponseCodeTest('/et/750009720', 302))
   ->run();
 
 /************ /host/xxxxxxx ************/
-id(new DaGdRegexTest('/host/google.com', '@2607:f8b0@'))
+id(new DaGdRegexTest('/host/google.com', '@:@'))
   ->run();
-id(new DaGdRegexTest('/host/google.com', '@74\.125@'))
+id(new DaGdRegexTest('/host/google.com', '@[0-9]\.@'))
   ->run();
 id(new DaGdRegexTest('/host/google.com?noipv6', '@:@', true))
   ->run();
@@ -357,8 +357,8 @@ echo chr(27)."[1;31m Failed        : ".$results['fail'].chr(27)."[0m"."\n";
 echo chr(27)."[1;33m Tolerated Fail: ".$results['tolerated fail'].chr(27)."[0m".
   "\n";
 
-if (count($results['fail']) != 0) {
-  exit(1);
-} else {
+if ($results['fail'] === 0) {
   exit(0);
+} else {
+  exit(1);
 }
