@@ -15,6 +15,7 @@ class DaGdConfig {
       'libcurl',
       'Supybot',
       'Ruby',
+      'NetBSD-ftp',
     ),
 
     'general.useragent' => 'da.gd/1.0',
