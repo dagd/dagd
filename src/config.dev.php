@@ -20,7 +20,6 @@ class DaGdConfig {
 
     'general.useragent' => 'da.gd/1.0',
     'general.applications' => array(
-      'base', // This absolutely MUST be first.
       'ip',
       'useragent',
       'comingsoon',
@@ -57,14 +56,15 @@ class DaGdConfig {
       '/isp/?(.+)?/?$' => 'DaGdISPController',
       '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
 
-    // These redirects take place on CLI useragents only.
+    // These routes take place on CLI useragents only.
     'general.cli_routemap' => array(
       '/$' => 'DaGdHelpController',
     ),
 
     // These are just full-out redirects.
     'general.redirect_map' => array(
-      '/et/(\d+)/?$' => 'http://www.etsy.com/listing/$1'),
+      '/et/(\d+)/?$' => 'http://www.etsy.com/listing/$1',
+    ),
 
     // These are extra headers that get applied globally
     'general.extra_headers' => array(
@@ -72,6 +72,7 @@ class DaGdConfig {
     ),
 
     // Required PHP extensions
+    // We fatal if these aren't found.
     'general.required_extensions' => array(
       'gd',
     ),

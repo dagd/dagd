@@ -4,6 +4,8 @@
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 require_once dirname(__FILE__).'/resources/php/index_resources.php';
 
+require_application('base');
+
 // All of the applications that we route too.
 // This is a tad inefficient as we actually load every app's code into
 // mem on each page load, and don't end up using it. If this ends up biting us
@@ -58,10 +60,10 @@ foreach ($routes as $route => $controller) {
   }
 }
 
-$DEBUG = DaGdConfig::get('general.debug');
+$debug = DaGdConfig::get('general.debug');
 if (!$route_matches) {
   error404();
-  if (!$DEBUG) {
+  if (!$debug) {
     die();
   }
 }
