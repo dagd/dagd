@@ -76,8 +76,9 @@ $headers = DaGdConfig::get('general.extra_headers');
 foreach ($headers as $header) {
   header($header);
 }
-$git_dir = dirname($_SERVER['SCRIPT_FILENAME']).'/../../.git/';
-$git_latest_commit = shell_exec('git --git-dir='.$git_dir.' log -1 --pretty=format:%h');
+$git_dir = escapeshellarg(dirname($_SERVER['SCRIPT_FILENAME']).'/../../.git/');
+$git_latest_commit = shell_exec(
+  'git --git-dir='.$git_dir.' log -1 --pretty=format:%h');
 header('X-Git-Commit: '.$git_latest_commit);
 
 $instance = new ReflectionClass($controller_match);
