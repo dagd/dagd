@@ -159,7 +159,7 @@ function build_given_querystring() {
  *  Use the header X-Forwarded-For if it exists.
  */
 function client_ip() {
-  if (server_or_default('HTTP_DAGD_PROXY') == "1" &&
+  if (server_or_default('HTTP_X_DAGD_PROXY') == "1" &&
       $ip = server_or_default('HTTP_X_FORWARDED_FOR')) {
     return $ip;
   } else {
