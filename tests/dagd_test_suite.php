@@ -243,13 +243,13 @@ id(new DaGdResponseCodeTest('/et/750009720', 302))
   ->run();
 
 /************ /host/xxxxxxx ************/
-id(new DaGdRegexTest('/host/google.com', '@:@'))
+id(new DaGdRegexTest('/host/ipv6.google.com', '@:@'))
   ->run();
 id(new DaGdRegexTest('/host/google.com', '@[0-9]\.@'))
   ->run();
 id(new DaGdRegexTest('/host/google.com?noipv6', '@:@', true))
   ->run();
-id(new DaGdRegexTest('/host/69.171.237.16', '@facebook.com@'))
+id(new DaGdRegexTest('/host/69.171.224.42', '@facebook.com@'))
   ->run();
 
 /************ /break/ ************/
