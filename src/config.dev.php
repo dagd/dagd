@@ -16,6 +16,7 @@ class DaGdConfig {
       'Supybot',
       'Ruby',
       'NetBSD-ftp',
+      'HTTPie',
     ),
 
     'general.useragent' => 'da.gd/1.0',
