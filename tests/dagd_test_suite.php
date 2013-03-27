@@ -346,10 +346,23 @@ id(new DaGdResponseCodeTest('/status/123/hi', 123))
   ->run();
 
 /************ /isp/[xxxxxxx] ************/
-id(new DaGdRegexTest('/isp/127.0.0.1', '@^Internet Assigned Numbers Authority@'))
+id(new DaGdRegexTest(
+  '/isp/127.0.0.1',
+  '@^Internet Assigned Numbers Authority@'))
   ->run();
 id(new DaGdRegexTest('/isp/69.171.237.16', '@^Facebook, Inc\.$@'))
   ->run();
+
+/************ /help ************/
+id(new DaGdRegexTest('/help', '@pixels: /image/200x400/png@'))
+  ->setUserAgent(FIREFOX_UA)
+  ->run();
+id(new DaGdRegexTest(
+  '/help?url_prefix=dagd%20&url_separator=%20&url_request_sep=%20--',
+  '@image 200x400 png@'))
+  ->setUserAgent(TEXT_UA)
+  ->run();
+
 
 $results = DaGdTest::getResultsSummary();
 echo chr(27)."[1;32m Passed        : ".$results['pass'].chr(27)."[0m"."\n";

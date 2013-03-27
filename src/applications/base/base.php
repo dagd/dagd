@@ -49,7 +49,7 @@ abstract class DaGdBaseClass {
       foreach ($help['examples'] as $example) {
         $return .= '<li>    ';
         if ($example['summary']) {
-          $return .= $example['summary'].':   ';
+          $return .= $example['summary'].': ';
         }
         $return .= $prefix.$help['path'];
         if (array_key_exists('arguments', $example)) {
@@ -58,7 +58,7 @@ abstract class DaGdBaseClass {
             if ($help['path']) {
               $return .= $separator;
             }
-            $return .= implode($prefix, $arguments);
+            $return .= implode($separator, $arguments);
           }
         }
         if (array_key_exists('request', $example)) {
