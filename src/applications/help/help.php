@@ -21,9 +21,7 @@ final class DaGdHelpController extends DaGdBaseClass {
       if (in_array($controller, $controllers_visited)) {
         continue;
       }
-      $instance = new ReflectionClass($controller);
-      $instance = $instance->newInstance();
-      $return .= $instance->help();
+      $return .= help($controller);
       $controllers_visited[] = $controller;
     }
     return $return;

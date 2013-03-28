@@ -35,52 +35,6 @@ abstract class DaGdBaseClass {
     return 'Override this method to make stuff happen!';
   }
 
-  // Generate help for a given controller.
-  // This needs a lot of work :)
-  public function help() {
-    $prefix = request_or_default('url_prefix', '/');
-    $separator = request_or_default('url_separator', '/');
-    $request_sep = request_or_default('url_request_sep', null);
-
-    $return = '';
-    if ($help = $this::$__help__) {
-      $return .= '<h3>'.$help['summary']."</h3>\n";
-      $return .= '<ul>';
-      foreach ($help['examples'] as $example) {
-        $return .= '<li>    ';
-        if ($example['summary']) {
-          $return .= $example['summary'].': ';
-        }
-        $return .= $prefix.$help['path'];
-        if (array_key_exists('arguments', $example)) {
-          $arguments = $example['arguments'];
-          if ($arguments) {
-            if ($help['path']) {
-              $return .= $separator;
-            }
-            $return .= implode($separator, $arguments);
-          }
-        }
-        if (array_key_exists('request', $example)) {
-          $iteration = 0;
-          foreach ($example['request'] as $param => $param_example) {
-            if($request_sep) {
-              $return .= ($iteration === 0) ? $request_sep : $request_sep;
-            } else {
-              $return .= ($iteration === 0) ? '?' : '&';
-            }
-            $return .= $param.'='.$param_example;
-            $iteration++;
-          }
-        }
-
-        $return .= "</li>\n";
-      }
-      $return .= "</ul>\n";
-    }
-    return $return;
-  }
-
   /*
    * A function that, when overridden, returns a certain version of a response
    * to a CLI browser. By default handle things normally.
