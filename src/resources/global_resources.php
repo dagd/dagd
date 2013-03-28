@@ -166,3 +166,50 @@ function client_ip() {
     return $_SERVER['REMOTE_ADDR'];
   }
 }
+
+/** Get help for a given class. */
+function help($class) {
+  $prefix = request_or_default('url_prefix', '/');
+  $separator = request_or_default('url_separator', '/');
+  $request_sep = request_or_default('url_request_sep', null);
+
+  $return = '';
+
+  $help_getter = new ReflectionProperty($class, '__help__');
+  if ($help = $help_getter->getValue()) {
+    $return .= '<h3>'.$help['summary']."</h3>\n";
+    $return .= '<ul>';
+    foreach ($help['examples'] as $example) {
+      $return .= '<li>    ';
+      if ($example['summary']) {
+        $return .= $example['summary'].': ';
+      }
+      $return .= $prefix.$help['path'];
+      if (array_key_exists('arguments', $example)) {
+        $arguments = $example['arguments'];
+        if ($arguments) {
+          if ($help['path']) {
+            $return .= $separator;
+          }
+          $return .= implode($separator, $arguments);
+        }
+      }
+      if (array_key_exists('request', $example)) {
+        $iteration = 0;
+        foreach ($example['request'] as $param => $param_example) {
+          if($request_sep) {
+            $return .= ($iteration === 0) ? $request_sep : $request_sep;
+          } else {
+            $return .= ($iteration === 0) ? '?' : '&';
+          }
+          $return .= $param.'='.$param_example;
+          $iteration++;
+        }
+      }
+
+      $return .= "</li>\n";
+    }
+    $return .= "</ul>\n";
+  }
+  return $return;
+}
