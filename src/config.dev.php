@@ -37,6 +37,7 @@ class DaGdConfig {
       'image',
       'status',
       'isp',
+      'dns',
     ),
     'general.routemap' => array(
       '/help/?$' => 'DaGdHelpController',
@@ -51,11 +52,13 @@ class DaGdConfig {
       '/c/(store)/(.+?)/(.+?)/?$' => 'DaGdCommanderController',
       '/c/(.+?)(?:/| )(.+?)/?$' => 'DaGdCommanderController',
       '/c/?(json|)?/?$' => 'DaGdCommanderController',
+      '/dns/(.+)/?$' => 'DaGdDNSController',
       '/status/(\d+)/?(.+)?/?' => 'DaGdStatusController',
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => 'DaGdImageController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/isp/?(.+)?/?$' => 'DaGdISPController',
-      '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController'),
+      '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController',
+    ),
 
     // These routes take place on CLI useragents only.
     'general.cli_routemap' => array(

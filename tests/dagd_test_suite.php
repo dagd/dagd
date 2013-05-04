@@ -363,6 +363,16 @@ id(new DaGdRegexTest(
   ->setUserAgent(TEXT_UA)
   ->run();
 
+/************ /dns/[xxxxxxx] ************/
+id(new DaGdRegexTest(
+  '/dns/google.com',
+  '@IN NS@'))
+  ->run();
+
+id(new DaGdRegexTest(
+  '/dns/google.com',
+  '@IN A@'))
+  ->run();
 
 $results = DaGdTest::getResultsSummary();
 echo chr(27)."[1;32m Passed        : ".$results['pass'].chr(27)."[0m"."\n";
