@@ -50,27 +50,36 @@ class DaGdWhois {
         return true;
       }
     }
+
+    $transient_sock = null;
     if (filter_var($this->domain, FILTER_VALIDATE_IP)) {
-      $this->whois_server = 'whois.arin.net';
-      return true;
+      $transient_sock = fsockopen('whois.arin.net', 43);
+      if (!$transient_sock) {
+        return false;
+      }
+      fwrite($transient_sock, $this->domain."\r\n");
+    } else {
+      $transient_sock = fsockopen($this->tld().'.whois-servers.net', 43);
+      if (!$transient_sock) {
+        return false;
+      }
+      fwrite($transient_sock, 'domain '.$this->domain."\r\n");
     }
-    $sock = fsockopen($this->tld().'.whois-servers.net', 43);
-    if (!$sock) {
-      return false;
-    }
-    fwrite($sock, 'domain '.$this->domain."\r\n");
+
     $whois_server = null;
     $whois_info = '';
-    while (!feof($sock)) {
-      $line = fgets($sock);
-      if (preg_match('#Whois Server: (.*)#i', $line, $whois_server)) {
+    while (!feof($transient_sock)) {
+      $line = fgets($transient_sock);
+      if (preg_match('#(?:Whois Server|ReferralServer): (.*)#i', $line, $whois_server)) {
         break;
       }
       $whois_info .= $line;
     }
-    fclose($sock);
+    fclose($transient_sock);
     if ($whois_server) {
       $this->whois_server = $whois_server[1];
+      $this->whois_server = str_replace('whois://', '', $this->whois_server);
+      $this->whois_server = str_replace(':43', '', $this->whois_server);
       return true;
     } else {
       $this->skip_detail = true;
