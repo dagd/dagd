@@ -89,6 +89,9 @@ class DaGdConfig {
         // some reason, so we trick fetchWhoisServer().
         'server' => 'gd.whois-servers.net',
       ),
+      'io' => array(
+        'server' => 'io.whois-servers.net',
+      ),
       'ly' => array(
         'server' => 'whois.nic.ly',
       ),
