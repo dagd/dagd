@@ -104,6 +104,12 @@ class DaGdConfig {
       ),
     ),
 
+    // These referral servers are blacklisted. If we hit one of them, we simply
+    // bail out and return the transient result.
+    'whois.referral_blacklist' => array(
+      'rwhois.eng.bellsouth.net', // Service Not Available: exceeded max client sessions
+    ),
+
     // Should error emails get sent out?
     'exceptions.email' => false,
 

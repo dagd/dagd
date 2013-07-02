@@ -6,6 +6,7 @@ class DaGdWhois {
   private $domain;
   private $query = '';
   private $whois_server;
+  private $whois_port = 43;
   private $skip_detail = false;
 
   public function __construct($domain) {
@@ -77,14 +78,22 @@ class DaGdWhois {
     }
     fclose($transient_sock);
     if ($whois_server) {
-      $this->whois_server = $whois_server[1];
-      $this->whois_server = str_replace('whois://', '', $this->whois_server);
-      $this->whois_server = str_replace(':43', '', $this->whois_server);
-      return true;
-    } else {
-      $this->skip_detail = true;
-      return $whois_info;
+      $whois_server = $whois_server[1];
+      $whois_server = preg_replace('#r?whois://#', '', $whois_server);
+      if (strpos($whois_server, ':') !== false) {
+        list($this->whois_server, $this->whois_port) = explode(':', $whois_server, 2);
+      } else {
+        $this->whois_server = $whois_server;
+      }
+
+      $blacklisted_referrals = DaGdConfig::get('whois.referral_blacklist');
+      if (!in_array($this->whois_server, $blacklisted_referrals)) {
+        return true;
+      }
     }
+
+    $this->skip_detail = true;
+    return $whois_info;
   }
 
   /*
@@ -95,7 +104,7 @@ class DaGdWhois {
    * @returns <bool> false if non successful.
    */
   private function fetchWhoisDetails() {
-    $sock = fsockopen($this->whois_server, 43);
+    $sock = fsockopen($this->whois_server, (int)$this->whois_port);
     if (!$sock) {
       return false;
     }
