@@ -17,6 +17,7 @@ class DaGdConfig {
       'Ruby',
       'NetBSD-ftp',
       'HTTPie',
+      'OpenBSD ftp',
     ),
 
     'general.useragent' => 'da.gd/1.0',
