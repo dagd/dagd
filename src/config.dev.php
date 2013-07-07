@@ -18,6 +18,7 @@ class DaGdConfig {
       'NetBSD-ftp',
       'HTTPie',
       'OpenBSD ftp',
+      'haskell-HTTP',
     ),
 
     'general.useragent' => 'da.gd/1.0',
