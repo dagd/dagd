@@ -352,6 +352,8 @@ id(new DaGdRegexTest(
   ->run();
 id(new DaGdRegexTest('/isp/69.171.237.16', '@^Facebook, Inc\.$@'))
   ->run();
+id(new DaGdRegexTest('/isp/98.27.111.11', '@^Road Runner$@'))
+  ->run();
 
 /************ /help ************/
 id(new DaGdRegexTest('/help', '@pixels: /image/200x400/png@'))

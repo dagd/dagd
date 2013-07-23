@@ -22,7 +22,7 @@ final class DaGdISPController extends DaGdBaseClass {
 
     $whois_client = new DaGdWhois($query);
     $response = $whois_client->performQuery();
-    if (preg_match('/OrgName: (.+)/', $response, $org_matches)) {
+    if (preg_match('/Org\-?Name: ?(.+)/', $response, $org_matches)) {
       return trim($org_matches[1]);
     }
     return 'ISP could not be found.';
