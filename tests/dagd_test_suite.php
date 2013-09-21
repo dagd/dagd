@@ -220,6 +220,11 @@ id(new DaGdRegexTest('/w/4.2.2.2', '@Level 3 Communications@'))
   ->run();
 id(new DaGdRegexTest('/w/74.94.18.108', '@OrgAbusePhone@'))
   ->run();
+id(
+  new DaGdRegexTest(
+    '/w/2001:470:8:624:211c:aaaa:1111:1111',
+    '@contact:Name:Private Customer@'))
+  ->run();
 
 /************ /headers/xxxxxxx ************/
 
@@ -355,6 +360,11 @@ id(new DaGdRegexTest(
 id(new DaGdRegexTest('/isp/69.171.237.16', '@^Facebook, Inc\.$@'))
   ->run();
 id(new DaGdRegexTest('/isp/98.27.111.11', '@^Road Runner$@'))
+  ->run();
+id(
+  new DaGdRegexTest(
+    '/isp/2001:470:8:624:211c:aaaa:1111:1111',
+    '@^Private Customer - Hurricane Electric@'))
   ->run();
 
 /************ /help ************/
