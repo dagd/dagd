@@ -58,7 +58,7 @@ class DaGdWhois {
       if (!$transient_sock) {
         return false;
       }
-      fwrite($transient_sock, $this->domain."\r\n");
+      fwrite($transient_sock, 'n + '.$this->domain."\r\n");
     } else {
       $transient_sock = fsockopen($this->tld().'.whois-servers.net', 43);
       if (!$transient_sock) {

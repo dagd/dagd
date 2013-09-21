@@ -218,6 +218,8 @@ id(new DaGdRegexTest('/w/da.gd', '@Ricky@'))
   ->run();
 id(new DaGdRegexTest('/w/4.2.2.2', '@Level 3 Communications@'))
   ->run();
+id(new DaGdRegexTest('/w/74.94.18.108', '@OrgAbusePhone@'))
+  ->run();
 
 /************ /headers/xxxxxxx ************/
 
