@@ -54,11 +54,20 @@ class DaGdWhois {
 
     $transient_sock = null;
     if (filter_var($this->domain, FILTER_VALIDATE_IP)) {
-      $transient_sock = fsockopen('whois.arin.net', 43);
+      $default = DaGdConfig::get('whois.transient_server');
+
+      $default_server = $default['server'];
+      $default_port = 43;
+
+      if (strpos($default_server, ':') !== false) {
+        list($default_server, $default_port) = explode(':', $default_server, 2);
+      }
+
+      $transient_sock = fsockopen($default_server, $default_port);
       if (!$transient_sock) {
         return false;
       }
-      fwrite($transient_sock, 'n + '.$this->domain."\r\n");
+      fwrite($transient_sock, $default['query'].' '.$this->domain."\r\n");
     } else {
       $transient_sock = fsockopen($this->tld().'.whois-servers.net', 43);
       if (!$transient_sock) {
@@ -71,7 +80,11 @@ class DaGdWhois {
     $whois_info = '';
     while (!feof($transient_sock)) {
       $line = fgets($transient_sock);
-      if (preg_match('#(?:Whois Server|ReferralServer): (.*)#i', $line, $whois_server)) {
+      $referral = preg_match(
+        '#(?:Whois Server|ReferralServer): (.*)#i',
+        $line,
+        $whois_server);
+      if ($referral) {
         break;
       }
       $whois_info .= $line;

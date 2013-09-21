@@ -83,6 +83,12 @@ class DaGdConfig {
       'gd',
     ),
 
+    // The default transient whois server.
+    'whois.transient_server' => array(
+      'server' => 'whois.arin.net',
+      'query' => 'n +',
+    ),
+
     // A hardcoded map of whois servers to use for certain domains.
     'whois.hardcode_map' => array(
       // tld (WITHOUT '.') => server
