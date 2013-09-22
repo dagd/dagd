@@ -1,27 +1,6 @@
 <?php
 final class DaGdPastebinController extends DaGdBaseClass {
-  public static $__help__ = array(
-    'summary' =>
-      'Paste blurbs of code. This service will be removed in late January 2013.',
-    'path' => 'paste',
-    'examples' => array(
-      array(
-        'arguments' => array('4'),
-        'request' => array(
-          'lang' => 'php',
-        ),
-        'summary' => 'Fetch and show paste ID 4 and highlight it as PHP code.'),
-      array(
-        'arguments' => array('12'),
-        'summary' => 'Fetch and show paste ID 12, with no color highlighting.'),
-      array(
-        'arguments' => array('7'),
-        'request' => array(
-          'cli' => '1',
-          'lang' => 'php',
-        ),
-        'summary' => 'Show paste 7, highlighted as PHP with terminal colors'),
-    ));
+  public static $__help__ = null;
 
   private $paste_id;
   private function logPasteAccess() {
