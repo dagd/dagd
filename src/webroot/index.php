@@ -6,7 +6,7 @@ require_once dirname(__FILE__).'/resources/php/index_resources.php';
 
 require_application('base');
 
-// All of the applications that we route too.
+// All of the applications that we route to.
 // This is a tad inefficient as we actually load every app's code into
 // mem on each page load, and don't end up using it. If this ends up biting us
 // at some point, we can optimize this.
