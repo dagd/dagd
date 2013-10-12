@@ -395,10 +395,19 @@ id(new DaGdRegexTest(
   ->setTolerateFailure(true)
   ->run();
 
+id(new DaGdRegexTest(
+  '/s?url=http://facebook.com/&shorturl=fbook',
+  '@/fbook@'))
+  ->setTolerateFailure(true)
+  ->run();
+
 id(new DaGdResponseCodeTest('/g', 302))
   ->run();
 
 id(new DaGdResponseCodeTest('/g/foo', 302))
+  ->run();
+
+id(new DaGdResponseCodeTest('/fbook', 302))
   ->run();
 
 $results = DaGdTest::getResultsSummary();
