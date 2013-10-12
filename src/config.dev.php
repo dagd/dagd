@@ -59,7 +59,7 @@ class DaGdConfig {
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => 'DaGdImageController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/isp/?(.+)?/?$' => 'DaGdISPController',
-      '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(original)?$' => 'DaGdShortenController',
+      '/(?:(?:shorten|s|)(?:/|$))?(.+?)?/?(.+)?$' => 'DaGdShortenController',
     ),
 
     // These routes take place on CLI useragents only.

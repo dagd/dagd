@@ -82,7 +82,11 @@ final class DaGdShortenController extends DaGdBaseClass {
     if ($this->long_url) {
       $this->logURLAccess();
       header('X-Original-URL: '.$this->long_url);
-      header('Location: '.$this->long_url);
+      if ($this->route_matches[2]) {
+        header('Location: '.$this->long_url.'/'.$this->route_matches[2]);
+      } else {
+        header('Location: '.$this->long_url);
+      }
       return true;
     } else {
       error404();
@@ -195,15 +199,9 @@ final class DaGdShortenController extends DaGdBaseClass {
 
     // No 'url' was passed, so we are not creating a new short-url.
     if (count($this->route_matches) > 1) {
-      if (end($this->route_matches) == 'original') {
-        $this->escape = false;
-        $this->getLongURL($this->route_matches[1]);
-        return '<a href="'.$this->long_url.'">'.$this->long_url.'</a>';
-      } else {
-        // Attempt to access a stored URL
-        $this->redirect_from_shorturl();
-        return;
-      }
+      // Attempt to access a stored URL
+      $this->redirect_from_shorturl();
+      return;
     } else {
       // We are not attempting to access a stored URL, but we also don't have
       // a 'url' - Show the form so that we can create a new short-url.

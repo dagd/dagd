@@ -388,6 +388,19 @@ id(new DaGdRegexTest(
   '@IN A@'))
   ->run();
 
+/************ /s/[xxxxxxx] ************/
+id(new DaGdRegexTest(
+  '/s?url=http://google.com/&shorturl=g',
+  '@/g@'))
+  ->setTolerateFailure(true)
+  ->run();
+
+id(new DaGdResponseCodeTest('/g', 302))
+  ->run();
+
+id(new DaGdResponseCodeTest('/g/foo', 302))
+  ->run();
+
 $results = DaGdTest::getResultsSummary();
 echo chr(27)."[1;32m Passed        : ".$results['pass'].chr(27)."[0m"."\n";
 echo chr(27)."[1;31m Failed        : ".$results['fail'].chr(27)."[0m"."\n";
