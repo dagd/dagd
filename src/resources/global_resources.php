@@ -144,14 +144,6 @@ function build_given_querystring() {
     }
   }
 
-  foreach ($_POST as $key => $value) {
-    $querystring .= $key;
-    if (!empty($value)) {
-      $querystring .= '='.$value;
-    }
-    $querystring .= '&';
-  }
-
   return rtrim($querystring, '&');
 }
 
