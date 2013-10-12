@@ -198,7 +198,7 @@ final class DaGdShortenController extends DaGdBaseClass {
     }
 
     // No 'url' was passed, so we are not creating a new short-url.
-    if (count($this->route_matches) > 1) {
+    if ($this->route_matches[1]) {
       // Attempt to access a stored URL
       $this->redirect_from_shorturl();
       return;
