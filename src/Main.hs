@@ -43,9 +43,9 @@ prepareResponse a = do
   agent <- reqHeader "User-Agent"
   if isTextUseragent $ T.unpack <$> agent
            then text a
-           else html $ renderHtml $ do
-             H.html $ do
-               H.body $ do
+           else html $ renderHtml $
+             H.html $
+               H.body $
                  H.pre $ H.toHtml a
 
 main = scotty 3000 $ do
