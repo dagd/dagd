@@ -4,7 +4,7 @@ import Control.Monad
 import Control.Monad.IO.Class
 
 import Data.Maybe (fromMaybe)
-import Data.Monoid (mconcat)
+import Data.Monoid (mappend, mconcat)
 import qualified Data.Text.Lazy as T
 import qualified Data.Text.Encoding as TE
 import qualified Network.Socket as S
@@ -42,4 +42,4 @@ main = scotty 3000 $ do
   get "/et/:item" $ do
     item <- param "item"
     qs <- fmap (T.fromStrict . TE.decodeUtf8 . rawQueryString) request
-    redirect $ mconcat ["http://www.etsy.com/listing/", item, qs]
+    redirect $ "http://www.etsy.com/listing/" `mappend` item `mappend` qs
