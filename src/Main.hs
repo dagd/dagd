@@ -8,6 +8,7 @@ import Data.Monoid (mconcat)
 import qualified Data.Text.Lazy as T
 import qualified Network.Socket as S
 
+import Network.HTTP.Types.Status
 import Network.Wai
 import Network.Wai.Middleware.RequestLogger
 import Network.Wai.Middleware.Gzip
@@ -31,3 +32,8 @@ main = scotty 3000 $ do
     query <- param "query"
     x <- liftIO $ whois query
     text $ T.pack . unlines $ fmap (fromMaybe "") x
+
+  get "/status/:code/:message" $ do
+    code <- param "code"
+    message <- param "message"
+    status $ Status code message
