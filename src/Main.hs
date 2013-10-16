@@ -6,6 +6,7 @@ import Control.Monad.IO.Class
 import Data.Maybe (fromMaybe)
 import Data.Monoid (mconcat)
 import qualified Data.Text.Lazy as T
+import qualified Data.Text.Encoding as TE
 import qualified Network.Socket as S
 
 import Network.HTTP.Types.Status
@@ -37,3 +38,8 @@ main = scotty 3000 $ do
     code <- param "code"
     message <- param "message"
     status $ Status code message
+
+  get "/et/:item" $ do
+    item <- param "item"
+    qs <- fmap (T.fromStrict . TE.decodeUtf8 . rawQueryString) request
+    redirect $ mconcat ["http://www.etsy.com/listing/", item, qs]
