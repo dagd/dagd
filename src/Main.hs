@@ -1,8 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+import Control.Applicative
 import Control.Monad
 import Control.Monad.IO.Class
 
+import Data.List (isInfixOf)
 import Data.Maybe (fromMaybe)
 import Data.Monoid (mappend, mconcat)
 import qualified Data.Text.Lazy as T
@@ -15,7 +17,36 @@ import Network.Wai.Middleware.RequestLogger
 import Network.Wai.Middleware.Gzip
 import Network.Whois
 
+import qualified Text.Blaze.Html5 as H
+import Text.Blaze.Html5.Attributes
+import Text.Blaze.Html.Renderer.Text (renderHtml)
+
 import Web.Scotty
+
+isTextUseragent :: Maybe String -> Bool
+isTextUseragent (Just a) = any (`isInfixOf` a) textUAs
+  where
+    textUAs = ["Wget"
+             , "curl"
+             , "libcurl"
+             , "Supybot"
+             , "Ruby"
+             , "NetBSD-ftp"
+             , "HTTPie"
+             , "OpenBSD ftp"
+             , "haskell-HTTP"
+             ]
+isTextUseragent Nothing = False
+
+prepareResponse :: T.Text -> ActionM ()
+prepareResponse a = do
+  agent <- reqHeader "User-Agent"
+  if isTextUseragent $ T.unpack <$> agent
+           then text a
+           else html $ renderHtml $ do
+             H.html $ do
+               H.body $ do
+                 H.pre $ H.toHtml a
 
 main = scotty 3000 $ do
   middleware $ gzip $ def { gzipFiles = GzipCompress }
@@ -23,16 +54,16 @@ main = scotty 3000 $ do
 
   get "/ip" $ do
     ip <- fmap (T.pack . show . remoteHost) request
-    text ip
+    prepareResponse ip
 
   get "/ua" $ do
     agent <- reqHeader "User-Agent"
-    maybe (raise "User-Agent header not found!") text agent
+    maybe (raise "User-Agent header not found!") prepareResponse agent
 
   get "/w/:query" $ do
     query <- param "query"
     x <- liftIO $ whois query
-    text $ T.pack . unlines $ fmap (fromMaybe "") x
+    prepareResponse $ T.pack . unlines $ fmap (fromMaybe "") x
 
   get "/status/:code/:message" $ do
     code <- param "code"
