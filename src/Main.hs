@@ -9,13 +9,13 @@ import Data.Maybe (fromMaybe)
 import Data.Monoid (mappend, mconcat)
 import qualified Data.Text.Lazy as T
 import qualified Data.Text.Encoding as TE
-import qualified Network.Socket as S
 
 import Network.HTTP.Types.Status
 import Network.Wai
 import Network.Wai.Middleware.RequestLogger
 import Network.Wai.Middleware.Gzip
 import Network.Whois
+import qualified Network.Socket as S
 
 import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes
