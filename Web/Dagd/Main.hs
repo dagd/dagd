@@ -41,7 +41,7 @@ main = scotty 3000 $ do
   get "/w/:query" $ do
     query <- param "query"
     x <- liftIO $ whois query
-    prepareResponse $ T.pack . unlines $ fmap (fromMaybe "") x
+    prepareResponse $ T.pack . unlines $ fmap (fromMaybe "") [fst x, snd x]
 
   get "/status/:code/:message" $ do
     code <- param "code"
