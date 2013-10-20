@@ -8,6 +8,7 @@ import Control.Monad.IO.Class
 
 import qualified Data.ByteString.Char8 as BC8
 import qualified Data.ByteString.Lazy as BL
+import Data.List (dropWhileEnd)
 import Data.Maybe (fromMaybe)
 import Data.Monoid (mappend, mconcat)
 import qualified Data.Text as TS
@@ -31,7 +32,7 @@ main = scotty 3000 $ do
   middleware logStdoutDev
 
   get "/ip" $ do
-    ip <- fmap (T.pack . show . remoteHost) request
+    ip <-  fmap (T.pack . init . dropWhileEnd (/= ':') . show . remoteHost) request
     prepareResponse ip
 
   get "/ua" $ do
