@@ -8,7 +8,7 @@ import Control.Monad.IO.Class
 
 import qualified Data.ByteString.Char8 as BC8
 import qualified Data.ByteString.Lazy as BL
-import Data.List (dropWhileEnd)
+import Data.List (dropWhileEnd, intercalate, nub)
 import Data.Maybe (fromMaybe)
 import Data.Monoid (mappend, mconcat)
 import qualified Data.Text as TS
@@ -43,6 +43,20 @@ main = scotty 3000 $ do
     query <- param "query"
     x <- liftIO $ whois query
     prepareResponse $ T.pack . unlines $ fmap (fromMaybe "") [fst x, snd x]
+
+  get "/host/:ip" $ do
+    ip <- param "ip"
+    unless (isIpAddress ip) next
+    h <- liftIO $ fmap (S.addrAddress . head) $ S.getAddrInfo Nothing (Just ip) Nothing
+    name <- liftIO $ fmap fst $ S.getNameInfo [] True False h
+    prepareResponse $ T.pack (fromMaybe "Unable to determine reverse DNS." name)
+
+  get "/host/:host" $ do
+    host <- param "host"
+    results <- liftIO $ do
+      fmap (fmap (init . dropWhileEnd (/= ':') . show . S.addrAddress)) $ do
+        S.getAddrInfo Nothing (Just host) Nothing
+    prepareResponse $ T.pack (intercalate ", " (nub results))
 
   get "/status/:code/:message" $ do
     code <- param "code"

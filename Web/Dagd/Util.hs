@@ -2,10 +2,13 @@
 
 module Web.Dagd.Util where
 
+import Control.Monad
 import Control.Applicative
 
 import Data.List (isInfixOf)
 import qualified Data.Text.Lazy as T
+
+import Network.URI (isIPv4address, isIPv6address)
 
 import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes
@@ -43,3 +46,6 @@ prepareResponse a = do
              H.html $
                H.body $
                  H.pre $ H.toHtml a
+
+isIpAddress :: String -> Bool
+isIpAddress = liftM2 (||) isIPv4address isIPv6address
