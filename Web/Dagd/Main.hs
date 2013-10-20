@@ -32,7 +32,7 @@ main = scotty 3000 $ do
   middleware logStdoutDev
 
   get "/ip" $ do
-    ip <-  fmap (T.pack . init . dropWhileEnd (/= ':') . show . remoteHost) request
+    ip <- fmap (T.pack . init . dropWhileEnd (/= ':') . show . remoteHost) request
     prepareResponse ip
 
   get "/ua" $ do
