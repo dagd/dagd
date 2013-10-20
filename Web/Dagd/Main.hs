@@ -47,14 +47,15 @@ main = scotty 3000 $ do
   get "/host/:ip" $ do
     ip <- param "ip"
     unless (isIpAddress ip) next
-    h <- liftIO $ fmap (S.addrAddress . head) $ S.getAddrInfo Nothing (Just ip) Nothing
+    h <- liftIO $ fmap (S.addrAddress . head) $
+      S.getAddrInfo Nothing (Just ip) Nothing
     name <- liftIO $ fmap fst $ S.getNameInfo [] True False h
     prepareResponse $ T.pack (fromMaybe "Unable to determine reverse DNS." name)
 
   get "/host/:host" $ do
     host <- param "host"
-    results <- liftIO $ do
-      fmap (fmap (init . dropWhileEnd (/= ':') . show . S.addrAddress)) $ do
+    results <- liftIO $
+      fmap (fmap (init . dropWhileEnd (/= ':') . show . S.addrAddress)) $
         S.getAddrInfo Nothing (Just host) Nothing
     prepareResponse $ T.pack (intercalate ", " (nub results))
 
