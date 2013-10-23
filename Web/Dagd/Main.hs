@@ -15,6 +15,7 @@ import qualified Data.Text as TS
 import qualified Data.Text.Lazy as T
 import qualified Data.Text.Encoding as TE
 
+import Network.HTTP.Conduit as NHC
 import Network.HTTP.Types.Status
 import Network.Wai
 import Network.Wai.Middleware.RequestLogger
@@ -61,7 +62,14 @@ main = scotty 3000 $ do
 
   get "/headers" $ do
     r <- request
-    prepareResponse $ showHeaders (requestHeaders r)
+    prepareResponse $ showHeaders (Network.Wai.requestHeaders r)
+
+  get (regex "^/headers/(.*)$") $ do
+    site <- param "1"
+    rsp <- liftIO $ do
+      u <- NHC.parseUrl site
+      NHC.withManager $ NHC.httpLbs u
+    prepareResponse $ showHeaders (NHC.responseHeaders rsp)
 
   get "/status/:code/:message" $ do
     code <- param "code"
