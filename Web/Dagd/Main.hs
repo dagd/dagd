@@ -59,6 +59,10 @@ main = scotty 3000 $ do
         S.getAddrInfo Nothing (Just host) Nothing
     prepareResponse $ T.pack (intercalate ", " (nub results))
 
+  get "/headers" $ do
+    r <- request
+    prepareResponse $ showHeaders (requestHeaders r)
+
   get "/status/:code/:message" $ do
     code <- param "code"
     message <- param "message"
