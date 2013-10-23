@@ -19,6 +19,7 @@ final class DaGdShortenController extends DaGdBaseClass {
     ));
 
   protected $wrap_pre = false;
+  protected $request_methods = array('GET', 'POST');
 
   private $long_url;
   private $short_url;

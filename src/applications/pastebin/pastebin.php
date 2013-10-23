@@ -2,6 +2,8 @@
 final class DaGdPastebinController extends DaGdBaseClass {
   public static $__help__ = null;
 
+  protected $request_method = array('GET', 'POST');
+
   private $paste_id;
   private function logPasteAccess() {
     $query = $this->db_connection->prepare(

@@ -19,6 +19,9 @@ abstract class DaGdBaseClass {
   // Set text/plain by default for all text-useragent responses.
   protected $text_content_type = true;
 
+  // Acceptable request types to listen for in this controller.
+  protected $request_methods = array('GET');
+
   // This is used for DaGdHelpController to generate its list of commands.
   public static $__help__ = null;
 
@@ -44,6 +47,11 @@ abstract class DaGdBaseClass {
   }
 
   public function finalize() {
+    if (!in_array($_SERVER['REQUEST_METHOD'], $this->request_methods)) {
+      error405();
+      return;
+    }
+
     $response = null;
 
     if ($this->text_html_strip && is_text_useragent()) {

@@ -109,6 +109,13 @@ function error400($echo = '400 - bad request', $status_text = 'Bad Request') {
   echo $echo;
 }
 
+function error405(
+  $echo = '405 - method not allowed',
+  $status_text = 'Method not allowed') {
+  header('HTTP/1.1 405 '.$status_text);
+  echo $echo;
+}
+
 function idx(array $array, $key, $default = null) {
   if (array_key_exists($key, $array) && strlen($array[$key])) {
     return $array[$key];
