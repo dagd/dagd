@@ -29,6 +29,7 @@ import qualified Network.Socket as S
 import Graphics.ImageMagick.MagickWand
 
 import Web.Dagd.DBSchema
+import qualified Web.Dagd.TestApp as TestApp
 import Web.Dagd.Util
 import Web.Scotty
 
@@ -43,6 +44,8 @@ main = scotty 3000 $ do
   , connectUser = "dagd"
   , connectPassword = "dagdpassword" -- No, this isn't the prod password ;)
   }
+
+  TestApp.render
 
   get "/ip" $ do
     ip <- fmap (T.pack . init . dropWhileEnd (/= ':') . show . remoteHost) request
