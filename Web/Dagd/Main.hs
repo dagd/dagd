@@ -15,22 +15,36 @@ import qualified Data.Text as TS
 import qualified Data.Text.Lazy as T
 import qualified Data.Text.Encoding as TE
 
+import Database.PostgreSQL.Simple
+
 import Network.HTTP.Conduit as NHC
+import Network.HTTP.Types (notFound404)
 import Network.HTTP.Types.Status
 import Network.Wai
 import Network.Wai.Middleware.RequestLogger
 import Network.Wai.Middleware.Gzip
-import Network.Whois
+import Network.Whois hiding (query)
 import qualified Network.Socket as S
 
 import Graphics.ImageMagick.MagickWand
 
+import Web.Dagd.DBSchema
 import Web.Dagd.Util
 import Web.Scotty
+import Web.Scotty.Trans (ActionT)
+
 
 main = scotty 3000 $ do
   middleware $ gzip $ def { gzipFiles = GzipCompress }
   middleware logStdoutDev
+
+  -- TODO: Move to a config file.
+  db <- liftIO $ connect defaultConnectInfo {
+    connectHost = "localhost"
+  , connectDatabase = "dagd"
+  , connectUser = "dagd"
+  , connectPassword = "dagdpassword" -- No, this isn't the prod password ;)
+  }
 
   get "/ip" $ do
     ip <- fmap (T.pack . init . dropWhileEnd (/= ':') . show . remoteHost) request
@@ -111,3 +125,12 @@ main = scotty 3000 $ do
     mime <- liftIO $ withMagickWandGenesis $ toMime (TS.pack extension)
     setHeader "Content-Type" (T.fromStrict mime)
     raw $ BL.fromStrict img
+
+  get "/:shorturl" $ do
+    shorturl <- param "shorturl" :: ActionM String
+    result <- liftIO $ query db "select * from shorturls where shorturl=?" (Only shorturl) :: ActionT IO [ShortUrl]
+    if length result /= 1
+    then
+      status notFound404
+    else
+      redirect $ (T.pack . TS.unpack . longurl $ head result)
