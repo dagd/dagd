@@ -17,6 +17,8 @@ import qualified Data.Text.Encoding as TE
 
 import Database.PostgreSQL.Simple
 
+import Graphics.ImageMagick.MagickWand
+
 import Network.HTTP.Conduit as NHC
 import Network.HTTP.Types (notFound404)
 import Network.HTTP.Types.Status
@@ -26,11 +28,14 @@ import Network.Wai.Middleware.Gzip
 import Network.Whois hiding (query)
 import qualified Network.Socket as S
 
-import Graphics.ImageMagick.MagickWand
+import qualified Text.Blaze.Html5 as H
+import Text.Blaze.Html5.Attributes
+import Text.Blaze.Html.Renderer.Text (renderHtml)
 
 import Web.Dagd.DBSchema
 import Web.Dagd.Util
 import Web.Scotty
+import Web.Scotty.Trans (ActionT)
 
 main = scotty 3000 $ do
   middleware $ gzip $ def { gzipFiles = GzipCompress }
@@ -130,6 +135,13 @@ main = scotty 3000 $ do
       query db "select * from shorturls where shorturl=?" (Only shorturl)
     if null result
     then
-      status notFound404
+      next
     else
-      redirect (T.pack . TS.unpack . longurl $ head result)
+      redirect (T.pack . TS.unpack . urlLongurl $ head result)
+
+  get "/c" $ do
+    result <- liftIO $
+      query_ db "select * from command_redirects where enabled=true;"
+        :: ActionT IO [Command]
+    let html = H.b "Enabled Commands" : map H.toHtml result
+    prepareResponseHtml $ mconcat html

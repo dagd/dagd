@@ -14,8 +14,9 @@ import qualified Data.Text.Lazy as T
 import Network.HTTP.Types.Header
 import Network.URI (isIPv4address, isIPv6address)
 
+import Text.Blaze (Markup)
 import qualified Text.Blaze.Html5 as H
-import Text.Blaze.Html5.Attributes
+import Text.Blaze.Html5.Attributes as HA
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 
 import Web.Scotty
@@ -50,11 +51,26 @@ prepareResponse :: T.Text -> ActionM ()
 prepareResponse a = do
   agent <- reqHeader "User-Agent"
   if isTextUseragent $ T.unpack <$> agent
-           then text a
-           else html $ renderHtml $
-             H.html $
-               H.body $
-                 H.pre $ H.toHtml a
+  then text a
+  else html $ renderHtml $
+    H.docTypeHtml $ do
+      H.head $ do
+        H.title "da.gd"
+        H.meta H.! HA.charset "utf8"
+      H.body $
+        H.toHtml a
+
+prepareResponseHtml :: Markup -> ActionM ()
+prepareResponseHtml a = do
+  agent <- reqHeader "User-Agent"
+  if isTextUseragent $ T.unpack <$> agent
+  then text $ renderHtml a -- TODO: Strip it
+  else html $ renderHtml $
+    H.docTypeHtml $ do
+      H.head $ do
+        H.title "da.gd"
+        H.meta H.! HA.charset "utf8"
+      H.body a
 
 isIpAddress :: String -> Bool
 isIpAddress = liftM2 (||) isIPv4address isIPv6address
