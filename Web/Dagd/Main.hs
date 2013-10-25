@@ -31,8 +31,6 @@ import Graphics.ImageMagick.MagickWand
 import Web.Dagd.DBSchema
 import Web.Dagd.Util
 import Web.Scotty
-import Web.Scotty.Trans (ActionT)
-
 
 main = scotty 3000 $ do
   middleware $ gzip $ def { gzipFiles = GzipCompress }
@@ -128,9 +126,10 @@ main = scotty 3000 $ do
 
   get "/:shorturl" $ do
     shorturl <- param "shorturl" :: ActionM String
-    result <- liftIO $ query db "select * from shorturls where shorturl=?" (Only shorturl) :: ActionT IO [ShortUrl]
-    if length result /= 1
+    result <- liftIO $
+      query db "select * from shorturls where shorturl=?" (Only shorturl)
+    if null result
     then
       status notFound404
     else
-      redirect $ (T.pack . TS.unpack . longurl $ head result)
+      redirect (T.pack . TS.unpack . longurl $ head result)

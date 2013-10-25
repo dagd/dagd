@@ -19,4 +19,11 @@ data ShortUrl = ShortUrl {
 } deriving Show
 
 instance FromRow ShortUrl where
-  fromRow = ShortUrl <$> field <*> field <*> field <*> field <*> field <*> field <*> field
+  fromRow = ShortUrl <$>
+            field <*>
+            field <*>
+            field <*>
+            field <*>
+            field <*>
+            field <*>
+            field
