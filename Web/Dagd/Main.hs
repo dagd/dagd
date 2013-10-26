@@ -42,12 +42,12 @@ main = scotty 3000 $ do
   middleware logStdoutDev
 
   -- TODO: Move to a config file.
-  db <- liftIO $ connect defaultConnectInfo {
-    connectHost = "localhost"
-  , connectDatabase = "dagd"
-  , connectUser = "dagd"
-  , connectPassword = "dagdpassword" -- No, this isn't the prod password ;)
-  }
+  -- No, this isn't the prod password ;)
+  db <- liftIO $
+    connect defaultConnectInfo { connectHost     = "localhost"
+                               , connectDatabase = "dagd"
+                               , connectUser     = "dagd"
+                               , connectPassword = "dagdpassword" }
 
   get "/ip" $ do
     ip <- fmap (T.pack . init . dropWhileEnd (/= ':') . show . remoteHost) request

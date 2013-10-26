@@ -48,29 +48,32 @@ isTextUseragent (Just a) = any (`isInfixOf` a) textUAs
 isTextUseragent Nothing = False
 
 prepareResponse :: T.Text -> ActionM ()
-prepareResponse a = do
-  agent <- reqHeader "User-Agent"
-  if isTextUseragent $ T.unpack <$> agent
-  then text a
-  else html $ renderHtml $
-    H.docTypeHtml $ do
-      H.head $ do
-        H.title "da.gd"
-        H.meta H.! HA.charset "utf8"
-      H.body $
-        H.toHtml a
+prepareResponse = wrapPrepareResponse . Left
 
 prepareResponseHtml :: Markup -> ActionM ()
-prepareResponseHtml a = do
+prepareResponseHtml = wrapPrepareResponse . Right
+
+wrapPrepareResponse :: Either T.Text Markup -> ActionM ()
+wrapPrepareResponse content = do
   agent <- reqHeader "User-Agent"
   if isTextUseragent $ T.unpack <$> agent
-  then text $ renderHtml a -- TODO: Strip it
-  else html $ renderHtml $
-    H.docTypeHtml $ do
-      H.head $ do
-        H.title "da.gd"
-        H.meta H.! HA.charset "utf8"
-      H.body a
+    then text genText
+    else html $ renderHtml genHtml
+  where
+    genHtml =
+      H.docTypeHtml $ do
+        H.head $ do
+          H.title "da.gd"
+          H.meta H.! HA.charset "utf8"
+        H.body $
+          case content of
+            Left a -> H.toHtml a
+            Right a -> a
+
+    genText =
+      case content of
+        Left a -> a
+        Right a -> renderHtml a
 
 isIpAddress :: String -> Bool
 isIpAddress = liftM2 (||) isIPv4address isIPv6address
