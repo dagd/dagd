@@ -2,6 +2,7 @@
 
 module Web.Dagd.Util where
 
+import Control.Conditional (ifM)
 import Control.Monad
 import Control.Applicative
 
@@ -19,7 +20,7 @@ import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes as HA
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 
-import Web.Scotty
+import Web.Scotty.Trans
 
 safe :: ActionM a -> ActionM (Maybe a)
 safe = (`rescue` const (return Nothing)) . (Just `fmap`)
@@ -47,6 +48,17 @@ isTextUseragent (Just a) = any (`isInfixOf` a) textUAs
              ]
 isTextUseragent Nothing = False
 
+wantsPlainText :: ActionT IO Bool
+wantsPlainText = do
+  -- If given ?text, do what that says.
+  -- Otherwise, check the useragent. If it's textual, return true
+  textP <- paramMay "text" :: ActionM (Maybe String)
+  case textP of
+    Just p -> return $ if p == "0" || p == "false" then False else True
+    Nothing -> do
+      agent <- reqHeader "User-Agent"
+      return $ isTextUseragent $ T.unpack <$> agent
+
 prepareResponse :: T.Text -> ActionM ()
 prepareResponse = wrapPrepareResponse . Left
 
@@ -55,10 +67,8 @@ prepareResponseHtml = wrapPrepareResponse . Right
 
 wrapPrepareResponse :: Either T.Text Markup -> ActionM ()
 wrapPrepareResponse content = do
-  agent <- reqHeader "User-Agent"
-  if isTextUseragent $ T.unpack <$> agent
-    then text genText
-    else html $ renderHtml genHtml
+  --x <- wantsPlainText
+  ifM wantsPlainText (text genText) (html $ renderHtml genHtml)
   where
     genHtml =
       H.docTypeHtml $ do
