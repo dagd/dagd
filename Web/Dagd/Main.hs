@@ -129,15 +129,18 @@ main = scotty 3000 $ do
     setHeader "Content-Type" (T.fromStrict mime)
     raw $ BL.fromStrict img
 
-  get "/:shorturl" $ do
-    shorturl <- param "shorturl" :: ActionM String
+  get (regex "/([[:alnum:]]+)/?(.+)?") $ do
+    shorturl <- param "1" :: ActionM String
+    suffix <- paramMay "2"
     result <- liftIO $
       query db "select * from shorturls where shorturl=?" (Only shorturl)
     if null result
-    then
-      next
-    else
-      redirect (T.pack . TS.unpack . urlLongurl $ head result)
+      then next
+      else do
+        let s = fromMaybe "" (T.append "/" <$> suffix)
+        qs <- fmap (T.fromStrict . TE.decodeUtf8 . rawQueryString) request
+        redirect $ (T.pack . TS.unpack . urlLongurl $ head result) `mappend` s `mappend` qs
+
 
   get "/c" $ do
     result <- liftIO $
