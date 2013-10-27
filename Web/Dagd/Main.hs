@@ -32,7 +32,8 @@ import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 
-import Web.Dagd.DBSchema
+import Web.Dagd.DB.Command
+import Web.Dagd.DB.ShortUrl
 import Web.Dagd.Util
 import Web.Scotty
 import Web.Scotty.Trans (ActionT)

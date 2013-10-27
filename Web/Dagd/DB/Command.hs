@@ -1,4 +1,4 @@
-module Web.Dagd.DBSchema where
+module Web.Dagd.DB.Command where
 
 import Control.Applicative
 
@@ -12,26 +12,6 @@ import Text.Blaze (Markup, ToMarkup, toMarkup)
 import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes
 import Text.Blaze.Html.Renderer.Text (renderHtml)
-
-data ShortUrl = ShortUrl {
-  urlId         :: Integer
-, urlShorturl   :: String
-, urlLongurl    :: Text
-, urlOwnerIp    :: String
-, urlCreationDt :: LocalTime
-, urlEnabled    :: Maybe Bool
-, urlCustom     :: Maybe Bool
-} deriving (Show, Eq)
-
-instance FromRow ShortUrl where
-  fromRow = ShortUrl <$>
-            field <*>
-            field <*>
-            field <*>
-            field <*>
-            field <*>
-            field <*>
-            field
 
 data Command = Command {
   commandId         :: Integer
