@@ -5,13 +5,10 @@ import Control.Applicative
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
 
-import Data.Text (Text)
 import Data.Time.LocalTime
 
-import Text.Blaze (Markup, ToMarkup, toMarkup)
+import Text.Blaze (ToMarkup, toMarkup)
 import qualified Text.Blaze.Html5 as H
-import Text.Blaze.Html5.Attributes
-import Text.Blaze.Html.Renderer.Text (renderHtml)
 
 data Command = Command {
   commandId         :: Integer

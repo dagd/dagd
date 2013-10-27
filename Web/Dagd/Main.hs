@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-
 module Web.Dagd.Main where
 
 import Control.Applicative

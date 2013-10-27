@@ -8,10 +8,9 @@ import Database.PostgreSQL.Simple.FromRow
 import Data.Text (Text)
 import Data.Time.LocalTime
 
-import Text.Blaze (Markup, ToMarkup, toMarkup)
+import Text.Blaze (ToMarkup, toMarkup, toValue)
 import qualified Text.Blaze.Html5 as H
-import Text.Blaze.Html5.Attributes
-import Text.Blaze.Html.Renderer.Text (renderHtml)
+import Text.Blaze.Html5.Attributes as HA
 
 data ShortUrl = ShortUrl {
   urlId         :: Integer
@@ -33,3 +32,6 @@ instance FromRow ShortUrl where
             field <*>
             field
 
+instance ToMarkup ShortUrl where
+  toMarkup a =
+    H.a H.! HA.src (toValue $ urlShorturl a) $ H.toHtml (urlShorturl a)
