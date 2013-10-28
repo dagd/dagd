@@ -27,8 +27,9 @@ import Network.Wai.Middleware.Gzip
 import Network.Whois hiding (query)
 import qualified Network.Socket as S
 
+import Text.Blaze.Html5 ((!))
 import qualified Text.Blaze.Html5 as H
-import Text.Blaze.Html5.Attributes
+import Text.Blaze.Html5.Attributes as HA
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 
 import Web.Dagd.DB.Command
@@ -141,6 +142,24 @@ main = scotty 3000 $ do
         qs <- fmap (T.fromStrict . TE.decodeUtf8 . rawQueryString) request
         redirect $ (T.pack . TS.unpack . urlLongurl $ head result) `mappend` s `mappend` qs
 
+  get "/" $ do
+    prepareResponseHtml $ do
+      H.b "da.gd"
+      mconcat $ replicate 2 H.br
+      H.form ! HA.action "/" ! HA.method "post" $ do
+        "Long URL: "
+        H.input ! HA.type_ "text" ! HA.name "url" ! HA.id "url" ! HA.size "35"
+        mconcat $ replicate 2 H.br
+        "Optional custom suffix (truncated at 10 chars): "
+        H.input ! HA.type_ "text" ! HA.name "shorturl" ! HA.size "20"
+        mconcat $ replicate 2 H.br
+        H.input ! HA.type_ "submit" ! HA.value "Shorten URL"
+        mconcat $ replicate 2 H.br
+        H.a ! HA.href "/help" $ "help"
+        " | "
+        H.a ! HA.href "https://github.com/codeblock/dagd" $ "open source"
+      -- Add this after the form is drawn to ensure the form exists first
+      H.script $ "document.getElementById('url').focus();"
 
   get "/c" $ do
     result <- liftIO $
