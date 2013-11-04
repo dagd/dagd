@@ -27,6 +27,7 @@ import Network.Wai.Middleware.Gzip
 import Network.Whois hiding (query)
 import qualified Network.Socket as S
 
+import Text.Blaze (toValue)
 import Text.Blaze.Html5 ((!))
 import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes as HA
@@ -160,6 +161,41 @@ main = scotty 3000 $ do
         H.a ! HA.href "https://github.com/codeblock/dagd" $ "open source"
       -- Add this after the form is drawn to ensure the form exists first
       H.script $ "document.getElementById('url').focus();"
+
+  post "/" $ do
+    url <- param "url" :: ActionM String
+    shorturl <- param "shorturl" :: ActionM String
+    ip <- fmap (init . dropWhileEnd (/= ':') . show . remoteHost) request
+
+    -- This is conditional-hell and should be refactored at some point.
+    -- It's also rather inefficient.
+    if not $ isValidLongURL url
+      then do
+        status badRequest400
+        prepareResponse $ "Invalid long URL given."
+      else do
+        if (shorturl /= "") && (not $ isValidShortUrl shorturl)
+          then do
+            status badRequest400
+            prepareResponse $ "Invalid short URL given. Valid characters: "
+              `mappend` (T.pack possibleShortUrlChars)
+          else do
+            freeUrl <- liftIO $ isFreeShortUrl db shorturl
+            if (shorturl /= "") && (not $ freeUrl)
+              then do
+                status badRequest400
+                prepareResponse $ "That short URL was already taken!"
+              else do
+                s <- liftIO $ shortUrl shorturl url db
+                liftIO $
+                  execute db ("insert into shorturls("
+                    `mappend` "shorturl, longurl, owner_ip, enabled, "
+                    `mappend` "custom_shorturl) values(?, ?, ?, ?, ?)") $
+                  ShortUrl Nothing s (TS.pack url) ip Nothing True (shorturl /= "")
+
+                prepareResponseHtml $
+                  H.a ! HA.href ("http://da.gd/" `mappend` (toValue s)) $
+                    ("http://da.gd/" `mappend` (H.toHtml s))
 
   get "/c" $ do
     result <- liftIO $
