@@ -48,6 +48,7 @@ isTextUseragent (Just a) = any (`isInfixOf` a) textUAs
              , "HTTPie"
              , "OpenBSD ftp"
              , "haskell-HTTP"
+             , "tnftp"
              ]
 isTextUseragent Nothing = False
 
