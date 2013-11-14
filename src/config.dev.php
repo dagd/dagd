@@ -20,6 +20,7 @@ class DaGdConfig {
       'OpenBSD ftp',
       'haskell-HTTP',
       'tnftp',
+      'WindowsPowerShell',
     ),
 
     'general.useragent' => 'da.gd/1.0',
