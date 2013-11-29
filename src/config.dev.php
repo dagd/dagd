@@ -77,6 +77,7 @@ class DaGdConfig {
     // These are extra headers that get applied globally
     'general.extra_headers' => array(
       'Cache-Control: no-cache',
+      'Access-Control-Allow-Origin: *', // CORS
     ),
 
     // Required PHP extensions
