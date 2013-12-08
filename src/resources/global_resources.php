@@ -140,6 +140,7 @@ function server_or_default($key, $default = null) {
  * @returns string The query string, starting with a '?'.
  */
 function build_given_querystring() {
+  $querystring = '';
   foreach ($_GET as $key => $value) {
     if ($key != '__path__') {
       $querystring .= $key;
@@ -148,6 +149,10 @@ function build_given_querystring() {
       }
       $querystring .= '&';
     }
+    if ($querystring != '') {
+      $querystring = '?'.$querystring;
+    }
+    return $querystring;
   }
 
   $querystring = rtrim($querystring, '&');
