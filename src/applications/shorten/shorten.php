@@ -83,17 +83,16 @@ final class DaGdShortenController extends DaGdBaseClass {
     if ($this->long_url) {
       $this->logURLAccess();
       header('X-Original-URL: '.$this->long_url);
+      $qs = build_given_querystring();
       if ($this->route_matches[2]) {
-        $qs = build_given_querystring();
         header('Location: '.$this->long_url.'/'.$this->route_matches[2].$qs);
       } else {
-        header('Location: '.$this->long_url);
+        header('Location: '.$this->long_url.$qs);
       }
       return true;
     } else {
       error404();
       return false;
-
     }
   }
 
