@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Web.Dagd.Main where
+module Main where
 
 import Control.Applicative
 import Control.Monad
