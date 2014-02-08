@@ -21,6 +21,7 @@ class DaGdConfig {
       'haskell-HTTP',
       'tnftp',
       'WindowsPowerShell',
+      'python-requests',
     ),
 
     'general.useragent' => 'da.gd/1.0',
