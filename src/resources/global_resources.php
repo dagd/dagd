@@ -65,27 +65,25 @@ Your friendly da.gd server',
 }
 set_exception_handler('handle_exception');
 
-function is_text_useragent() {
+function is_html_useragent() {
   if (!isset($_REQUEST['text']) &&
-    array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
-    $useragents = DaGdConfig::get('general.text_useragent_search');
-    $useragents = implode('|', $useragents);
-    return preg_match(
-      '#(?:'.$useragents.')#',
-      $_SERVER['HTTP_USER_AGENT']);
+    array_key_exists('HTTP_ACCEPT', $_SERVER)) {
+    $accept = strtolower(str_replace(' ', '', $_SERVER['HTTP_ACCEPT']));
+    $html_accept_regex = implode('|', DaGdConfig::get('general.html_accept'));
+    return preg_match('#(?:'.$html_accept_regex.')#i', $accept);
   } else {
 
     // Force text useragent response to be on/off...
     $force_text = request_or_default('text');
     if ($force_text != 0 || $force_text == null) {
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
 
-    // If the useragent field is not defined for whatever reason, assume it
-    // is a text/cli thing. Browsers are smart, they know how to send a UA. ;)
-    return true;
+    // ?text wasn't specified and there was no Accept header.
+    // Default to text and assume browsers are smart.
+    return false;
   }
 }
 

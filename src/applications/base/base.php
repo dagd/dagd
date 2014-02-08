@@ -54,7 +54,7 @@ abstract class DaGdBaseClass {
 
     $response = null;
 
-    if ($this->text_html_strip && is_text_useragent()) {
+    if ($this->text_html_strip && !is_html_useragent()) {
       if ($this->text_content_type) {
         header('Content-type: text/plain; charset=utf-8');
         header('X-Content-Type-Options: nosniff');
@@ -67,7 +67,7 @@ abstract class DaGdBaseClass {
       }
     }
 
-    if (!is_text_useragent() && $this->wrap_pre) {
+    if (is_html_useragent() && $this->wrap_pre) {
       $response = '<pre>'.$response.'</pre>';
     }
 

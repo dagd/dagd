@@ -206,7 +206,7 @@ final class DaGdShortenController extends DaGdBaseClass {
     } else {
       // We are not attempting to access a stored URL, but we also don't have
       // a 'url' - Show the form so that we can create a new short-url.
-      if (is_text_useragent()) {
+      if (!is_html_useragent()) {
         // No use in showing a form for text UAs. Rather, show help text.
         return $this->help();
       }

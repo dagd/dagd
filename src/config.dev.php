@@ -3,27 +3,23 @@
 class DaGdConfig {
   public static $config = array(
     'general.environment' => 'development',
+
     'general.debug' => false,
+
     'general.display_errors' => false,
+
     'general.baseurl' => 'http://dagd.local', // DO *NOT* include trailing '/'.
 
-    // This array is imploded by | into a regex. Escape any | or # used in it.
-    // I am not including ELinks here, because it can support linking
-    'general.text_useragent_search' => array(
-      'Wget',
-      'curl',
-      'libcurl',
-      'Supybot',
-      'Ruby',
-      'NetBSD-ftp',
-      'HTTPie',
-      'OpenBSD ftp',
-      'haskell-HTTP',
-      'tnftp',
-      'WindowsPowerShell',
+    'general.useragent' => 'da.gd/1.0',
+
+    // These are the "Accept:" headers we return html for.
+    // Any of these can match anywhere in the Accept header.
+    // These are imploded by "|", so all |'s should be escaped.
+    'general.html_accept' => array(
+      'text/html',
+      'application/xhtml+xml'
     ),
 
-    'general.useragent' => 'da.gd/1.0',
     'general.applications' => array(
       'ip',
       'useragent',
@@ -43,6 +39,7 @@ class DaGdConfig {
       'isp',
       'dns',
     ),
+
     'general.routemap' => array(
       '/help/?$' => 'DaGdHelpController',
       '/ua/?$' => 'DaGdUserAgentController',

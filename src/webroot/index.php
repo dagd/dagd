@@ -37,7 +37,7 @@ $controller_match = null;
 $routes = array();
 $routes += DaGdConfig::get('general.redirect_map');
 
-if (is_text_useragent()) {
+if (!is_html_useragent()) {
   $routes += DaGdConfig::get('general.cli_routemap');
 }
 $routes += DaGdConfig::get('general.routemap');
