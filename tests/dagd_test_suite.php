@@ -2,15 +2,6 @@
 <?php
 // Sorry, this probably isn't as neat as you expected. But this is our test suite. :P
 
-define(
-  'TEXT_UA',
-  'curl/7.19.7 (x86_64-redhat-linux-gnu) libcurl/7.19.7 '.
-    'NSS/3.12.9.0 zlib/1.2.3 libidn/1.18 libssh2/1.2.2');
-
-define(
-  'FIREFOX_UA',
-  'Mozilla/5.0 (X11; Linux x86_64; rv:9.0a1) Gecko/20110824 Firefox/9.0a1');
-
 require_once dirname(dirname(__FILE__)).'/src/resources/global_resources.php';
 
 class DaGdTest {
@@ -18,7 +9,9 @@ class DaGdTest {
   protected $path;
   protected $headers;
   protected $tolerate_failure;
+  protected $accept = '*/*';
   private $original_user_agent;
+
   private static $results = array(
     'pass' => 0,
     'fail' => 0,
@@ -33,6 +26,11 @@ class DaGdTest {
   public function setUserAgent($user_agent) {
     $this->original_user_agent = ini_get('user_agent');
     ini_set('user_agent', $user_agent);
+    return $this;
+  }
+
+  public function setAccept($type) {
+    $this->accept = $type;
     return $this;
   }
 
@@ -68,6 +66,9 @@ class DaGdTest {
       array(
         'http' => array(
           'ignore_errors' => $ignore_errors,
+          'header' => array(
+            'Accept: '.$this->accept."\r\n",
+          ),
         ),
       )
     );
@@ -183,10 +184,10 @@ if (count($argv) > 1) {
 /*********** / ***********/
 
 id(new DaGdContentTypeTest('/', 'text/plain'))
-  ->setUserAgent(TEXT_UA)
+  ->setAccept('text/plain')
   ->run();
 id(new DaGdContentTypeTest('/', 'text/html'))
-  ->setUserAgent(FIREFOX_UA)
+  ->setAccept('text/html')
   ->run();
 id(new DaGdRegexTest('/', '@various conditions@'))
   ->run();
@@ -308,36 +309,36 @@ id(new DaGdRegexTest('/c/json', '@{"g":@'))
 id(new DaGdRegexTest('/c/json/', '@"g1":@'))
   ->run();
 id(new DaGdContentTypeTest('/c/json/', 'application/json'))
-  ->setUserAgent(TEXT_UA)
+  ->setAccept('text/plain')
   ->run();
 id(new DaGdContentTypeTest('/c/json', 'application/json'))
-  ->setUserAgent(FIREFOX_UA)
+  ->setAccept('text/html')
   ->run();
 id(new DaGdContentTypeTest('/c', 'text/html'))
-  ->setUserAgent(FIREFOX_UA)
+  ->setAccept('text/html')
   ->run();
 id(new DaGdContentTypeTest('/c/', 'text/html'))
-  ->setUserAgent(FIREFOX_UA)
+  ->setAccept('text/html')
   ->run();
 id(new DaGdContentTypeTest('/c', 'text/plain'))
-  ->setUserAgent(TEXT_UA)
+  ->setAccept('text/plain')
   ->run();
 id(new DaGdContentTypeTest('/c/', 'text/plain'))
-  ->setUserAgent(TEXT_UA)
+  ->setAccept('text/plain')
   ->run();
 
 /************ /image/xxxxxxx/[xxxxxxx] ************/
 id(new DaGdContentTypeTest('/image/200x200', 'image/png'))
-  ->setUserAgent(FIREFOX_UA)
+  ->setAccept('text/html')
   ->run();
 id(new DaGdContentTypeTest('/image/200x200', 'image/png'))
-  ->setUserAgent(TEXT_UA)
+  ->setAccept('text/plain')
   ->run();
 id(new DaGdContentTypeTest('/image/10x10.jpg', 'image/jpeg'))
-  ->setUserAgent(TEXT_UA)
+  ->setAccept('text/plain')
   ->run();
 id(new DaGdContentTypeTest('/image/30x20.gif?bgcolor=333333', 'image/gif'))
-  ->setUserAgent(FIREFOX_UA)
+  ->setAccept('text/html')
   ->run();
 id(new DaGdResponseCodeTest('/image/300', 400))
   ->run();
@@ -369,12 +370,12 @@ id(
 
 /************ /help ************/
 id(new DaGdRegexTest('/help', '@pixels: /image/200x400/png@'))
-  ->setUserAgent(FIREFOX_UA)
+  ->setAccept('text/html')
   ->run();
 id(new DaGdRegexTest(
   '/help?url_prefix=dagd%20&url_separator=%20&url_request_sep=%20--',
   '@image 200x400 png@'))
-  ->setUserAgent(TEXT_UA)
+  ->setAccept('text/plain')
   ->run();
 
 /************ /dns/[xxxxxxx] ************/
