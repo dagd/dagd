@@ -20,7 +20,7 @@ abstract class DaGdBaseClass {
   protected $text_content_type = true;
 
   // Acceptable request types to listen for in this controller.
-  protected $request_methods = array('GET');
+  protected $request_methods = array('GET', 'HEAD');
 
   // This is used for DaGdHelpController to generate its list of commands.
   public static $__help__ = null;
