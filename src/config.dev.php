@@ -58,6 +58,7 @@ class DaGdConfig {
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => 'DaGdImageController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/isp/?(.+)?/?$' => 'DaGdISPController',
+      '/coshorten/([^/]+)?/?(.*)?$' => 'DaGdCoShortenController',
       '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => 'DaGdShortenController',
     ),
 

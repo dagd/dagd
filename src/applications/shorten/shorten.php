@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__).'/resources/random_string.php';
+require_once dirname(__FILE__).'/coshorten.php';
 
 final class DaGdShortenController extends DaGdBaseClass {
   public static $__help__ = array(
@@ -40,15 +41,15 @@ final class DaGdShortenController extends DaGdBaseClass {
     return !(bool)$count;
   }
 
-  private function getLongURL($longurl) {
+  public function getLongURL($shorturl) {
     $query = $this->db_connection->prepare(
       'SELECT id,longurl FROM shorturls WHERE shorturl=? AND enabled=1');
-    $query->bind_param('s', $longurl);
+    $query->bind_param('s', $shorturl);
     $query->execute();
     $query->bind_result($this->stored_url_id, $this->long_url);
     $query->fetch();
     $query->close();
-    return;
+    return $this->long_url;
   }
 
   private function getNonCustomShortURL($longurl) {
