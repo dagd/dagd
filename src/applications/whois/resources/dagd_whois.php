@@ -87,13 +87,14 @@ class DaGdWhois {
 
       // This can't be easy because there's an edge case where the referral
       // server doesn't exist, so after parsing we get a simple "\r" back.
-      if ($referral && $whois_server && !empty(trim($whois_server[1]))) {
+      $referral_server_name = trim($whois_server[1]);
+      if ($referral && $whois_server && !empty($referral_server_name)) {
         break;
       }
       $whois_info .= $line;
     }
     fclose($transient_sock);
-    if ($whois_server && !empty(trim($whois_server[1]))) {
+    if ($whois_server && !empty($referral_server_name)) {
       $whois_server = $whois_server[1];
       $whois_server = preg_replace('#r?whois://#', '', $whois_server);
       if (strpos($whois_server, ':') !== false) {
