@@ -84,6 +84,9 @@ class DaGdConfig {
       'gd',
     ),
 
+    // Regexes we blacklist on
+    'shorten.longurl_blacklist' => array(),
+
     // The default transient whois server.
     'whois.transient_server' => array(
       'server' => 'whois.arin.net',

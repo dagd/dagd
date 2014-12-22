@@ -41,6 +41,16 @@ final class DaGdShortenController extends DaGdBaseClass {
     return !(bool)$count;
   }
 
+  private function blacklisted($url) {
+    $blacklist_list = DaGdConfig::get('shorten.longurl_blacklist');
+    foreach ($blacklist_list as $regex) {
+      if (preg_match('#'.$regex.'#i', $url)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public function getLongURL($shorturl) {
     $query = $this->db_connection->prepare(
       'SELECT id,longurl FROM shorturls WHERE shorturl=? AND enabled=1');
@@ -171,13 +181,14 @@ final class DaGdShortenController extends DaGdBaseClass {
 
     if ($long_url = request_or_default('url')) {
       // Something has at least been submitted. Is it valid?
-      if (preg_match('@^https?://@', $long_url)) {
+      if (preg_match('@^https?://@', $long_url) &&
+          !$this->blacklisted($long_url)) {
         // Good enough for now...probably needs some better checks.
         $this->long_url = $long_url;
         return true;
       } else {
         error400(
-          'Malformed original URL. Try again (http or https '.
+          'Malformed or blacklisted original URL. Try again (http or https '.
           'protocols only, please.).');
         return false;
       }
