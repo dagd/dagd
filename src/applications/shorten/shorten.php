@@ -227,7 +227,7 @@ final class DaGdShortenController extends DaGdBaseClass {
       // Bring in the form. // TODO: html in strings = bad.
       $content = '***da.gd***
 <form method="POST" action="">
-Long URL: <input type="text" name="url" id="url" size="35" /><br />
+Long URL: <input type="text" name="url" id="url" size="35" autofocus /><br />
 Optional custom suffix (truncated at 10 chars): <input type="text" name="shorturl" size="20" maxlength="10" /><br />
 <input type="submit" value="Shorten URL" /><br />
 [help](/help) | [open source](http://github.com/codeblock/dagd)';
