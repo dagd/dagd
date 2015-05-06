@@ -97,9 +97,7 @@ class DaGdConfig {
     'whois.hardcode_map' => array(
       // tld (WITHOUT '.') => server
       'gd' => array(
-        // Bit of a hack, whois-servers.net answers .gd directly for
-        // some reason, so we trick fetchWhoisServer().
-        'server' => 'gd.whois-servers.net',
+        'server' => 'whois.nic.gd',
       ),
       'io' => array(
         'server' => 'io.whois-servers.net',
