@@ -6,19 +6,19 @@ final class DaGdEditCountController extends DaGdBaseClass {
     'path' => 'ec',
     'examples' => array(
       array(
-        'arguments' => array('Phuzion'),
-        'summary' => 'en.wikipedia.org editcount for user "Phuzion"'),
+        'arguments' => array('CodeBlock'),
+        'summary' => 'en.wikipedia.org editcount for user "CodeBlock"'),
       array(
-        'arguments' => array('Phuzion'),
+        'arguments' => array('CodeBlock'),
         'request' => array(
           'lang' => 'fr'),
-        'summary' => 'fr.wikipedia.org editcount for user "Phuzion"'),
+        'summary' => 'fr.wikipedia.org editcount for user "CodeBlock"'),
       array(
-        'arguments' => array('Phuzion'),
+        'arguments' => array('CodeBlock'),
         'request' => array(
           'lang' => 'en',
           'proj' => 'wikiquote'),
-        'summary' => 'en.wikiquote.org editcount for user "Phuzion"'),
+        'summary' => 'en.wikiquote.org editcount for user "CodeBlock"'),
     ));
 
   public function render() {
