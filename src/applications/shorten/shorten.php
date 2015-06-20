@@ -220,7 +220,7 @@ final class DaGdShortenController extends DaGdBaseClass {
       // a 'url' - Show the form so that we can create a new short-url.
       if (!is_html_useragent()) {
         // No use in showing a form for text UAs. Rather, show help text.
-        return $this->help();
+        return help('DaGdShortenController');
       }
 
       // Not a text useragent because we didn't return above.

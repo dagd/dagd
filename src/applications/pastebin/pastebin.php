@@ -80,7 +80,7 @@ final class DaGdPastebinController extends DaGdBaseClass {
       } else {
         if (!is_html_useragent()) {
           // No use in showing a form for text UAs. Rather, show help text.
-          return $this->help();
+          return help('DaGdPastebinController');
         }
 
         $content = '
