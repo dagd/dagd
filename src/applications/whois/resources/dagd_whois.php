@@ -103,8 +103,9 @@ class DaGdWhois {
       $whois_server = $whois_server[1];
       $whois_server = preg_replace('#r?whois://#', '', $whois_server);
       if (strpos($whois_server, ':') !== false) {
-        list($this->whois_server, $this->whois_port) = 
-          explode(':', $whois_server, 2);
+        $exp = explode(':', $whois_server, 2);
+        $this->whois_server = trim($exp[0]);
+        $this->whois_port = trim($exp[1]);
       } else {
         $this->whois_server = $whois_server;
       }
