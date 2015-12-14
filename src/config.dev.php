@@ -88,6 +88,9 @@ class DaGdConfig {
     // Regexes we blacklist on
     'shorten.longurl_blacklist' => array(),
 
+    // Regex to validate custom short URLs against
+    'shorten.custom_url_regex' => '@^[\d\w-_]+$@i',
+
     // The default transient whois server.
     'whois.transient_server' => array(
       'server' => 'whois.arin.net',

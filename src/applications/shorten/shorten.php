@@ -132,7 +132,7 @@ final class DaGdShortenController extends DaGdBaseClass {
   private function set_shorturl_or_400() {
     if ($short_url = request_or_default('shorturl')) {
       $this->custom_url = true;
-      $valid_char_pattern = '@^[\d\w-_]+$@i';
+      $valid_char_pattern = DaGdConfig::get('shorten.custom_url_regex');
       if (!preg_match($valid_char_pattern, $short_url)) {
         error400('Invalid short URL entered. Alphanumeric only, please.');
         return false;
