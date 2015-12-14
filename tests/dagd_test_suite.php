@@ -257,7 +257,7 @@ id(new DaGdRegexTest('/host/google.com', '@[0-9]\.@'))
   ->run();
 id(new DaGdRegexTest('/host/google.com?noipv6', '@:@', true))
   ->run();
-id(new DaGdRegexTest('/host/69.171.224.42', '@facebook.com@'))
+id(new DaGdRegexTest('/host/4.2.2.2', '@b.resolvers.Level3.net@'))
   ->run();
 
 /************ /break/ ************/
