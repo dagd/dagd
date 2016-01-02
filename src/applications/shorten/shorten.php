@@ -124,7 +124,7 @@ final class DaGdShortenController extends DaGdBaseClass {
     if ($query->execute()) {
       return true;
     } else {
-      error400('Something has gone wrong! :( ... Try again? Please?');
+      error500('Something has gone wrong! :( ... Try again? Please?');
       return false;
     }
   }

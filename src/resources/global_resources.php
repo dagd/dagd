@@ -114,6 +114,13 @@ function error405(
   echo $echo;
 }
 
+function error500(
+  $echo = '500 - internal server error',
+  $status_text = 'Internal Server Error') {
+  header('HTTP/1.1 500 '.$status_text);
+  echo $echo;
+}
+
 function idx(array $array, $key, $default = null) {
   if (array_key_exists($key, $array) && strlen($array[$key])) {
     return $array[$key];
