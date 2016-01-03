@@ -13,12 +13,6 @@ The goal of this project is to just make an easy to use, little-of-everything to
 
 Because a goal of this project is to have it work for many purposes/situations, I encourage feedback, ideas, participation, and interaction with this project. Have some fun with it :)
 
-IPv6
-====
-
-@martinbrandenburg runs a proxy on IPv6 which allows da.gd to work over IPv6,
-and an AAAA record has been pointed to it. Thanks!
-
 What currently works?
 =====================
 
