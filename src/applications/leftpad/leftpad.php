@@ -5,10 +5,12 @@ final class DaGdLeftPadController extends DagdBaseClass {
     'path' => 'leftpad',
     'examples' => array(
       array(
-        'arguments' => array('10', '*', 'hi'),
-        'summary' =>
-          'Pads the input string (last parameter) with the padding character '.
-          '(second parameter) up to the specified length (first parameter)'),
+        'arguments' => array('[length]', '[padding character]', '[input]'),
+        'summary' => 'Left-pads the input string with padding character',
+      ),
+      array(
+        'arguments' => array('10', '@', 'hello'),
+        'summary' => 'Returns "@@@@@hello"')
     ));
 
   public function render() {
