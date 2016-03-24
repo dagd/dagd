@@ -38,6 +38,7 @@ class DaGdConfig {
       'status',
       'isp',
       'dns',
+      'leftpad',
     ),
 
     'general.routemap' => array(
@@ -58,6 +59,7 @@ class DaGdConfig {
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => 'DaGdImageController',
       '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
       '/isp/?(.+)?/?$' => 'DaGdISPController',
+      '/leftpad/([0-9]+)/(.+)/(.+)/?$' => 'DaGdLeftPadController',
       '/coshorten/([^/]+)?/?(.*)?$' => 'DaGdCoShortenController',
       '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => 'DaGdShortenController',
     ),
