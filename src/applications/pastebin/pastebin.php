@@ -1,6 +1,6 @@
 <?php
 final class DaGdPastebinController extends DaGdBaseClass {
-  public static $__help__ = null;
+  public $__help__ = null;
 
   protected $request_method = array('GET', 'POST');
 

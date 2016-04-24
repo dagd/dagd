@@ -4,7 +4,7 @@ require_once dirname(__FILE__).'/resources/random_string.php';
 require_once dirname(__FILE__).'/coshorten.php';
 
 final class DaGdShortenController extends DaGdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'title' => 'shorten',
     'summary' => 'Shorten your long URLs (/, /s, /shorten).',
     'path' => 's',

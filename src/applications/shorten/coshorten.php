@@ -1,7 +1,7 @@
 <?php
 
 final class DaGdCoShortenController extends DaGdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'title' => 'coshorten',
     'summary' => 'The dual of a shorturl is a long url. This gets us back to the original URL.',
     'path' => 'coshorten',

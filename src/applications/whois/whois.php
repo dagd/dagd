@@ -2,7 +2,7 @@
 require_once dirname(__FILE__).'/resources/dagd_whois.php';
 
 final class DaGdWhoisController extends DaGdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'title' => 'whois',
     'summary' => 'Whois a given domain or IP address.',
     'path' => 'w',

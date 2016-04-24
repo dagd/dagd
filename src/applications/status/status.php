@@ -1,6 +1,6 @@
 <?php
 final class DaGdStatusController extends DaGdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'title' => 'status',
     'summary' => 'Generate a response with the given status code.',
     'path' => 'status',

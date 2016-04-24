@@ -1,6 +1,6 @@
 <?php
 final class DaGdIPController extends DaGdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'title' => 'ip',
     'summary' => 'Returns your current IP address.',
     'path' => 'ip',

@@ -1,7 +1,7 @@
 <?php
 
 final class DaGdDNSController extends DaGdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'title' => 'dns',
     'summary' => 'Fetch and return all DNS records for a given hostname.',
     'path' => 'dns',

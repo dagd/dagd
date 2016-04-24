@@ -1,6 +1,6 @@
 <?php
 final class DaGdHeadersController extends DaGdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'title' => 'headers',
     'summary' => 'Show HTTP headers for various conditions.',
     'path' => 'headers',

@@ -1,7 +1,7 @@
 <?php
 
 final class DaGdCommanderController extends DaGdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'summary' => 'A very simple yubnub replacement.',
     'path' => 'c',
     'examples' => array(

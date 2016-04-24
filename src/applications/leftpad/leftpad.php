@@ -1,6 +1,6 @@
 <?php
 final class DaGdLeftPadController extends DagdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'title' => 'leftpad',
     'summary' => 'Left pad a string. As a service.',
     'path' => 'leftpad',

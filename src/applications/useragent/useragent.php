@@ -1,6 +1,6 @@
 <?php
 final class DaGdUserAgentController extends DaGdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'title' => 'useragent',
     'summary' => 'Show the user agent that your browser is sending.',
     'path' => 'ua',

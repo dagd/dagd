@@ -1,6 +1,6 @@
 <?php
 final class DaGdHostController extends DaGdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'title' => 'host',
     'summary' => 'Return the IP or hostname of the given value.',
     'path' => 'host',

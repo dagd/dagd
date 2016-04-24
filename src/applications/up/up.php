@@ -1,6 +1,6 @@
 <?php
 final class DaGdIsItUpController extends DaGdBaseClass {
-  public static $__help__ = array(
+  public $__help__ = array(
     'title' => 'up',
     'summary' => 'Determine whether or not a site is up.',
     'path' => 'up',

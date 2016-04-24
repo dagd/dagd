@@ -188,8 +188,8 @@ function help($class) {
 
   $return = '';
 
-  $help_getter = new ReflectionProperty($class, '__help__');
-  if ($help = $help_getter->getValue()) {
+  $help_getter = new ReflectionClass($class);
+  if ($help = $help_getter->getDefaultProperties()['__help__']) {
     $return .= '<h3>'.$help['summary']."</h3>\n";
     $return .= '<ul>';
     foreach ($help['examples'] as $example) {

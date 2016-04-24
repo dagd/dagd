@@ -28,7 +28,7 @@ abstract class DaGdBaseClass {
   protected $wrap_html = false;
 
   // This is used for DaGdHelpController to generate its list of commands.
-  public static $__help__ = null;
+  public $__help__ = null;
 
   public function __construct() {
     global $__db_handler;
@@ -67,13 +67,13 @@ abstract class DaGdBaseClass {
       $response = $this->renderCLI();
     } else {
       $response = '';
-
       if ($this->wrap_html) {
+        $title = idx($this->__help__, 'title', 'Welcome!');
         $response .= "<!doctype html>\n";
         $response .= '<html>';
         $response .= '  <head>';
         $response .= '    <meta charset="utf-8">';
-        $response .= '    <title>da.gd</title>';
+        $response .= '    <title>da.gd: '.$title.'</title>';
         $response .= '  </head>';
         $response .= '  <body>';
       }
