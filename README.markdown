@@ -28,3 +28,8 @@ Eventually the following will work.
 - /port/google.com/80 - check if port 80 is open on google.com - this will be limited if implemented.
 - /bl/127.0.0.1 - check to see if an IP is on a dnsbl. (Thanks for the idea @Ttech!)
 - Any other ideas you would like to see.
+
+License
+=======
+
+ASL 2.0. See `LICENSE` for more details.
