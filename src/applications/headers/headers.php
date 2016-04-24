@@ -1,6 +1,7 @@
 <?php
 final class DaGdHeadersController extends DaGdBaseClass {
   public static $__help__ = array(
+    'title' => 'headers',
     'summary' => 'Show HTTP headers for various conditions.',
     'path' => 'headers',
     'examples' => array(
@@ -11,6 +12,8 @@ final class DaGdHeadersController extends DaGdBaseClass {
         'arguments' => array('google.com'),
         'summary' => 'The headers that "http://google.com/" sends'),
     ));
+
+  protected $wrap_html = true;
 
   public function render() {
     $headers = array();

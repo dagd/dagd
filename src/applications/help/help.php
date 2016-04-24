@@ -1,6 +1,7 @@
 <?php
 final class DaGdHelpController extends DaGdBaseClass {
   public static $__help__ = array(
+    'title' => 'help',
     'summary' => 'Provides a list of valid commands based on the route map.',
     'path' => 'help',
     'examples' => array(
@@ -9,6 +10,7 @@ final class DaGdHelpController extends DaGdBaseClass {
         'summary' => 'Provide an overall list of commands'),
       ));
 
+  protected $wrap_html = true;
   protected $wrap_pre = false;
   protected $escape = false;
 

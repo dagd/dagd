@@ -1,6 +1,7 @@
 <?php
 final class DaGdIsItUpController extends DaGdBaseClass {
   public static $__help__ = array(
+    'title' => 'up',
     'summary' => 'Determine whether or not a site is up.',
     'path' => 'up',
     'examples' => array(
@@ -8,6 +9,8 @@ final class DaGdIsItUpController extends DaGdBaseClass {
         'arguments' => array('google.com'),
         'summary' => 'Get the HTTP response code for the given site'),
     ));
+
+  protected $wrap_html = true;
 
   public function render() {
     $query = $this->route_matches[1];

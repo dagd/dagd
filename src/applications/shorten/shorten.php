@@ -5,6 +5,7 @@ require_once dirname(__FILE__).'/coshorten.php';
 
 final class DaGdShortenController extends DaGdBaseClass {
   public static $__help__ = array(
+    'title' => 'shorten',
     'summary' => 'Shorten your long URLs (/, /s, /shorten).',
     'path' => 's',
     'examples' => array(
@@ -19,6 +20,7 @@ final class DaGdShortenController extends DaGdBaseClass {
         'summary' => 'An example short URL with a custom suffix'),
     ));
 
+  protected $wrap_html = true;
   protected $wrap_pre = false;
   protected $request_methods = array('GET', 'POST', 'HEAD');
 
@@ -225,16 +227,18 @@ final class DaGdShortenController extends DaGdBaseClass {
 
       // Not a text useragent because we didn't return above.
       // Bring in the form. // TODO: html in strings = bad.
+      $this->escape = false;
       $content = '***da.gd***
-<form method="POST" action="">
+<form method="POST" action="/">
 Long URL: <input type="text" name="url" id="url" size="35" autofocus /><br />
 Optional custom suffix (truncated at 10 chars): <input type="text" name="shorturl" size="20" maxlength="10" /><br />
-<input type="submit" value="Shorten URL" /><br />
+<input type="submit" value="Shorten URL" />
+</form><br />
 [help](/help) | [open source](http://github.com/codeblock/dagd)';
       $markup = new DaGdMarkup($content);
       $markup = $markup->render();
       $markup .= '<script>window.onload = function() {document.getElementById("url").focus();}</script>';
-      echo $markup;
+      return $markup;
     }
   }
 }

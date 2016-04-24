@@ -2,6 +2,7 @@
 
 final class DaGdEditCountController extends DaGdBaseClass {
   public static $__help__ = array(
+    'title' => 'editcount',
     'summary' => 'Gives wikipedia edit count for a user.',
     'path' => 'ec',
     'examples' => array(
@@ -20,6 +21,8 @@ final class DaGdEditCountController extends DaGdBaseClass {
           'proj' => 'wikiquote'),
         'summary' => 'en.wikiquote.org editcount for user "CodeBlock"'),
     ));
+
+  protected $wrap_html = true;
 
   public function render() {
     $query = $this->route_matches[1];

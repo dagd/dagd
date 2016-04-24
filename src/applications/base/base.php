@@ -22,6 +22,11 @@ abstract class DaGdBaseClass {
   // Acceptable request types to listen for in this controller.
   protected $request_methods = array('GET', 'HEAD');
 
+  // Wrap the HTML boilerplate around this response?
+  // Default to false because this is a new thing and might break some
+  // controllers.
+  protected $wrap_html = false;
+
   // This is used for DaGdHelpController to generate its list of commands.
   public static $__help__ = null;
 
@@ -61,14 +66,35 @@ abstract class DaGdBaseClass {
       }
       $response = $this->renderCLI();
     } else {
-      $response = $this->render();
-      if ($this->escape) {
-        $response = htmlspecialchars($response);
-      }
-    }
+      $response = '';
 
-    if (is_html_useragent() && $this->wrap_pre) {
-      $response = '<pre>'.$response.'</pre>';
+      if ($this->wrap_html) {
+        $response .= "<!doctype html>\n";
+        $response .= '<html>';
+        $response .= '  <head>';
+        $response .= '    <meta charset="utf-8">';
+        $response .= '    <title>da.gd</title>';
+        $response .= '  </head>';
+        $response .= '  <body>';
+      }
+
+      $controller_response = $this->render();
+
+      if ($this->escape) {
+        $controller_response = htmlspecialchars($controller_response);
+      }
+
+      if ($this->wrap_pre) {
+        $controller_response = '<pre>'.$controller_response.'</pre>';
+      }
+
+      $response .= $controller_response;
+
+      if ($this->wrap_html) {
+        $response .= '  </body>';
+        $response .= '</html>';
+      }
+
     }
 
     return $response;

@@ -1,6 +1,7 @@
 <?php
 final class DaGdLeftPadController extends DagdBaseClass {
   public static $__help__ = array(
+    'title' => 'leftpad',
     'summary' => 'Left pad a string. As a service.',
     'path' => 'leftpad',
     'examples' => array(
@@ -12,6 +13,8 @@ final class DaGdLeftPadController extends DagdBaseClass {
         'arguments' => array('10', '@', 'hello'),
         'summary' => 'Returns "@@@@@hello"')
     ));
+
+  protected $wrap_html = true;
 
   public function render() {
     $length = (int)$this->route_matches[1];

@@ -1,6 +1,7 @@
 <?php
 final class DaGdStatusController extends DaGdBaseClass {
   public static $__help__ = array(
+    'title' => 'status',
     'summary' => 'Generate a response with the given status code.',
     'path' => 'status',
     'examples' => array(
@@ -11,6 +12,8 @@ final class DaGdStatusController extends DaGdBaseClass {
         'arguments' => array('500', 'testing foo'),
         'summary' => 'Generate a 500 response with the message "testing foo"'),
     ));
+
+  protected $wrap_html = true;
 
   public function render() {
     $code = $this->route_matches[1];

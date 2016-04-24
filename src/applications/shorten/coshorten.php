@@ -2,6 +2,7 @@
 
 final class DaGdCoShortenController extends DaGdBaseClass {
   public static $__help__ = array(
+    'title' => 'coshorten',
     'summary' => 'The dual of a shorturl is a long url. This gets us back to the original URL.',
     'path' => 'coshorten',
     'examples' => array(
@@ -10,6 +11,7 @@ final class DaGdCoShortenController extends DaGdBaseClass {
         'summary' => 'An example short URL with a custom suffix'),
     ));
 
+  protected $wrap_html = true;
   protected $wrap_pre = false;
   protected $request_methods = array('GET');
 
