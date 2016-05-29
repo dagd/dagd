@@ -118,6 +118,9 @@ class DaGdConfig {
       'so' => array(
         'server' => 'whois.nic.so',
       ),
+      'me' => array(
+        'server' => 'whois.nic.me',
+      ),
     ),
 
     // These referral servers are blacklisted. If we hit one of them, we simply
