@@ -127,6 +127,7 @@ class DaGdConfig {
     // bail out and return the transient result.
     'whois.referral_blacklist' => array(
       'rwhois.eng.bellsouth.net', // Service Not Available: exceeded max client sessions
+      'ipmt.rr.com',
     ),
 
     // Should error emails get sent out?
