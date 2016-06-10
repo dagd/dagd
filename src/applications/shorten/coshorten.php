@@ -18,6 +18,9 @@ final class DaGdCoShortenController extends DaGdBaseClass {
   public function render() {
     $longurl = new DagdShortenController();
     $text = $longurl->getLongURL($this->route_matches[1]);
+    if ($text === null) {
+      return error404();
+    }
     $qs = build_given_querystring();
     if ($this->route_matches[2]) {
       return $text.'/'.$this->route_matches[2].$qs;
