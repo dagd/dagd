@@ -73,6 +73,10 @@ abstract class DaGdBaseClass {
         $response .= '<html>';
         $response .= '  <head>';
         $response .= '    <meta charset="utf-8">';
+        $response .= '    <meta name="keywords" content="dagd,da.gd,url,'.
+                     'shorten,shortening,open,source,foss,github">';
+        $response .= '    <meta name="description" content="The da.gd URL '.
+                     'shortening service">';
         $response .= '    <title>da.gd: '.$title.'</title>';
         $response .= '  </head>';
         $response .= '  <body>';
