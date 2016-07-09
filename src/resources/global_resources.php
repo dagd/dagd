@@ -129,7 +129,14 @@ function idx(array $array, $key, $default = null) {
   }
 }
 
-function request_or_default($key, $default = null) {
+function request_or_default(
+  $key,
+  $default = null,
+  $allow_empty = false,
+  $empty_default = null) {
+  if ($allow_empty && isset($_REQUEST[$key]) && strlen($_REQUEST[$key]) == 0) {
+    return $empty_default;
+  }
   return idx($_REQUEST, $key, $default);
 }
 
