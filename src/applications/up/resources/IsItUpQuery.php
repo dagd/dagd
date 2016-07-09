@@ -32,8 +32,6 @@ class IsItUpQuery {
       curl_setopt($curl, CURLOPT_HEADER, true);
       curl_setopt($curl, CURLOPT_NOBODY, true);
       curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-      curl_setopt($curl, CURLOPT_SSLVERSION, 3);
       curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
       $this->response = curl_exec($curl);
       $http_response = curl_getinfo($curl, CURLINFO_HTTP_CODE);
