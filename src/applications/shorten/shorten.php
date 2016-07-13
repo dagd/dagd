@@ -236,7 +236,7 @@ h2 { margin: 0; padding: 0; }';
 Long URL: <input type="text" name="url" id="url" size="35" autofocus /><br />
 Custom short URL (leave blank for random): <input type="text" name="shorturl" size="20" maxlength="10" /><br />
 <input type="submit" value="Shorten URL" />
-</form><br />
+</form>
 [help](/help) | [open source](http://github.com/codeblock/dagd)
 </div>';
       $markup = new DaGdMarkup($content);
