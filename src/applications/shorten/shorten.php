@@ -26,7 +26,7 @@ final class DaGdShortenController extends DaGdBaseClass {
   protected $style = 'body {
   margin: 0; padding: 0;
   border-top: 5px solid #4ab3ee;
-  padding-left: 10px;
+  padding: 10px;
 }
 h2 { margin: 0; padding: 0; }';
 
