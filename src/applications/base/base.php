@@ -27,6 +27,9 @@ abstract class DaGdBaseClass {
   // controllers.
   protected $wrap_html = false;
 
+  // Custom stylization for apps.
+  protected $style = '';
+
   // This is used for DaGdHelpController to generate its list of commands.
   public $__help__ = null;
 
@@ -78,6 +81,10 @@ abstract class DaGdBaseClass {
         $response .= '    <meta name="description" content="The da.gd URL '.
                      'shortening service">';
         $response .= '    <title>da.gd: '.$title.'</title>';
+        $response .= '    <style>';
+        $response .= '      *:not(pre):not(code) { font-family: sans-serif; }';
+        $response .= $this->style;
+        $response .= '    </style>';
         $response .= '  </head>';
         $response .= '  <body>';
       }
