@@ -23,8 +23,11 @@ final class DaGdShortenController extends DaGdBaseClass {
   protected $wrap_html = true;
   protected $wrap_pre = false;
   protected $request_methods = array('GET', 'POST', 'HEAD');
-  protected $style = 'body { margin: 0; padding: 0; }
-#shorten { border-top: 5px solid #4ab3ee; padding-left: 10px;}
+  protected $style = 'body {
+  margin: 0; padding: 0;
+  border-top: 5px solid #4ab3ee;
+  padding-left: 10px;
+}
 h2 { margin: 0; padding: 0; }';
 
   private $long_url;
@@ -231,14 +234,12 @@ h2 { margin: 0; padding: 0; }';
       // Not a text useragent because we didn't return above.
       // Bring in the form. // TODO: html in strings = bad.
       $this->escape = false;
-      $content = '<div id="shorten">
-<h2>da.gd</h2><form method="POST" action="/">
+      $content = '<h2>da.gd</h2><form method="POST" action="/">
 Long URL: <input type="text" name="url" id="url" size="35" autofocus /><br />
 Custom short URL (leave blank for random): <input type="text" name="shorturl" size="20" maxlength="10" /><br />
 <input type="submit" value="Shorten URL" />
 </form>
-[help](/help) | [open source](http://github.com/codeblock/dagd)
-</div>';
+[help](/help) | [open source](http://github.com/codeblock/dagd)';
       $markup = new DaGdMarkup($content);
       $markup = $markup->render();
       $markup .= '<script>window.onload = function() {document.getElementById("url").focus();}</script>';
