@@ -107,7 +107,7 @@ class DaGdWhois {
         $this->whois_server = trim($exp[0]);
         $this->whois_port = trim($exp[1]);
       } else {
-        $this->whois_server = $whois_server;
+        $this->whois_server = trim($whois_server);
       }
 
       $blacklisted_referrals = DaGdConfig::get('whois.referral_blacklist');
