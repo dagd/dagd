@@ -130,6 +130,10 @@ class DaGdConfig {
       'ipmt.rr.com',
     ),
 
+    // How long should we wait before timing out trying to hit a server we are
+    // referred to? (in seconds)
+    'whois.redirect_timeout' => 2,
+
     // Should error emails get sent out?
     'exceptions.email' => false,
 

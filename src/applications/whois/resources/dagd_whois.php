@@ -8,6 +8,9 @@ class DaGdWhois {
   private $whois_server;
   private $whois_port = 43;
   private $skip_detail = false;
+  // Keep the transient result around in case we can't connect to the server
+  // we're redirected to. In that case, we return this result.
+  private $first_query_result = '';
 
   public function __construct($domain) {
     $this->domain = $domain;
@@ -99,6 +102,7 @@ class DaGdWhois {
       $whois_info .= $line;
     }
     fclose($transient_sock);
+    $this->first_query_result = $whois_info;
     if ($whois_server && !empty($referral_server_name)) {
       $whois_server = $whois_server[1];
       $whois_server = preg_replace('#r?whois://#', '', $whois_server);
@@ -128,9 +132,18 @@ class DaGdWhois {
    * @returns <bool> false if non successful.
    */
   private function fetchWhoisDetails() {
-    $sock = fsockopen($this->whois_server, (int)$this->whois_port);
+    $timeout = DaGdConfig::get('whois.redirect_timeout');
+    $errno = 0;
+    $errstr = '';
+    $sock = fsockopen(
+      $this->whois_server,
+      (int)$this->whois_port,
+      $errno,
+      $errstr,
+      null,
+      $timeout);
     if (!$sock) {
-      return false;
+      return $this->first_query_result;
     }
     fwrite($sock, $this->query.$this->domain."\r\n");
     $response = '';
