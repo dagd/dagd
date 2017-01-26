@@ -140,9 +140,8 @@ class DaGdWhois {
       (int)$this->whois_port,
       $errno,
       $errstr,
-      null,
       $timeout);
-    if (!$sock) {
+    if (($errno != 0) || ($errno == 0 && $sock === false)) {
       return $this->first_query_result;
     }
     fwrite($sock, $this->query.$this->domain."\r\n");
