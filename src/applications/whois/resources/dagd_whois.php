@@ -32,8 +32,15 @@ class DaGdWhois {
 
   /*
    * Look up the proper whois server for a domain, given its tld.
-   * Do this by connecting to <tld>.whois-servers.net, and asking them,
-   * and store the result in $this->whois_server.
+   * First, check if we specify an override in the dagd config. If we do, and it
+   * contains only a query line, use it and continue. Otherwise, if it also
+   * contains the server to use, use it and bail out.
+   *
+   * If we are still here, then we have some more work to do. We roughly emulate
+   * the OpenBSD whois client here. First we try whois.nic.TLD. Failing that, we
+   * try TLD.whois-servers.net.
+   *
+   * The result is stored in $this->whois_server.
    *
    * @returns <bool> true if successful, false if not.
    */
@@ -60,7 +67,7 @@ class DaGdWhois {
       $default = DaGdConfig::get('whois.transient_server');
 
       $default_server = $default['server'];
-      $default_port = 43;
+      $default_port = $default['port'];
 
       if (strpos($default_server, ':') !== false) {
         list($default_server, $default_port) = explode(':', $default_server, 2);
@@ -72,10 +79,21 @@ class DaGdWhois {
       }
       fwrite($transient_sock, $default['query'].' '.$this->domain."\r\n");
     } else {
-      $transient_sock = fsockopen($this->tld().'.whois-servers.net', 43);
+      // A domain query (as opposed to an IP query)
+      $generic_servers = DaGdConfig::get('whois.generic_tld_servers');
+      foreach ($generic_servers as $server) {
+        $server_with_tld = str_replace('TLD', $this->tld(), $server['server']);
+        $transient_sock = fsockopen($server_with_tld, idx($server, 'port', 43));
+        if ($transient_sock) {
+          fwrite($transient_sock, $server['query'].$this->domain."\r\n");
+          break;
+        }
+      }
+
       if (!$transient_sock) {
         return false;
       }
+
       fwrite($transient_sock, 'domain '.$this->domain."\r\n");
     }
 

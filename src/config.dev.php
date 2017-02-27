@@ -96,7 +96,21 @@ class DaGdConfig {
     // The default transient whois server.
     'whois.transient_server' => array(
       'server' => 'whois.arin.net',
+      'port' => 43,
       'query' => 'n +',
+    ),
+
+    // General TLD-based whois server lookup. The string "TLD" wlil be replaced
+    // with the tld.
+    'whois.generic_tld_servers' => array(
+      array(
+        'server' => 'TLD.whois-servers.net',
+        'query' => 'domain ',
+      ),
+      array(
+        'server' => 'whois.nic.TLD',
+        'query' => '',
+      ),
     ),
 
     // A hardcoded map of whois servers to use for certain domains.
@@ -120,9 +134,6 @@ class DaGdConfig {
       ),
       'me' => array(
         'server' => 'whois.nic.me',
-      ),
-      'run' => array(
-	'server' => 'whois.donuts.co'
       ),
     ),
 
