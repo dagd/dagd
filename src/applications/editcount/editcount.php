@@ -56,7 +56,7 @@ final class DaGdEditCountController extends DaGdBaseClass {
    }
 
     $counts = file_get_contents(
-      'http://'.$language.'.'.$project.'.org/w/api.php?action=query&list=users'.
+      'https://'.$language.'.'.$project.'.org/w/api.php?action=query&list=users'.
       '&usprop=editcount&format=json&ususers='.urlencode($query));
     $json_counts = json_decode($counts, true);
     $json_counts = $json_counts['query']['users'];
