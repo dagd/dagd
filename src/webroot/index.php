@@ -32,8 +32,10 @@ foreach ($required_extensions as $extension) {
 }
 
 $requested_path = $_GET['__path__'];
+$request_method = $_SERVER['REQUEST_METHOD'];
 $route_matches = null;
-$controller_match = null;
+$metadata_match = null;
+$regex_match_wrong_method = false;
 $routes = array();
 $routes += DaGdConfig::get('general.redirect_map');
 
@@ -42,25 +44,41 @@ if (!is_html_useragent()) {
 }
 $routes += DaGdConfig::get('general.routemap');
 
-foreach ($routes as $route => $controller) {
+foreach ($routes as $route => $metadata) {
   if (preg_match('#^'.$route.'#', $requested_path, $route_matches)) {
-    if (preg_match('#^https?://#', $controller)) {
+    if (preg_match('#^https?://#', $metadata['controller'])) {
       // If the "controller" side starts with http://, we can just redirect.
       // This lets us do things like '/foo/(.*)' => 'http://google.com/$1'
       array_shift($route_matches);
-      $new_location = preg_replace('@^'.$route.'@', $controller, $requested_path);
+      $new_location = preg_replace(
+          '@^'.$route.'@',
+          $metadata['controller'],
+          $requested_path);
       $new_location .= build_given_querystring();
       debug('New Location', $new_location);
       header('Location: '.$new_location);
       return;
     } else {
-      $controller_match = $controller;
+      if (!array_key_exists('methods', $metadata)) {
+        $default_methods = DaGdConfig::get('general.default_methods');
+        $metadata['methods'] = $default_methods;
+      }
+      if (!in_array($request_method, $metadata['methods'])) {
+        // If we the current request method doesn't match, continue on, but
+        // mark that we found a controller that regex-matched, so we can return
+        // a 405 instead of a 404.
+        $regex_match = true;
+        continue;
+      }
+      $metadata_match = $metadata;
+      $regex_match_wrong_method = false;
       break;
     }
   }
 }
 
 $debug = DaGdConfig::get('general.debug');
+
 if (!$route_matches) {
   error404();
   if (!$debug) {
@@ -68,9 +86,17 @@ if (!$route_matches) {
   }
 }
 
+if ($regex_match_wrong_method) {
+  error405();
+  if (!$debug) {
+    die();
+  }
+}
+
 debug('REQUEST variables', print_r($_REQUEST, true));
 debug('Route matches', print_r($route_matches, true));
-debug('Controller', $controller_match);
+debug('Controller', $metadata_match['controller']);
+debug('Metadata', print_r($metadata_match, true));
 debug('Pass-off', 'Passing off to controller.');
 
 // Extra headers
@@ -83,7 +109,7 @@ $git_latest_commit = shell_exec(
   'git --git-dir='.$git_dir.' log -1 --pretty=format:%h');
 header('X-Git-Commit: '.$git_latest_commit);
 
-$instance = new ReflectionClass($controller_match);
+$instance = new ReflectionClass($metadata_match['controller']);
 $instance = $instance->newInstance();
 $instance->setRouteMatches($route_matches);
 debug('Response from Controller', '');

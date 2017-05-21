@@ -13,7 +13,6 @@ final class DaGdCoShortenController extends DaGdBaseClass {
 
   protected $wrap_html = true;
   protected $wrap_pre = false;
-  protected $request_methods = array('GET');
 
   public function render() {
     $longurl = new DagdShortenController();

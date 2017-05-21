@@ -19,12 +19,12 @@ final class DaGdHelpController extends DaGdBaseClass {
     $return = '';
     $controllers_visited = array();
 
-    foreach ($routes as $path => $controller) {
-      if (in_array($controller, $controllers_visited)) {
+    foreach ($routes as $path => $metadata) {
+      if (in_array($metadata['controller'], $controllers_visited)) {
         continue;
       }
-      $return .= help($controller);
-      $controllers_visited[] = $controller;
+      $return .= help($metadata['controller']);
+      $controllers_visited[] = $metadata['controller'];
     }
     return $return;
   }

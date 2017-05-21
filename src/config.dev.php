@@ -41,32 +41,81 @@ class DaGdConfig {
       'leftpad',
     ),
 
+    'general.default_methods' => array(
+      'GET',
+      'HEAD',
+    ),
+
     'general.routemap' => array(
-      '/help/?$' => 'DaGdHelpController',
-      '/ua/?$' => 'DaGdUserAgentController',
-      '/ip/?$' => 'DaGdIPController',
-      '/w/(.+)/?$' => 'DaGdWhoisController',
-      '/ec/(.+)/?$' => 'DaGdEditCountController',
-      '/up/(.+)/?$' => 'DaGdIsItUpController',
-      '/host/(.+)/?$' => 'DaGdHostController',
-      '/headers/?(.+)?/?$' => 'DaGdHeadersController',
-      '/break/?$' => 'DaGdBreakController',
-      '/c/(store)/(.+?)/(.+?)/?$' => 'DaGdCommanderController',
-      '/c/(.+?)(?:/| )(.+?)/?$' => 'DaGdCommanderController',
-      '/c/?(json|)?/?$' => 'DaGdCommanderController',
-      '/dns/(.+)/?$' => 'DaGdDNSController',
-      '/status/(\d+)/?(.+)?/?' => 'DaGdStatusController',
-      '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => 'DaGdImageController',
-      '/(?:p|paste|pastebin)/?(\d+)?/?$' => 'DaGdPastebinController',
-      '/isp/?(.+)?/?$' => 'DaGdISPController',
-      '/leftpad/([0-9]+)/(.+)/(.+)/?$' => 'DaGdLeftPadController',
-      '/coshorten/([^/]+)?/?(.*)?$' => 'DaGdCoShortenController',
-      '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => 'DaGdShortenController',
+      '/help/?$' => array(
+        'controller' => 'DaGdHelpController',
+      ),
+      '/ua/?$' => array(
+        'controller' => 'DaGdUserAgentController',
+      ),
+      '/ip/?$' => array(
+        'controller' => 'DaGdIPController',
+      ),
+      '/w/(.+)/?$' => array(
+        'controller' => 'DaGdWhoisController',
+      ),
+      '/ec/(.+)/?$' => array(
+        'controller' => 'DaGdEditCountController',
+      ),
+      '/up/(.+)/?$' => array(
+        'controller' => 'DaGdIsItUpController',
+      ),
+      '/host/(.+)/?$' => array(
+        'controller' => 'DaGdHostController',
+      ),
+      '/headers/?(.+)?/?$' => array(
+        'controller' => 'DaGdHeadersController',
+      ),
+      '/break/?$' => array(
+        'controller' => 'DaGdBreakController',
+      ),
+      '/c/(store)/(.+?)/(.+?)/?$' => array(
+        'controller' => 'DaGdCommanderController',
+      ),
+      '/c/(.+?)(?:/| )(.+?)/?$' => array(
+        'controller' => 'DaGdCommanderController',
+      ),
+      '/c/?(json|)?/?$' => array(
+        'controller' => 'DaGdCommanderController',
+      ),
+      '/dns/(.+)/?$' => array(
+        'controller' => 'DaGdDNSController',
+      ),
+      '/status/(\d+)/?(.+)?/?' => array(
+        'controller' => 'DaGdStatusController',
+      ),
+      '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => array(
+        'controller' => 'DaGdImageController',
+      ),
+      '/(?:p|paste|pastebin)/?(\d+)?/?$' => array(
+        'controller' => 'DaGdPastebinController',
+      ),
+      '/isp/?(.+)?/?$' => array(
+        'controller' => 'DaGdISPController',
+      ),
+      '/leftpad/([0-9]+)/(.+)/(.+)/?$' => array(
+        'controller' => 'DaGdLeftPadController',
+      ),
+      '/coshorten/([^/]+)?/?(.*)?$' => array(
+        'controller' => 'DaGdCoShortenController',
+      ),
+      '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => array(
+        'controller' => 'DaGdShortenController',
+        'methods' => array('GET', 'HEAD', 'POST'),
+      ),
     ),
 
     // These routes take place on CLI useragents only.
     'general.cli_routemap' => array(
-      '/$' => 'DaGdHelpController',
+      '/$' => array(
+        'controller' => 'DaGdHelpController',
+        'methods' => array('GET', 'HEAD'),
+      ),
     ),
 
     // These are just full-out redirects.

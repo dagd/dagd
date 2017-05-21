@@ -22,7 +22,6 @@ final class DaGdShortenController extends DaGdBaseClass {
 
   protected $wrap_html = true;
   protected $wrap_pre = false;
-  protected $request_methods = array('GET', 'POST', 'HEAD');
   protected $style = 'body {
   margin: 0; padding: 0;
   border-top: 5px solid #4ab3ee;
@@ -85,11 +84,14 @@ h2 { margin: 0; padding: 0; }';
   private function logURLAccess() {
     $query = $this->db_connection->prepare(
       'INSERT INTO shorturl_access(shorturl_id, ip, useragent) VALUES(?,?,?)');
+    $stored_url_id = $this->stored_url_id;
+    $client_ip = client_ip();
+    $useragent = $_SERVER['HTTP_USER_AGENT'];
     $query->bind_param(
       'iss',
-      $this->stored_url_id,
-      client_ip(),
-      $_SERVER['HTTP_USER_AGENT']);
+      $stored_url_id,
+      $client_ip,
+      $useragent);
     if ($query->execute()) {
       return true;
     } else {
