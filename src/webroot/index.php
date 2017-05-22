@@ -46,7 +46,7 @@ $routes += DaGdConfig::get('general.routemap');
 
 foreach ($routes as $route => $metadata) {
   if (preg_match('#^'.$route.'#', $requested_path, $route_matches)) {
-    if (preg_match('#^https?://#', $metadata['controller'])) {
+    if (is_string($metadata) && preg_match('#^https?://#', $metadata)) {
       // If the "controller" side starts with http://, we can just redirect.
       // This lets us do things like '/foo/(.*)' => 'http://google.com/$1'
       array_shift($route_matches);
