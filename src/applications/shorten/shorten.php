@@ -148,8 +148,8 @@ h2 { margin: 0; padding: 0; }';
         return false;
       } else {
         $routes = DaGdConfig::get('general.routemap');
-        foreach ($routes as $route => $controller) {
-          if ($controller == 'DaGdShortenController') {
+        foreach ($routes as $route => $metadata) {
+          if ($metadata['controller'] == 'DaGdShortenController') {
             continue;
           }
           $route = substr($route, 1);
