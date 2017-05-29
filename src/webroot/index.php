@@ -52,7 +52,7 @@ foreach ($routes as $route => $metadata) {
       array_shift($route_matches);
       $new_location = preg_replace(
           '@^'.$route.'@',
-          $metadata['controller'],
+          $metadata,
           $requested_path);
       $new_location .= build_given_querystring();
       debug('New Location', $new_location);
