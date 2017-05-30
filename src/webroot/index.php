@@ -67,7 +67,7 @@ foreach ($routes as $route => $metadata) {
         // If we the current request method doesn't match, continue on, but
         // mark that we found a controller that regex-matched, so we can return
         // a 405 instead of a 404.
-        $regex_match = true;
+        $regex_match_wrong_method = true;
         continue;
       }
       $metadata_match = $metadata;
