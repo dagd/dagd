@@ -33,24 +33,6 @@ foreach ($required_extensions as $extension) {
 
 $requested_path = $_GET['__path__'];
 $request_method = $_SERVER['REQUEST_METHOD'];
-
-$environment = DaGdConfig::get('general.environment');
-// Handle redirect to https if the browser requests it and we are using http.
-if ((!isset($_SERVER['HTTPS']) ||
-     ($_SERVER['HTTPS'] == 'off' || $_SERVER['HTTPS'] == 0) ||
-     isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-     strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) != 'https') &&
-     $environment != 'development') {
-  $headers = getallheaders();
-  foreach ($headers as $key => $value) {
-    if (strtolower($key) == 'upgrade-insecure-requests' && $value == '1') {
-      $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-      header('Location: '.$redirect);
-      return;
-    }
-  }
-}
-
 $route_matches = null;
 $metadata_match = null;
 $regex_match_wrong_method = false;
@@ -69,9 +51,9 @@ foreach ($routes as $route => $metadata) {
       // This lets us do things like '/foo/(.*)' => 'http://google.com/$1'
       array_shift($route_matches);
       $new_location = preg_replace(
-        '@^'.$route.'@',
-        $metadata,
-        $requested_path);
+          '@^'.$route.'@',
+          $metadata,
+          $requested_path);
       $new_location .= build_given_querystring();
       debug('New Location', $new_location);
       header('Location: '.$new_location);
