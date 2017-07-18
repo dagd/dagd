@@ -54,11 +54,12 @@ class DaGdWhois {
         $this->query = $custom_tld['query'].' ';
       }
 
-      // But if we specify our own server, there's no point in looking for
-      // a different one.
       if (array_key_exists('server', $custom_tld)) {
         $this->whois_server = $custom_tld['server'];
-        return true;
+      }
+
+      if (array_key_exists('port', $custom_tld)) {
+        $this->whois_port = $custom_tld['port'];
       }
     }
 
@@ -80,30 +81,47 @@ class DaGdWhois {
       fwrite($transient_sock, $default['query'].' '.$this->domain."\r\n");
     } else {
       // A domain query (as opposed to an IP query)
-      $generic_servers = DaGdConfig::get('whois.generic_tld_servers');
-      $generic_timeout = DaGdConfig::get('whois.generic_tld_timeout');
       $errno = 0;
       $errstr = '';
-      foreach ($generic_servers as $server) {
-        $server_with_tld = str_replace('TLD', $this->tld(), $server['server']);
+      if (!empty($this->whois_server)) {
+        // If we are in the hardcode map, then we set $thois->whois_server
+        // above. This becomes the *transient* server.
+        $generic_timeout = DaGdConfig::get('whois.generic_tld_timeout');
         $transient_sock = fsockopen(
-          $server_with_tld,
-          idx($server, 'port', 43),
+          $this->whois_server,
+          $this->whois_port,
           $errno,
           $errstr,
           $generic_timeout);
         if (($errno != 0) || ($errno == 0 && $transient_sock === false)) {
-          continue;
+          // We're in the hardcode map, but that server didn't work.
+          // Bail out and call it a day.
+          return false;
         }
-        fwrite($transient_sock, $server['query'].$this->domain."\r\n");
-        break;
+        fwrite($transient_sock, $this->query.$this->domain."\r\n");
+      } else {
+        // We're not in the hardcode map.
+        $generic_servers = DaGdConfig::get('whois.generic_tld_servers');
+        $generic_timeout = DaGdConfig::get('whois.generic_tld_timeout');
+        foreach ($generic_servers as $server) {
+          $server_with_tld = str_replace('TLD', $this->tld(), $server['server']);
+          $transient_sock = fsockopen(
+            $server_with_tld,
+            idx($server, 'port', 43),
+            $errno,
+            $errstr,
+            $generic_timeout);
+          if (($errno != 0) || ($errno == 0 && $transient_sock === false)) {
+            continue;
+          }
+          fwrite($transient_sock, $server['query'].$this->domain."\r\n");
+          break;
+        }
       }
 
       if (!$transient_sock) {
         return false;
       }
-
-      fwrite($transient_sock, 'domain '.$this->domain."\r\n");
     }
 
     $whois_server = null;
@@ -171,7 +189,7 @@ class DaGdWhois {
     if (($errno != 0) || ($errno == 0 && $sock === false)) {
       return $this->first_query_result;
     }
-    fwrite($sock, $this->query.$this->domain."\r\n");
+    fwrite($sock, $this->domain."\r\n");
     $response = '';
     while (!feof($sock)) {
       $response .= fgets($sock);
