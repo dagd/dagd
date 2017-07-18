@@ -153,36 +153,43 @@ class DaGdConfig {
     // with the tld.
     'whois.generic_tld_servers' => array(
       array(
-        'server' => 'TLD.whois-servers.net',
-        'query' => 'domain ',
-      ),
-      array(
         'server' => 'whois.nic.TLD',
         'query' => '',
       ),
+      array(
+        'server' => 'TLD.whois-servers.net',
+        'query' => 'domain ',
+      ),
     ),
 
+    // How long should we wait before we try the next server in the above list?
+    'whois.generic_tld_timeout' => 1,
+
     // A hardcoded map of whois servers to use for certain domains.
+    // Often these use the typical "whois.nic.TLD" without any 'domain ' prefix
+    // in their query.
     'whois.hardcode_map' => array(
       // tld (WITHOUT '.') => server
-      'gd' => array(
-        'server' => 'whois.nic.gd',
+      'com' => array(
+        // Since whois.nic.com doesn't work. We would fall back, but this makes
+        // things a bit quicker.
+        'server' => 'com.whois-servers.net',
+        'query' => 'domain ',
       ),
-      'io' => array(
-        'server' => 'io.whois-servers.net',
+      'org' => array(
+        // Same deal here: whois.nic.org times out. Fallback works, but let's
+        // avoid needing it.
+        'server' => 'org.whois-servers.net',
+        'query' => 'domain ',
       ),
-      'ly' => array(
-        'server' => 'whois.nic.ly',
+      'net' => array(
+        // Yep.
+        'server' => 'net.whois-servers.net',
+        'query' => 'domain ',
       ),
       'de' => array(
         'server' => 'whois.denic.de',
         'query' => '-T dn,ace',
-      ),
-      'so' => array(
-        'server' => 'whois.nic.so',
-      ),
-      'me' => array(
-        'server' => 'whois.nic.me',
       ),
     ),
 

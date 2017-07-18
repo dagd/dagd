@@ -81,13 +81,22 @@ class DaGdWhois {
     } else {
       // A domain query (as opposed to an IP query)
       $generic_servers = DaGdConfig::get('whois.generic_tld_servers');
+      $generic_timeout = DaGdConfig::get('whois.generic_tld_timeout');
+      $errno = 0;
+      $errstr = '';
       foreach ($generic_servers as $server) {
         $server_with_tld = str_replace('TLD', $this->tld(), $server['server']);
-        $transient_sock = fsockopen($server_with_tld, idx($server, 'port', 43));
-        if ($transient_sock) {
-          fwrite($transient_sock, $server['query'].$this->domain."\r\n");
-          break;
+        $transient_sock = fsockopen(
+          $server_with_tld,
+          idx($server, 'port', 43),
+          $errno,
+          $errstr,
+          $generic_timeout);
+        if (($errno != 0) || ($errno == 0 && $transient_sock === false)) {
+          continue;
         }
+        fwrite($transient_sock, $server['query'].$this->domain."\r\n");
+        break;
       }
 
       if (!$transient_sock) {
