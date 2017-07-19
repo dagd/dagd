@@ -122,7 +122,7 @@ function error500(
 }
 
 function idx(array $array, $key, $default = null) {
-  if (array_key_exists($key, $array) && strlen($array[$key])) {
+  if (array_key_exists($key, $array) && !empty($array[$key])) {
     return $array[$key];
   } else {
     return $default;
@@ -196,7 +196,7 @@ function help($class) {
   $return = '';
 
   $help_getter = new ReflectionClass($class);
-  if ($help = $help_getter->getDefaultProperties()['__help__']) {
+  if ($help = idx($help_getter->getDefaultProperties(), '__help__')) {
     $return .= '<h3>'.$help['summary']."</h3>\n";
     $return .= '<ul>';
     foreach ($help['examples'] as $example) {
