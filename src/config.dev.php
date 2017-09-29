@@ -166,8 +166,6 @@ class DaGdConfig {
     'whois.generic_tld_timeout' => 1,
 
     // A hardcoded map of whois servers to use for certain domains.
-    // Often these use the typical "whois.nic.TLD" without any 'domain ' prefix
-    // in their query.
     'whois.hardcode_map' => array(
       // tld (WITHOUT '.') => server
       'com' => array(
@@ -190,6 +188,16 @@ class DaGdConfig {
       'de' => array(
         'server' => 'whois.denic.de',
         'query' => '-T dn,ace',
+      ),
+      'me' => array(
+        // It appears whois.nic.me will handle its own responses without any
+        // need for a redirect. Further, it seems the redirect attempt on some
+        // domains here is futile. e.g. Following the redirect for
+        // "hotspot.me" takes us to a server that doesn't know that domain even
+        // exists.
+        'server' => 'whois.nic.me',
+        'query' => '',
+        'query_directly' => true,
       ),
     ),
 

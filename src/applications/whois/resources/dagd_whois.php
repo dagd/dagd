@@ -8,6 +8,9 @@ class DaGdWhois {
   private $whois_server;
   private $whois_port = 43;
   private $skip_detail = false;
+  // Used in the hardcode map where we never want to treat a server as
+  // transient.
+  private $query_directly = false;
   // Keep the transient result around in case we can't connect to the server
   // we're redirected to. In that case, we return this result.
   private $first_query_result = '';
@@ -61,6 +64,17 @@ class DaGdWhois {
       if (array_key_exists('port', $custom_tld)) {
         $this->whois_port = $custom_tld['port'];
       }
+
+      if (array_key_exists('query_directly', $custom_tld)) {
+        $this->query_directly = $custom_tld['query_directly'];
+      }
+    }
+
+    if ($this->query_directly) {
+      // If we are in the hardcode map and told to query directly, we don't
+      // want to bother with any of the transient stuff below. Bail out after
+      // setting the variables above.
+      return true;
     }
 
     $transient_sock = null;
@@ -84,7 +98,7 @@ class DaGdWhois {
       $errno = 0;
       $errstr = '';
       if (!empty($this->whois_server)) {
-        // If we are in the hardcode map, then we set $thois->whois_server
+        // If we are in the hardcode map, then we set $this->whois_server
         // above. This becomes the *transient* server.
         $generic_timeout = DaGdConfig::get('whois.generic_tld_timeout');
         $transient_sock = fsockopen(
