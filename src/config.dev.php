@@ -206,6 +206,7 @@ class DaGdConfig {
     'whois.referral_blacklist' => array(
       'rwhois.eng.bellsouth.net', // Service Not Available: exceeded max client sessions
       'ipmt.rr.com',
+      'www.enom.com', // Parsed as referral target in some cases but doesn't answer
     ),
 
     // How long should we wait before timing out trying to hit a server we are

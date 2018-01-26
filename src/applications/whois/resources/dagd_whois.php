@@ -140,8 +140,20 @@ class DaGdWhois {
 
     $whois_server = null;
     $whois_info = '';
+    $referred = false;
+
+    // We need to store the entire result because even if we get referred to a
+    // server, we might fail querying it and fail back to the transient result.
     while (!feof($transient_sock)) {
-      $line = fgets($transient_sock);
+      $whois_info .= fgets($transient_sock);
+    }
+
+    fclose($transient_sock);
+    $this->first_query_result = $whois_info;
+    $blacklisted_referrals = DaGdConfig::get('whois.referral_blacklist');
+
+    // Now we look for a referral server.
+    foreach(preg_split('#((\r?\n)|(\r\n?))#', $whois_info) as $line){
       $referral = preg_match(
         '#(?:Whois Server|ReferralServer): (.*)#i',
         $line,
@@ -150,32 +162,30 @@ class DaGdWhois {
       // This can't be easy because there's an edge case where the referral
       // server doesn't exist, so after parsing we get a simple "\r" back.
       $referral_server_name = null;
-      if (!empty($whois_server) && count($whois_server) > 0) {
-        $referral_server_name = trim($whois_server[1]);
-      }
-      if (!empty($referral) &&
-          !empty($whois_server) &&
-          !empty($referral_server_name)) {
-        break;
-      }
-      $whois_info .= $line;
-    }
-    fclose($transient_sock);
-    $this->first_query_result = $whois_info;
-    if ($whois_server && !empty($referral_server_name)) {
-      $whois_server = $whois_server[1];
-      $whois_server = preg_replace('#r?whois://#', '', $whois_server);
-      if (strpos($whois_server, ':') !== false) {
-        $exp = explode(':', $whois_server, 2);
-        $this->whois_server = trim($exp[0]);
-        $this->whois_port = trim($exp[1]);
-      } else {
-        $this->whois_server = trim($whois_server);
+      if (!empty($whois_server) && count($whois_server) > 1) {
+        $referred = true;
+        $referral_server_name = preg_replace(
+            '#r?whois://#',
+            '',
+            $whois_server[1]);
+        $referral_server_name = trim($referral_server_name);
+
+        if (strpos($referral_server_name, ':') !== false) {
+          $exp = explode(':', $referral_server_name, 2);
+          $this->whois_server = trim($exp[0]);
+          $this->whois_port = trim($exp[1]);
+        } else {
+          $this->whois_server = $referral_server_name;
+        }
       }
 
-      $blacklisted_referrals = DaGdConfig::get('whois.referral_blacklist');
-      if (!in_array($this->whois_server, $blacklisted_referrals)) {
-        return true;
+      // If the server we found above is NOT in the blacklist, we are good to
+      // jump away and query it.
+      if ($referred) {
+        if (!in_array($this->whois_server, $blacklisted_referrals)) {
+          return true;
+        }
+        $referred = false;
       }
     }
 
