@@ -28,7 +28,7 @@ final class DaGdDNSController extends DaGdBaseClass {
 
   public function render() {
     $hostname = $this->route_matches[1];
-    $this->dns = dns_get_record($hostname);
+    $this->dns = dns_get_record($hostname, DNS_ALL);
 
     $records = '';
 
