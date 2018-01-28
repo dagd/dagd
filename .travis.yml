@@ -30,3 +30,5 @@ script: ./tests/dagd_test_suite.php
 branches:
   only:
     - master
+notifications:
+  webhooks: https://sl.da.gd/travisci?channel=%23dagd
