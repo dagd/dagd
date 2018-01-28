@@ -13,7 +13,7 @@ before_install:
   - sudo sed -i "s/DocumentRoot.*/DocumentRoot $(pwd | sed 's/\//\\\//g')\/src\/webroot/g" /etc/apache2/sites-available/dagd.conf
   - sudo sed -i "s/CustomLog.*/CustomLog \/var\/log\/apache2\/dagd-access.log combined/g" /etc/apache2/sites-available/dagd.conf
   - sudo sed -i "s/ErrorLog.*/ErrorLog \/var\/log\/apache2\/dagd-error.log/g" /etc/apache2/sites-available/dagd.conf
-  - sudo sed -i "3i<Directory $(pwd)/src/webroot>Require all granted</Directory>" /etc/apache2/sites-available/dagd.conf
+  - sudo sed -i "3i<Directory $(pwd)/src/webroot>\nRequire all granted\n</Directory>" /etc/apache2/sites-available/dagd.conf
   - cat /etc/apache2/sites-available/dagd.conf
   - echo "127.0.0.1 dagd.local" | sudo tee --append /etc/hosts
   - sudo ln -s /etc/apache2/sites-available/dagd.conf /etc/apache2/sites-enabled/dagd.conf

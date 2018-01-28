@@ -224,7 +224,7 @@ id(new DaGdRegexTest('/w/74.94.18.108', '@OrgAbusePhone@'))
 id(
   new DaGdRegexTest(
     '/w/2001:470:8:624:211c:aaaa:1111:1111',
-    '@contact:Name:Private Customer@'))
+    '@Hurricane Electric@'))
   ->run();
 
 /************ /headers/xxxxxxx ************/
@@ -365,7 +365,7 @@ id(new DaGdRegexTest('/isp/98.27.111.11', '@^Time Warner Cable Internet LLC$@'))
 id(
   new DaGdRegexTest(
     '/isp/2001:470:8:624:211c:aaaa:1111:1111',
-    '@^Private Customer - Hurricane Electric@'))
+    '@^Hurricane Electric@'))
   ->run();
 
 /************ /help ************/
