@@ -14,6 +14,7 @@ final class DaGdStatusController extends DaGdBaseClass {
     ));
 
   protected $wrap_html = true;
+  protected $never_newline = true;
 
   public function render() {
     $code = $this->route_matches[1];

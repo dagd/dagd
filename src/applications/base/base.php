@@ -30,6 +30,10 @@ abstract class DaGdBaseClass {
   // This is used for DaGdHelpController to generate its list of commands.
   public $__help__ = null;
 
+  // If true, make ?strip ineffective -- never allow a newline to terminate
+  // output.
+  protected $never_newline = false;
+
   public function __construct() {
     global $__db_handler;
     $this->db_connection = $__db_handler;
@@ -97,7 +101,10 @@ abstract class DaGdBaseClass {
         $response .= '  </body>';
         $response .= '</html>';
       }
+    }
 
+    if (!$this->never_newline && !request_or_default('strip', false, true, true)) {
+        $response .= "\n";
     }
 
     return $response;

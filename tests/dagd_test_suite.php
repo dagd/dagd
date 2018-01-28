@@ -411,6 +411,16 @@ id(new DaGdResponseCodeTest('/g/foo', 302))
 id(new DaGdResponseCodeTest('/fbook', 302))
   ->run();
 
+/************ ?strip ************/
+id(new DaGdRegexTest('/ip', '@\n$@'))
+  ->run();
+id(new DaGdRegexTest('/ip?strip=0', '@\n$@'))
+  ->run();
+id(new DaGdRegexTest('/ip?strip', '@[0-9]$@'))
+  ->run();
+id(new DaGdRegexTest('/ip?strip=1', '@[0-9]$@'))
+  ->run();
+
 $results = DaGdTest::getResultsSummary();
 echo chr(27)."[1;32m Passed        : ".$results['pass'].chr(27)."[0m"."\n";
 echo chr(27)."[1;31m Failed        : ".$results['fail'].chr(27)."[0m"."\n";
