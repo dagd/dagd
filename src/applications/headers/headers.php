@@ -33,7 +33,7 @@ final class DaGdHeadersController extends DaGdBaseClass {
       }
 
       foreach ($headers as $header) {
-        $response .= htmlspecialchars($header."\n");
+        $response .= $header."\n";
       }
 
     } else {
@@ -46,7 +46,7 @@ final class DaGdHeadersController extends DaGdBaseClass {
           }
         }
 
-        $response .= htmlspecialchars($key.': '.$value."\n");
+        $response .= $key.': '.$value."\n";
       }
     }
     return $response;
