@@ -1,4 +1,6 @@
 <?php
+require_once dirname(__FILE__).'/resources/getallheaders.php';
+
 final class DaGdHeadersController extends DaGdBaseClass {
   public $__help__ = array(
     'title' => 'headers',
