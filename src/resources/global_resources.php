@@ -17,7 +17,7 @@ if ($display_errors) {
 require_once dirname(__FILE__).'/dagdmarkup.php';
 require_once dirname(__FILE__).'/sql.php';
 
-function handle_exception(Exception $e) {
+function handle_exception($e) {
   $debug = DaGdConfig::get('general.debug');
   $email = DaGdConfig::get('exceptions.email');
   $email_in_debug = DaGdConfig::get('exceptions.email_in_debug');
