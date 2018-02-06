@@ -226,6 +226,26 @@ id(
     '/w/2001:470:8:624:211c:aaaa:1111:1111',
     '@Hurricane Electric@'))
   ->run();
+id(
+  new DaGdRegexTest(
+    '/w/2001:470:8:624:211c:aaaa:1111:1111',
+    '@Hurricane Electric@'))
+  ->run();
+id(
+  new DaGdRegexTest(
+    '/w/trees.network',
+    '@Registrar WHOIS Server: whois.1api.net@'))
+  ->run();
+id(
+  new DaGdRegexTest(
+    '/w/trees.network',
+    '@Tech State/Province: West Yorkshire@'))
+  ->run();
+id(
+  new DaGdRegexTest(
+    '/w/donuts.co',
+    '@Registrant Organization: Donuts Inc.@'))
+  ->run();
 
 /************ /headers/xxxxxxx ************/
 
@@ -365,7 +385,7 @@ id(new DaGdRegexTest('/isp/98.27.111.11', '@^Time Warner Cable Internet LLC$@'))
 id(
   new DaGdRegexTest(
     '/isp/2001:470:8:624:211c:aaaa:1111:1111',
-    '@^Hurricane Electric@'))
+    '@Hurricane Electric@'))
   ->run();
 
 /************ /help ************/

@@ -204,9 +204,16 @@ class DaGdConfig {
     // These referral servers are blacklisted. If we hit one of them, we simply
     // bail out and return the transient result.
     'whois.referral_blacklist' => array(
-      'rwhois.eng.bellsouth.net', // Service Not Available: exceeded max client sessions
       'ipmt.rr.com',
-      'www.enom.com', // Parsed as referral target in some cases but doesn't answer
+      // Service Not Available: exceeded max client sessions
+      'rwhois.eng.bellsouth.net',
+      // Parsed as referral target in some cases but doesn't answer
+      'www.enom.com',
+      // Referral target but doesn't seem to know anything
+      'whois.1api.net',
+      // Referral target but utterly useless (wants you to visit their web
+      // service)
+      'whois.godaddy.com',
     ),
 
     // How long should we wait before timing out trying to hit a server we are
