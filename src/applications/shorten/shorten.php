@@ -30,6 +30,7 @@ final class DaGdShortenController extends DaGdBaseClass {
 h2 { margin: 0; padding: 0; }';
 
   private $long_url;
+  private $longurl_hash;
   private $short_url;
   private $stored_url_id;
   private $custom_url = false;
@@ -69,11 +70,11 @@ h2 { margin: 0; padding: 0; }';
     return $this->long_url;
   }
 
-  private function getNonCustomShortURL($longurl) {
+  private function getNonCustomShortURL($longurl_hash) {
     $query = $this->db_connection->prepare(
-      'SELECT id,shorturl FROM shorturls WHERE longurl=? AND enabled=1 AND '.
-      'custom_shorturl=0 ORDER BY id DESC LIMIT 1');
-    $query->bind_param('s', $longurl);
+      'SELECT id,shorturl FROM shorturls WHERE longurl_hash=? AND enabled=1 '.
+      'AND custom_shorturl=0 ORDER BY id DESC LIMIT 1');
+    $query->bind_param('s', $longurl_hash);
     $query->execute();
     $query->bind_result($this->stored_url_id, $this->short_url);
     $query->fetch();
@@ -122,14 +123,15 @@ h2 { margin: 0; padding: 0; }';
       return true;
     }
     $query = $this->db_connection->prepare(
-      'INSERT INTO shorturls(shorturl, longurl, owner_ip, custom_shorturl) '.
-      'VALUES(?, ?, ?, ?);');
+      'INSERT INTO shorturls(shorturl, longurl, owner_ip, custom_shorturl, '.
+      'longurl_hash) VALUES(?, ?, ?, ?, ?);');
     $query->bind_param(
-      'sssi',
+      'sssis',
       $this->short_url,
       $this->long_url,
       client_ip(),
-      $this->custom_url);
+      $this->custom_url,
+      $this->longurl_hash);
 
     if ($query->execute()) {
       return true;
@@ -167,12 +169,14 @@ h2 { margin: 0; padding: 0; }';
         }
       }
     } else {
-      $this->getNonCustomShortURL($this->long_url);
+      $this->longurl_hash = hash('sha256', $this->long_url);
+      $this->getNonCustomShortURL($this->longurl_hash);
       if ($this->short_url) {
         $this->store_url = false;
       } else {
         $this->short_url = randstr(rand(4, 5));
         while (!$this->isFreeShortURL()) {
+          debug('Hash collision', 'Calling randstr again');
           $this->short_url = randstr(4, 5);
         }
       }
