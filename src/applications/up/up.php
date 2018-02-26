@@ -11,7 +11,22 @@ final class DaGdIsItUpController extends DaGdBaseClass {
       array(
         'arguments' => array('google.com'),
         'summary' => 'Get the HTTP response code for the given site'),
-    ));
+      array(
+        'arguments' => array('elrod.me'),
+        'summary' => 'Get the HTTP response code, not following redirects',
+        'request' => array(
+          'redirects' => '0',
+        )
+      ),
+      array(
+        'arguments' => array('google.com'),
+        'summary' => 'Get the HTTP response code, verifying SSL peers',
+        'request' => array(
+          'sslverify' => '1',
+        )
+      ),
+    ),
+  );
 
   protected $wrap_html = true;
 
