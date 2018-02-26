@@ -122,7 +122,7 @@ function error500(
 }
 
 function idx(array $array, $key, $default = null) {
-  if (array_key_exists($key, $array) && !empty($array[$key])) {
+  if (isset($array[$key])) {
     return $array[$key];
   } else {
     return $default;
