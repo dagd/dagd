@@ -16,8 +16,14 @@ final class DaGdIsItUpController extends DaGdBaseClass {
   protected $wrap_html = true;
 
   public function render() {
-    $up = new IsItUpQuery($this->route_matches[1]);
+    $url = $this->route_matches[1];
     $verbose = request_or_default('verbose', false, true, true);
-    return $up->query($verbose);
+    $sslverify = request_or_default('sslverify', false, true, true);
+    $redirects = request_or_default('redirect', true, true, true);
+    if ($sslverify && !preg_match('#^https?://#i', $url)) {
+      $url = 'https://'.$url;
+    }
+    $up = new IsItUpQuery($url);
+    return $up->query($verbose, $sslverify, $redirects);
   }
 }
