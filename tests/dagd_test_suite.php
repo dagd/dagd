@@ -199,15 +199,13 @@ id(new DaGdRegexTest('/', '@various conditions@'))
 id(new DaGdRegexTest('/ip', '@[0-9]\.@'))
   ->run();
 
-/*********** /wp/CodeBlock ***********/
+/*********** /ec/CodeBlock ***********/
 
 id(new DaGdRegexTest('/ec/CodeBlock', '@^[0-9]+$@'))
   ->run();
 id(new DaGdRegexTest('/ec/CodeBlock?lang=en', '@^[0-9]+$@'))
   ->run();
 id(new DaGdRegexTest('/ec/CodeBlock?lang=fr', '@^[0-9]+$@'))
-  ->run();
-id(new DaGdResponseCodeTest('/ec/CodeBlock?lang=asdfasdf', 400))
   ->run();
 
 /************ /w/xxxxxxx ************/
