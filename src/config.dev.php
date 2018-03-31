@@ -211,6 +211,7 @@ class DaGdConfig {
       'www.enom.com',
       // Referral target but doesn't seem to know anything
       'whois.1api.net',
+      'whois.comlaude.com',
       // Referral target but utterly useless (wants you to visit their web
       // service)
       'whois.godaddy.com',
