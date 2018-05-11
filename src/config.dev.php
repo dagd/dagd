@@ -216,7 +216,7 @@ class DaGdConfig {
       // service)
       'whois.godaddy.com',
       // Google can't handle its own domains
-      // That TLD is not handled by this service."
+      // "That TLD is not handled by this service."
       'whois.google.com',
     ),
 
