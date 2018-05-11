@@ -215,6 +215,9 @@ class DaGdConfig {
       // Referral target but utterly useless (wants you to visit their web
       // service)
       'whois.godaddy.com',
+      // Google can't handle its own domains
+      // That TLD is not handled by this service."
+      'whois.google.com',
     ),
 
     // How long should we wait before timing out trying to hit a server we are
