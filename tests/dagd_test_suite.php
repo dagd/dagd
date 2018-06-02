@@ -211,9 +211,9 @@ id(new DaGdRegexTest('/ec/CodeBlock?lang=fr', '@^[0-9]+$@'))
 /************ /w/xxxxxxx ************/
 
 /* // Ensure that whois is functioning. */
-id(new DaGdRegexTest('/w/google.com', '@Mountain View@'))
+id(new DaGdRegexTest('/w/google.com', '@ns1.google.com@'))
   ->run();
-id(new DaGdRegexTest('/w/da.gd', '@Ricky@'))
+id(new DaGdRegexTest('/w/da.gd', '@bill.ns.cloudflare.com@'))
   ->run();
 id(new DaGdRegexTest('/w/4.2.2.2', '@Level 3 Parent@'))
   ->run();
@@ -234,10 +234,7 @@ id(
     '/w/trees.network',
     '@Registrar WHOIS Server: whois.1api.net@'))
   ->run();
-id(
-  new DaGdRegexTest(
-    '/w/trees.network',
-    '@Tech State/Province: West Yorkshire@'))
+id(new DaGdRegexTest('/w/trees.network','@1API GmbH@'))
   ->run();
 id(
   new DaGdRegexTest(
@@ -383,7 +380,7 @@ id(new DaGdRegexTest('/isp/98.27.111.11', '@^Time Warner Cable Internet LLC$@'))
 id(
   new DaGdRegexTest(
     '/isp/2001:470:8:624:211c:aaaa:1111:1111',
-    '@Hurricane Electric@'))
+    '@Network Operations@'))
   ->run();
 
 /************ /help ************/
