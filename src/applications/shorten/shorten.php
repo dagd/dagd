@@ -87,7 +87,7 @@ h2 { margin: 0; padding: 0; }';
       'INSERT INTO shorturl_access(shorturl_id, ip, useragent) VALUES(?,?,?)');
     $stored_url_id = $this->stored_url_id;
     $client_ip = client_ip();
-    $useragent = $_SERVER['HTTP_USER_AGENT'];
+    $useragent = server_or_default('HTTP_USER_AGENT', '');
     $query->bind_param(
       'iss',
       $stored_url_id,
