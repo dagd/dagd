@@ -199,6 +199,12 @@ class DaGdConfig {
         'query' => '',
         'query_directly' => true,
       ),
+      'frl' => array(
+        // The .frl v6 servers don't respond. Hardcode the v4 address for now.
+        'server' => '119.252.181.87',
+        'query' => '',
+        'query_directly' => true,
+      ),
     ),
 
     // These referral servers are blacklisted. If we hit one of them, we simply
