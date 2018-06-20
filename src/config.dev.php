@@ -205,6 +205,18 @@ class DaGdConfig {
         'query' => '',
         'query_directly' => true,
       ),
+      'space' => array(
+        // Same here - v6 doesn't respond.
+        'server' => '119.252.181.51',
+        'query' => '',
+        'query_directly' => true,
+      ),
+      'xyz' => array(
+        // Same here - v6 doesn't respond.
+        'server' => '119.252.181.42',
+        'query' => '',
+        'query_directly' => true,
+      ),
     ),
 
     // These referral servers are blacklisted. If we hit one of them, we simply
