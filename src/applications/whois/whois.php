@@ -19,7 +19,8 @@ final class DaGdWhoisController extends DaGdBaseClass {
 
   public function render() {
     $query = $this->route_matches[1];
-    $whois_client = new DaGdWhois($query);
+    $trace = request_or_default('trace', false, true, true);
+    $whois_client = new DaGdWhois($query, $trace);
     return $whois_client->performQuery();
   }
 }

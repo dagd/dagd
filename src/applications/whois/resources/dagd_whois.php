@@ -8,6 +8,8 @@ class DaGdWhois {
   private $whois_server;
   private $whois_port = 43;
   private $skip_detail = false;
+  private $trace = false;
+  private $trace_path = array();
   // Used in the hardcode map where we never want to treat a server as
   // transient.
   private $query_directly = false;
@@ -15,8 +17,9 @@ class DaGdWhois {
   // we're redirected to. In that case, we return this result.
   private $first_query_result = '';
 
-  public function __construct($domain) {
+  public function __construct($domain, $trace = false) {
     $this->domain = $domain;
+    $this->trace = $trace;
   }
 
   /*
@@ -68,6 +71,7 @@ class DaGdWhois {
       if (array_key_exists('query_directly', $custom_tld)) {
         $this->query_directly = $custom_tld['query_directly'];
       }
+      $this->trace_path[] = $this->whois_server.':'.$this->whois_port;
     }
 
     if ($this->query_directly) {
@@ -87,6 +91,8 @@ class DaGdWhois {
       if (strpos($default_server, ':') !== false) {
         list($default_server, $default_port) = explode(':', $default_server, 2);
       }
+
+      $this->trace_path[] = $default_server.':'.$default_port;
 
       $transient_sock = fsockopen($default_server, $default_port);
       if (!$transient_sock) {
@@ -119,6 +125,7 @@ class DaGdWhois {
         $generic_timeout = DaGdConfig::get('whois.generic_tld_timeout');
         foreach ($generic_servers as $server) {
           $server_with_tld = str_replace('TLD', $this->tld(), $server['server']);
+          $this->trace_path[] = $server_with_tld.':43';
           $transient_sock = fsockopen(
             $server_with_tld,
             idx($server, 'port', 43),
@@ -183,6 +190,7 @@ class DaGdWhois {
       // jump away and query it.
       if ($referred) {
         if (!in_array($this->whois_server, $blacklisted_referrals)) {
+          $this->trace_path[] = $this->whois_server.':'.$this->whois_port;
           return true;
         }
         $referred = false;
@@ -233,10 +241,15 @@ class DaGdWhois {
    */
   public function performQuery() {
     $whois_server = $this->fetchWhoisServer();
+    $res = '';
     if ($this->skip_detail) {
-      return $whois_server;
+      $res = $whois_server;
     } else {
-      return $this->fetchWhoisDetails();
+      $res = $this->fetchWhoisDetails();
     }
+    if ($this->trace) {
+      $res = var_export($this->trace_path, TRUE);
+    }
+    return $res;
   }
 }
