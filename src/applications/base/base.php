@@ -88,7 +88,10 @@ abstract class DaGdBaseClass {
       $controller_response = $this->render();
 
       if ($this->escape) {
-        $controller_response = htmlspecialchars($controller_response);
+        $controller_response = htmlspecialchars(
+          $controller_response,
+          ENT_HTML5,
+          'UTF-8');
       }
 
       if ($this->wrap_pre) {
