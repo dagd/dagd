@@ -14,7 +14,6 @@ if ($display_errors) {
   ini_set('display_errors', true);
 }
 
-require_once dirname(__FILE__).'/dagdmarkup.php';
 require_once dirname(__FILE__).'/sql.php';
 
 function handle_exception($e) {
