@@ -28,7 +28,6 @@ class DaGdConfig {
       'whois',
       'editcount',
       'shorten',
-      'pastebin',
       'headers',
       'up',
       'host',
@@ -91,9 +90,6 @@ class DaGdConfig {
       ),
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => array(
         'controller' => 'DaGdImageController',
-      ),
-      '/(?:p|paste|pastebin)/?(\d+)?/?$' => array(
-        'controller' => 'DaGdPastebinController',
       ),
       '/isp/?(.+)?/?$' => array(
         'controller' => 'DaGdISPController',
