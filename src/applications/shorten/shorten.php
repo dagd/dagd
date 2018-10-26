@@ -248,7 +248,7 @@ body, h2 { margin: 0; padding: 0; }';
       $content = '<div id="bar"><h2>da.gd</h2></div>
 <div id="main">
 <form method="POST" action="/">
-<table border=1 frame=void rules=rows>
+<table>
   <tr><td>Long URL: </td><td><input type="text" name="url" id="url" size="35" placeholder="https://google.com/" autofocus /></td></tr>
   <tr><td>Custom short URL: </td><td><input type="text" name="shorturl" size="10" maxlength="10" placeholder="g" /><br />
     <small>(blank for random, max 10)</small></td></tr>
