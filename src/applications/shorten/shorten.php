@@ -22,12 +22,17 @@ final class DaGdShortenController extends DaGdBaseClass {
 
   protected $wrap_html = true;
   protected $wrap_pre = false;
-  protected $style = 'body {
-  margin: 0; padding: 0;
-  border-top: 5px solid #4ab3ee;
-  padding: 10px;
-}
-h2 { margin: 0; padding: 0; }';
+  protected $style = '#bar {
+    background-color: #3c6eb4;
+    color: #f8f8f8;
+    padding: 15px;
+  }
+#main { padding: 0 15px; }
+.links { margin-left: 30px; }
+table { border-spacing: 30px; border-collapse: separate; }
+td { padding: 10px 0; }
+h2 { font-family: overpass, sans-serif !important; }
+body, h2 { margin: 0; padding: 0; }';
 
   private $long_url;
   private $longurl_hash;
@@ -240,16 +245,19 @@ h2 { margin: 0; padding: 0; }';
       // Not a text useragent because we didn't return above.
       // Bring in the form. // TODO: html in strings = bad.
       $this->escape = false;
-      $content = '<h2>da.gd</h2><form method="POST" action="/">
-Long URL: <input type="text" name="url" id="url" size="35" autofocus /><br />
-Custom short URL (leave blank for random): <input type="text" name="shorturl" size="20" maxlength="10" /><br />
-<input type="submit" value="Shorten URL" />
+      $content = '<div id="bar"><h2>da.gd</h2></div>
+<div id="main">
+<form method="POST" action="/">
+<table border=1 frame=void rules=rows>
+  <tr><td>Long URL: </td><td><input type="text" name="url" id="url" size="35" placeholder="https://google.com/" autofocus /></td></tr>
+  <tr><td>Custom short URL: </td><td><input type="text" name="shorturl" size="10" maxlength="10" placeholder="g" /><br />
+    <small>(blank for random, max 10)</small></td></tr>
+  <tr><td colspan=2><input style="width: 100%;" type="submit" value="Shorten URL" /></td></tr>
+</table>
 </form>
-[help](/help) | [open source](http://github.com/codeblock/dagd)';
-      $markup = new DaGdMarkup($content);
-      $markup = $markup->render();
-      $markup .= '<script>window.onload = function() {document.getElementById("url").focus();}</script>';
-      return $markup;
+<div class="links"><a href="/help">help</a> | <a href="https://github.com/codeblock/dagd">open source</a></div>
+</div>';
+      return $content;
     }
   }
 }
