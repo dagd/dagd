@@ -98,7 +98,7 @@ final class DaGdCommanderController extends DaGdBaseClass {
         $this->wrap_pre = false;
         return json_encode($commands);
       } else {
-        $return = "***Enabled Commands***<dl>\n";
+        $return = "<strong>Enabled Commands</strong><dl>\n";
 
         foreach ($rows as $row) {
           $return .= '<dt>'.htmlspecialchars($row['command'])."</dt>\n";
@@ -109,11 +109,9 @@ final class DaGdCommanderController extends DaGdBaseClass {
         }
 
         $return .= '</dl>';
-        $markup = new DaGdMarkup($return);
-        $markup->nl2br = false;
         $this->escape = false;
         $this->wrap_pre = false;
-        return $markup->render();
+        return $return;
       }
     } else {
       // Accessing a command?
