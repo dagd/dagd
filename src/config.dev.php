@@ -213,6 +213,11 @@ class DaGdConfig {
         'query' => '',
         'query_directly' => true,
       ),
+      'name' => array(
+        // This server requires a special format because it wants to be special.
+        'server' => 'whois.nic.name',
+        'query' => 'domain = '
+      ),
     ),
 
     // These referral servers are blacklisted. If we hit one of them, we simply
