@@ -145,7 +145,7 @@ class DaGdConfig {
       'query' => 'n +',
     ),
 
-    // General TLD-based whois server lookup. The string "TLD" wlil be replaced
+    // General TLD-based whois server lookup. The string "TLD" will be replaced
     // with the tld.
     'whois.generic_tld_servers' => array(
       array(
