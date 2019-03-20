@@ -2,6 +2,7 @@
 
 final class DaGdImageController extends DaGdBaseClass {
   public $__help__ = array(
+    'title' => 'image',
     'summary' => 'Generate almost-arbitrarily sized images.',
     'path' => 'image',
     'examples' => array(

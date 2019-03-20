@@ -196,7 +196,9 @@ function help($class) {
 
   $help_getter = new ReflectionClass($class);
   if ($help = idx($help_getter->getDefaultProperties(), '__help__')) {
-    $return .= '<h3>'.$help['summary']."</h3>\n";
+    $return .= '<h3 id="'.$help['title'].'">';
+    $return .= '<a href="#'.$help['title'].'">#</a> ';
+    $return .= $help['summary']."</h3>\n";
     $return .= '<ul>';
     foreach ($help['examples'] as $example) {
       $return .= '<li>    ';
@@ -216,8 +218,8 @@ function help($class) {
       if (array_key_exists('request', $example)) {
         $iteration = 0;
         foreach ($example['request'] as $param => $param_example) {
-          if($request_sep) {
-            $return .= ($iteration === 0) ? $request_sep : $request_sep;
+          if ($request_sep) {
+            $return .= $request_sep;
           } else {
             $return .= ($iteration === 0) ? '?' : '&';
           }

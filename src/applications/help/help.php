@@ -13,6 +13,7 @@ final class DaGdHelpController extends DaGdBaseClass {
   protected $wrap_html = true;
   protected $wrap_pre = false;
   protected $escape = false;
+  protected $style = ':target { background-color: #ddd; }';
 
   public function render() {
     $routes = DaGdConfig::get('general.routemap');
