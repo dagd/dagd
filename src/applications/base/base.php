@@ -34,6 +34,9 @@ abstract class DaGdBaseClass {
   // output.
   protected $never_newline = false;
 
+  // Dark mode!
+  protected $darkmode = false;
+
   public function __construct() {
     global $__db_handler;
     $this->db_connection = $__db_handler;
@@ -66,6 +69,34 @@ abstract class DaGdBaseClass {
       $response = $this->renderCLI();
     } else {
       $response = '';
+
+
+      if (isset($_REQUEST['darkmode'])) {
+        $darkmode_req = request_or_default('darkmode', false, true, true);
+        $darkmode_bool = 'false';
+        if ($darkmode_req) {
+            $darkmode_bool = 'true';
+        }
+        setcookie(
+          'darkmode',
+          $darkmode_bool,
+          time() + (60 * 60 * 24 * 365),
+          '/');
+        $_COOKIE['darkmode'] = $darkmode_bool;
+      }
+
+      $darkmode_cookie = idx($_COOKIE, 'darkmode');
+      $this->darkmode = $darkmode_cookie === 'true' ? true : false;
+
+      $darkmode = '';
+      if (idx($_COOKIE, 'darkmode') === 'true') {
+        $darkmode = 'body { ';
+        $darkmode .= '  background-color: #333;';
+        $darkmode .= '  color: #ddd;';
+        $darkmode .= '}';
+        $darkmode .= 'a, a:active, a:visited { color: #ccc; }';
+      }
+
       if ($this->wrap_html) {
         $title = idx($this->__help__, 'title', 'Welcome!');
         $response .= "<!doctype html>\n";
@@ -79,6 +110,7 @@ abstract class DaGdBaseClass {
         $response .= '    <title>da.gd: '.$title.'</title>';
         $response .= '    <style>';
         $response .= '      *:not(pre):not(code) { font-family: sans-serif; }';
+        $response .= $darkmode;
         $response .= $this->style;
         $response .= '    </style>';
         $response .= '  </head>';

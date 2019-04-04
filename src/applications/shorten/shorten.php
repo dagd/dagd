@@ -245,6 +245,12 @@ body, h2 { margin: 0; padding: 0; }';
       // Not a text useragent because we didn't return above.
       // Bring in the form. // TODO: html in strings = bad.
       $this->escape = false;
+
+      $darkmode_link = '<a href="/?darkmode=1">dark mode</a>';
+      if ($this->darkmode) {
+        $darkmode_link = '<a href="/?darkmode=0">light mode</a>';
+      }
+
       $content = '<div id="bar"><h2>da.gd</h2></div>
 <div id="main">
 <form method="POST" action="/">
@@ -255,7 +261,10 @@ body, h2 { margin: 0; padding: 0; }';
   <tr><td colspan=2><input style="width: 100%;" type="submit" value="Shorten URL" /></td></tr>
 </table>
 </form>
-<div class="links"><a href="/help">help</a> | <a href="https://github.com/codeblock/dagd">open source</a></div>
+<div class="links">
+  <a href="/help">help</a> |
+  <a href="https://github.com/codeblock/dagd">open source</a> | '.$darkmode_link.'
+</div>
 </div>';
       return $content;
     }
