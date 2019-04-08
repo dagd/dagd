@@ -7,7 +7,7 @@ require_once 'Net/DNS2.php';
 function query_dnsbl($domain) {
   $dnsbl_servers = DaGdConfig::get('shorten.dnsbl');
 
-  if count($dnsbl_servers === 0) {
+  if (count($dnsbl_servers) === 0) {
     return true;
   }
 
