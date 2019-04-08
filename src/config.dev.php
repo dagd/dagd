@@ -150,6 +150,7 @@ class DaGdConfig {
     // Make this array empty to disable this functionality.
     'shorten.dnsbl' => array(
       '.dbl.spamhaus.org',
+      '.multi.surbl.org',
     ),
 
     // Regex to validate custom short URLs against
