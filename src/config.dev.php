@@ -135,6 +135,23 @@ class DaGdConfig {
     // Regexes we blacklist on
     'shorten.longurl_blacklist' => array(),
 
+    // A list of DNS servers to query for checking against DNSBL databases.
+    // One of these is randomly selected each time. We default to OpenDNS,
+    // as Google's public DNS servers do not work here for certain databases.
+    'shorten.blacklist_via' => array(
+      '208.67.222.222',
+      '208.67.220.220',
+    ),
+
+    // The actual DNSBL databases to query. The domain of the URL being
+    // shortened is prepended to these. All of them must return NXDOMAIN
+    // otherwise the URL is rejected. These are checked at shorturl creation
+    // time and at access time.
+    // Make this array empty to disable this functionality.
+    'shorten.dnsbl' => array(
+      '.dbl.spamhaus.org',
+    ),
+
     // Regex to validate custom short URLs against
     'shorten.custom_url_regex' => '@^[\d\w-_]+$@i',
 

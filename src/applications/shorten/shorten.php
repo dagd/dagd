@@ -1,5 +1,6 @@
 <?php
 
+require_once dirname(__FILE__).'/resources/dnsbl.php';
 require_once dirname(__FILE__).'/resources/random_string.php';
 require_once dirname(__FILE__).'/coshorten.php';
 
@@ -108,6 +109,17 @@ body, h2 { margin: 0; padding: 0; }';
   private function redirect_from_shorturl() {
     $this->getLongURL($this->route_matches[1]);
     if ($this->long_url) {
+
+      // This check is best-effort to allow all older entries to continue
+      // working even if they don't host-parse.
+      $url = parse_url($this->long_url, PHP_URL_HOST);
+      if ($url !== false && !query_dnsbl($url)) {
+        // If the URL has since been added to dnsbl, treat it as if it were
+        // disabled and 404.
+        error404();
+        return false;
+      }
+
       $this->logURLAccess();
       header('X-Original-URL: '.$this->long_url);
       $qs = build_given_querystring();
@@ -200,15 +212,30 @@ body, h2 { margin: 0; padding: 0; }';
 
     if ($long_url = request_or_default('url')) {
       // Something has at least been submitted. Is it valid?
-      if (preg_match('@^https?://@', $long_url) &&
-          !$this->blacklisted($long_url)) {
-        // Good enough for now...probably needs some better checks.
+      // Good enough for now...probably needs some better checks.
+      if (preg_match('@^https?://@', $long_url)) {
+        if ($this->blacklisted($long_url)) {
+          error400('Blacklisted original URL.');
+          return false;
+        }
+
+        $url = parse_url($long_url, PHP_URL_HOST);
+        if ($url === false) {
+          error400('Unable to parse host from original URL.');
+          return false;
+        }
+
+        if (!query_dnsbl($url)) {
+          // Intentionally don't differentiate between us blacklisting vs.
+          // dnsbl blacklisting.
+          error400('Blacklisted original URL.');
+          return false;
+        }
+
         $this->long_url = $long_url;
         return true;
       } else {
-        error400(
-          'Malformed or blacklisted original URL. Try again (http or https '.
-          'protocols only, please.).');
+        error400('http and https protocols only, please.');
         return false;
       }
     } else {
