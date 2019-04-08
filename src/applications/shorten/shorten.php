@@ -65,6 +65,16 @@ body, h2 { margin: 0; padding: 0; }';
     return false;
   }
 
+  private function whitelisted($url) {
+    $whitelist_list = DaGdConfig::get('shorten.longurl_whitelist');
+    foreach ($whitelist_list as $regex) {
+      if (preg_match('#'.$regex.'#i', $url)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public function getLongURL($shorturl) {
     $query = $this->db_connection->prepare(
       'SELECT id,longurl FROM shorturls WHERE shorturl=? AND enabled=1');
@@ -112,12 +122,15 @@ body, h2 { margin: 0; padding: 0; }';
 
       // This check is best-effort to allow all older entries to continue
       // working even if they don't host-parse.
-      $url = parse_url($this->long_url, PHP_URL_HOST);
-      if ($url !== false && !query_dnsbl($url)) {
-        // If the URL has since been added to dnsbl, treat it as if it were
-        // disabled and 404.
-        error404();
-        return false;
+      // If it's whitelisted, don't even bother checking dnsbl
+      if (!$this->whitelisted($this->long_url)) {
+        $url = parse_url($this->long_url, PHP_URL_HOST);
+        if ($url !== false && !query_dnsbl($url)) {
+          // If the URL has since been added to dnsbl, treat it as if it were
+          // disabled and 404.
+          error404();
+          return false;
+        }
       }
 
       $this->logURLAccess();
@@ -219,17 +232,20 @@ body, h2 { margin: 0; padding: 0; }';
           return false;
         }
 
-        $url = parse_url($long_url, PHP_URL_HOST);
-        if ($url === false) {
-          error400('Unable to parse host from original URL.');
-          return false;
-        }
+        // If whitelisted, skip all the dnsbl logic.
+        if (!$this->whitelisted($long_url)) {
+          $url = parse_url($long_url, PHP_URL_HOST);
+          if ($url === false) {
+            error400('Unable to parse host from original URL.');
+            return false;
+          }
 
-        if (!query_dnsbl($url)) {
-          // Intentionally don't differentiate between us blacklisting vs.
-          // dnsbl blacklisting.
-          error400('Blacklisted original URL.');
-          return false;
+          if (!query_dnsbl($url)) {
+            // Intentionally don't differentiate between us blacklisting vs.
+            // dnsbl blacklisting.
+            error400('Blacklisted original URL.');
+            return false;
+          }
         }
 
         $this->long_url = $long_url;

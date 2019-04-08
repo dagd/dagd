@@ -132,8 +132,11 @@ class DaGdConfig {
       'gd',
     ),
 
-    // Regexes we blacklist on
+    // Regexes we blacklist on.
     'shorten.longurl_blacklist' => array(),
+
+    // Regexes we whitelist on to avoid checking dnsbl.
+    'shorten.longurl_whitelist' => array(),
 
     // A list of DNS servers to query for checking against DNSBL databases.
     // One of these is randomly selected each time. We default to OpenDNS,
