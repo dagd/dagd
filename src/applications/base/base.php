@@ -70,7 +70,6 @@ abstract class DaGdBaseClass {
     } else {
       $response = '';
 
-
       if (isset($_REQUEST['darkmode'])) {
         $darkmode_req = request_or_default('darkmode', false, true, true);
         $darkmode_bool = 'false';
@@ -97,6 +96,11 @@ abstract class DaGdBaseClass {
         $darkmode .= 'a, a:active, a:visited { color: #ccc; }';
       }
 
+      // We need this to be early-ish because it can set properties we use
+      // below such as $this->style. However, controllers need to access
+      // $this->darkmode, so it has to be after we set that.
+      $controller_response = $this->render();
+
       if ($this->wrap_html) {
         $title = idx($this->__help__, 'title', 'Welcome!');
         $response .= "<!doctype html>\n";
@@ -116,8 +120,6 @@ abstract class DaGdBaseClass {
         $response .= '  </head>';
         $response .= '  <body>';
       }
-
-      $controller_response = $this->render();
 
       if ($this->escape) {
         $controller_response = htmlspecialchars(
