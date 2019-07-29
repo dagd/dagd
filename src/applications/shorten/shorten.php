@@ -308,6 +308,8 @@ body, h2 { margin: 0; padding: 0; }';
   <a href="/help">help</a> |
   <a href="https://github.com/codeblock/dagd">open source</a> | '.$darkmode_link.' |
   <a href="https://www.patreon.com/relrod">donate</a>
+  <br />
+  <small>report abuse to abuse@da.gd</small>
 </div>
 </div>';
       return $content;
