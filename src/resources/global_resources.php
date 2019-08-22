@@ -101,11 +101,6 @@ function error404($echo = '404 - route not found', $status_text = 'Not Found') {
   echo $echo;
 }
 
-function error403($echo = '403 - forbidden', $status_text = 'Forbidden') {
-  header('HTTP/1.1 403 '.$status_text);
-  echo $echo;
-}
-
 function error400($echo = '400 - bad request', $status_text = 'Bad Request') {
   header('HTTP/1.1 400 '.$status_text);
   echo $echo;

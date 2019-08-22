@@ -39,7 +39,6 @@ body, h2 { margin: 0; padding: 0; }';
   private $longurl_hash;
   private $short_url;
   private $stored_url_id;
-  private $owner_ip;
   private $custom_url = false;
   private $store_url = true;
 
@@ -64,20 +63,6 @@ body, h2 { margin: 0; padding: 0; }';
       }
     }
     return false;
-  }
-
-  private function isBannedAuthor() {
-    $query = $this->db_connection->prepare(
-      'SELECT COUNT(*) FROM blocked_ips WHERE '.
-      'inet6_aton(?) between ip_start and ip_end');
-    $query->bind_param('s', $this->owner_ip);
-    $query->execute();
-    $query->bind_result($count);
-    $query->fetch();
-    $query->close();
-
-    // Return true if the author is banned, false if not.
-    return (bool)$count;
   }
 
   private function whitelisted($url) {
@@ -174,7 +159,7 @@ body, h2 { margin: 0; padding: 0; }';
       'sssis',
       $this->short_url,
       $this->long_url,
-      $this->owner_ip,
+      client_ip(),
       $this->custom_url,
       $this->longurl_hash);
 
@@ -247,11 +232,6 @@ body, h2 { margin: 0; padding: 0; }';
           return false;
         }
 
-        if ($this->isBannedAuthor()) {
-          error403();
-          return false;
-        }
-
         // If whitelisted, skip all the dnsbl logic.
         if (!$this->whitelisted($long_url)) {
           $url = parse_url($long_url, PHP_URL_HOST);
@@ -281,7 +261,6 @@ body, h2 { margin: 0; padding: 0; }';
 
   public function render() {
     if (array_key_exists('url', $_REQUEST)) {
-      $this->owner_ip = client_ip();
       if ($this->set_longurl_or_400() && $this->set_shorturl_or_400()) {
         if ($this->store_shorturl()) {
           header('X-Short-URL: '.$this->short_url);
