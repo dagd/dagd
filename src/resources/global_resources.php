@@ -153,22 +153,19 @@ function server_or_default($key, $default = null) {
 function build_given_querystring() {
   $querystring = '';
   foreach ($_GET as $key => $value) {
-    if ($key != '__path__') {
-      $querystring .= $key;
-      if (!empty($value)) {
-        $querystring .= '='.$value;
-      }
-      $querystring .= '&';
+    if ($key == '__path__') {
+        continue;
     }
-    if ($querystring != '') {
-      $querystring = '?'.$querystring;
+    $querystring .= $key;
+    if (!empty($value)) {
+      $querystring .= '='.$value;
     }
-    return $querystring;
+    $querystring .= '&';
   }
-
-  $querystring = rtrim($querystring, '&');
-  if ($querystring) {
-    return '?'.$querystring;
+  if ($querystring != '') {
+    $querystring = '?'.$querystring;
+    $querystring = rtrim($querystring, '&');
+    return $querystring;
   } else {
     return '';
   }
