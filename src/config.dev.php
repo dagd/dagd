@@ -100,6 +100,9 @@ class DaGdConfig {
       '/coshorten/([^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdCoShortenController',
       ),
+      '/stats/([^/]+)?/?(.*)?$' => array(
+        'controller' => 'DaGdStatsController',
+      ),
       '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdShortenController',
         'methods' => array('GET', 'HEAD', 'POST'),

@@ -3,6 +3,7 @@
 require_once dirname(__FILE__).'/resources/dnsbl.php';
 require_once dirname(__FILE__).'/resources/random_string.php';
 require_once dirname(__FILE__).'/coshorten.php';
+require_once dirname(__FILE__).'/stats.php';
 
 final class DaGdShortenController extends DaGdBaseClass {
   public $__help__ = array(
@@ -84,6 +85,51 @@ body, h2 { margin: 0; padding: 0; }';
     $query->fetch();
     $query->close();
     return $this->long_url;
+  }
+
+  public function getStatsForURL($shorturl) {
+    // This function costs two queries, but they both hit already-existing
+    // indexes and so they should be nearly trivial.
+    $id = null;
+    $creation_dt = null;
+    $longurl = null;
+
+    // Get some initial info
+    $shorturls_query = $this->db_connection->prepare(
+      'SELECT id,creation_dt,longurl FROM shorturls '.
+      'WHERE shorturl=? AND enabled=1');
+    $shorturls_query->bind_param('s', $shorturl);
+    $shorturls_query->execute();
+    $shorturls_query->bind_result($id, $creation_dt, $longurl);
+    $shorturls_query->fetch();
+    $shorturls_query->close();
+
+    // If $id never gets set, the shorturl doesn't exist. Bail out and return
+    // null.
+    if ($id === null) {
+      return null;
+    }
+
+    $count_accesses = null;
+    $count_distinct_accesses = null;
+
+    $access_query = $this->db_connection->prepare(
+      'SELECT count(ip),count(distinct ip) FROM shorturl_access '.
+      'WHERE shorturl_id=?');
+    $access_query->bind_param('i', $id);
+    $access_query->execute();
+    $access_query->bind_result($count_accesses, $count_distinct_accesses);
+    $access_query->fetch();
+    $access_query->close();
+
+    $res = array(
+      'id' => $id,
+      'creation_dt' => $creation_dt,
+      'longurl' => $longurl,
+      'accesses' => $count_accesses,
+      'distinct_accesses' => $count_distinct_accesses,
+    );
+    return $res;
   }
 
   private function getNonCustomShortURL($longurl_hash) {
