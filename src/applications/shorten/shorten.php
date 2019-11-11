@@ -218,6 +218,7 @@ body, h2 { margin: 0; padding: 0; }';
     if (!$this->store_url) {
       return true;
     }
+    $client_ip = client_ip();
     $query = $this->db_connection->prepare(
       'INSERT INTO shorturls(shorturl, longurl, owner_ip, custom_shorturl, '.
       'longurl_hash) VALUES(?, ?, ?, ?, ?);');
@@ -225,7 +226,7 @@ body, h2 { margin: 0; padding: 0; }';
       'sssis',
       $this->short_url,
       $this->long_url,
-      client_ip(),
+      $client_ip,
       $this->custom_url,
       $this->longurl_hash);
 
