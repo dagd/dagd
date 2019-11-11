@@ -146,6 +146,11 @@ class DaGdConfig {
     // Regexes we whitelist on to avoid checking dnsbl.
     'shorten.longurl_whitelist' => array(),
 
+    // Strings we whitelist on as above. These are attempted before
+    // shorten.longurl_whitelist because doing substring searches is
+    // significantly faster than doing regex matches.
+    'shorten.longurl_whitelist_strings' => array(),
+
     // A list of DNS servers to query for checking against DNSBL databases.
     // One of these is randomly selected each time. We default to OpenDNS,
     // as Google's public DNS servers do not work here for certain databases.

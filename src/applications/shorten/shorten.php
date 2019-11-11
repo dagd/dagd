@@ -79,8 +79,16 @@ body, h2 { margin: 0; padding: 0; }';
   }
 
   private function whitelisted($url) {
-    $whitelist_list = DaGdConfig::get('shorten.longurl_whitelist');
-    foreach ($whitelist_list as $regex) {
+    // Similar to above, but for whitelisting.
+    $whitelist_strings = DaGdConfig::get('shorten.longurl_whitelist_strings');
+    foreach ($whitelist_strings as $string) {
+      if (strpos($url, $string) !== false) {
+          return true;
+      }
+    }
+
+    $whitelist_regexes = DaGdConfig::get('shorten.longurl_whitelist');
+    foreach ($whitelist_regexes as $regex) {
       if (preg_match('#'.$regex.'#i', $url)) {
         return true;
       }
