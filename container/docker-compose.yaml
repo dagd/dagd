@@ -1,0 +1,20 @@
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    volumes:
+      - ..:/srv/dagd:Z
+  db:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_DATABASE: dagd
+    # If we just use the default temporary container root, initialization is
+    # INSANELY slow. Instead we mount it as an explicit tmpfs volume.
+    tmpfs:
+      - /var/lib/mysql
