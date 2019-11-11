@@ -57,12 +57,24 @@ body, h2 { margin: 0; padding: 0; }';
   }
 
   private function blacklisted($url) {
-    $blacklist_list = DaGdConfig::get('shorten.longurl_blacklist');
-    foreach ($blacklist_list as $regex) {
+    // First, check the array of strings and do direct substring searches
+    // because they are significantly faster than regexes.
+    $blacklist_strings = DaGdConfig::get('shorten.longurl_blacklist_strings');
+    foreach ($blacklist_strings as $string) {
+      if (strpos($url, $string) !== false) {
+          return true;
+      }
+    }
+
+    // If we're still here, then try the regexes.
+    $blacklist_regexes = DaGdConfig::get('shorten.longurl_blacklist');
+    foreach ($blacklist_regexes as $regex) {
       if (preg_match('#'.$regex.'#i', $url)) {
         return true;
       }
     }
+
+    // Otherwise we haven't found a match, so it's not blacklisted.
     return false;
   }
 
