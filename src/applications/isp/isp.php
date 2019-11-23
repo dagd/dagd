@@ -26,7 +26,8 @@ final class DaGdISPController extends DaGdBaseClass {
     $whois_client = new DaGdWhois($query);
     $response = $whois_client->performQuery();
     if (preg_match(
-          '/(?:Org\-?Name|contact:Name|descr|owner)(?:;I|): ?(.+)/i',
+          // NOTE: Later matches will win
+          '/(?:CustName|descr|Org\-?Name|OrgTechName|contact:Name|owner)(?:;I|): ?(.+)/i',
           $response,
           $org_matches)) {
       return trim($org_matches[1]);
