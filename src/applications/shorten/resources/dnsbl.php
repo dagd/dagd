@@ -7,10 +7,6 @@ require_once 'Net/DNS2.php';
 function query_dnsbl($domain) {
   $dnsbl_servers = DaGdConfig::get('shorten.dnsbl');
 
-  if (count($dnsbl_servers) === 0) {
-    return true;
-  }
-
   $dnsbl_query_via = DaGdConfig::get('shorten.blacklist_via');
 
   foreach ($dnsbl_servers as $suffix) {

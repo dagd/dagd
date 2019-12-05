@@ -4,9 +4,9 @@ class DaGdConfig {
   public static $config = array(
     'general.environment' => 'development',
 
-    'general.debug' => false,
+    'general.debug' => true,
 
-    'general.display_errors' => false,
+    'general.display_errors' => true,
 
     'general.baseurl' => 'http://dagd.local', // DO *NOT* include trailing '/'.
 
@@ -168,6 +168,41 @@ class DaGdConfig {
       '.dbl.spamhaus.org',
       '.multi.surbl.org',
     ),
+
+    // Should we send URLs to Google Safe Browsing? This check will take place
+    // both on URL storing and on URL access.
+    'shorten.safe_browsing' => false,
+
+    // How long before we give up? (seconds)
+    'shorten.safe_browsing_timeout' => 2,
+
+    // Should we default to being accepted?
+    // If true, if we timeout or otherwise can't access Safe Browsing, we
+    // accept the URL anyway. If false, we reject it.
+    'shorten.safe_browsing_default_accept' => true,
+
+    // Client ID sent to the Google Safe Browsing API. Must be one word,
+    // lowercase.
+    'shorten.safe_browsing_client_id' => 'dagd',
+
+    // Client version sent to the Google Safe Browsing API.
+    'shorten.safe_browsing_client_version' => 'git-HEAD',
+
+    // Threat types from this list:
+    // https://developers.google.com/safe-browsing/v4/reference/rest/v4/ThreatType
+    'shorten.safe_browsing_threat_types' => array(
+      'MALWARE',
+      'SOCIAL_ENGINEERING',
+    ),
+
+    // Platform types from this list:
+    // https://developers.google.com/safe-browsing/v4/reference/rest/v4/PlatformType
+    'shorten.safe_browsing_platform_types' => array(
+      'ANY_PLATFORM',
+    ),
+
+    // API key from Google Console.
+    'shorten.safe_browsing_api_key' => '',
 
     // Regex to validate custom short URLs against
     'shorten.custom_url_regex' => '@^[\d\w-_]+$@i',

@@ -2,6 +2,7 @@
 
 require_once dirname(__FILE__).'/resources/dnsbl.php';
 require_once dirname(__FILE__).'/resources/random_string.php';
+require_once dirname(__FILE__).'/resources/safe_browsing.php';
 require_once dirname(__FILE__).'/coshorten.php';
 require_once dirname(__FILE__).'/stats.php';
 
@@ -56,6 +57,14 @@ body, h2 { margin: 0; padding: 0; }';
     return !(bool)$count;
   }
 
+  // This function actually does quite a bit.
+  // It checks our string-list of blacklisted URLs.
+  // Then it checks our regex-list of blacklisted URL patterns.
+  // Then it checks DNSBL.
+  // Then it checks the Safe Browsing API.
+  // Our bottleneck will *always* be the network actions here, but still we
+  // should optimize for speed here where we can, because this function gets
+  // called on newly created URLs as well as on URL access.
   private function blacklisted($url) {
     // First, check the array of strings and do direct substring searches
     // because they are significantly faster than regexes.
@@ -70,6 +79,26 @@ body, h2 { margin: 0; padding: 0; }';
     $blacklist_regexes = DaGdConfig::get('shorten.longurl_blacklist');
     foreach ($blacklist_regexes as $regex) {
       if (preg_match('#'.$regex.'#i', $url)) {
+        return true;
+      }
+    }
+
+    // Next attempt is dnsbl, if there are any dnsbl server suffixes defined.
+    $dnsbl_servers = DaGdConfig::get('shorten.dnsbl');
+
+    if (count($dnsbl_servers) !== 0) {
+      $host = parse_url($url, PHP_URL_HOST);
+      if ($host !== false && !query_dnsbl($host)) {
+        return true;
+      }
+    }
+
+    // If we are *still* here, move on to the Safe Browsing API.
+    $safe_browsing_enabled = DaGdConfig::get('shorten.safe_browsing');
+
+    if ($safe_browsing_enabled) {
+      $safe_url = query_safe_browsing($url);
+      if ($safe_url === false) {
         return true;
       }
     }
@@ -190,10 +219,8 @@ body, h2 { margin: 0; padding: 0; }';
       // working even if they don't host-parse.
       // If it's whitelisted, don't even bother checking dnsbl
       if (!$this->whitelisted($this->long_url)) {
-        $url = parse_url($this->long_url, PHP_URL_HOST);
-        if ($url !== false && !query_dnsbl($url)) {
-          // If the URL has since been added to dnsbl, treat it as if it were
-          // disabled and 404.
+        if ($this->blacklisted($this->long_url)) {
+          // If blacklisted for any reason, simply return a 404.
           error404();
           return false;
         }
@@ -294,22 +321,10 @@ body, h2 { margin: 0; padding: 0; }';
       // Something has at least been submitted. Is it valid?
       // Good enough for now...probably needs some better checks.
       if (preg_match('@^https?://@', $long_url)) {
-        if ($this->blacklisted($long_url)) {
-          error400('Blacklisted original URL.');
-          return false;
-        }
 
-        // If whitelisted, skip all the dnsbl logic.
+        // If it's not whitelisted, and it IS blacklisted, then bail out.
         if (!$this->whitelisted($long_url)) {
-          $url = parse_url($long_url, PHP_URL_HOST);
-          if ($url === false) {
-            error400('Unable to parse host from original URL.');
-            return false;
-          }
-
-          if (!query_dnsbl($url)) {
-            // Intentionally don't differentiate between us blacklisting vs.
-            // dnsbl blacklisting.
+          if ($this->blacklisted($long_url)) {
             error400('Blacklisted original URL.');
             return false;
           }
