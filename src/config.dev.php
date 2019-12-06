@@ -40,6 +40,16 @@ class DaGdConfig {
       'leftpad',
     ),
 
+    // Control statsd metrics collection.
+    'general.statsd' => true,
+
+    'general.statsd_host' => 'localhost',
+
+    // Note, we solely use UDP here.
+    'general.statsd_port' => 9125,
+
+    'general.statsd_prefix' => 'dagd_',
+
     'general.default_methods' => array(
       'GET',
       'HEAD',

@@ -71,7 +71,8 @@ body, h2 { margin: 0; padding: 0; }';
     $blacklist_strings = DaGdConfig::get('shorten.longurl_blacklist_strings');
     foreach ($blacklist_strings as $string) {
       if (strpos($url, $string) !== false) {
-          return true;
+        statsd_bump('shorturl_blacklisted');
+        return true;
       }
     }
 
@@ -79,6 +80,7 @@ body, h2 { margin: 0; padding: 0; }';
     $blacklist_regexes = DaGdConfig::get('shorten.longurl_blacklist');
     foreach ($blacklist_regexes as $regex) {
       if (preg_match('#'.$regex.'#i', $url)) {
+        statsd_bump('shorturl_blacklisted');
         return true;
       }
     }
@@ -89,6 +91,7 @@ body, h2 { margin: 0; padding: 0; }';
     if (count($dnsbl_servers) !== 0) {
       $host = parse_url($url, PHP_URL_HOST);
       if ($host !== false && !query_dnsbl($host)) {
+        statsd_bump('shorturl_blacklisted');
         return true;
       }
     }
@@ -99,6 +102,7 @@ body, h2 { margin: 0; padding: 0; }';
     if ($safe_browsing_enabled) {
       $safe_url = query_safe_browsing($url);
       if ($safe_url === false) {
+        statsd_bump('shorturl_blacklisted');
         return true;
       }
     }
@@ -227,6 +231,7 @@ body, h2 { margin: 0; padding: 0; }';
       }
 
       $this->logURLAccess();
+      statsd_bump('shorturl_access');
       header('X-Original-URL: '.$this->long_url);
       $qs = build_given_querystring();
       if ($this->route_matches[2]) {
@@ -258,9 +263,11 @@ body, h2 { margin: 0; padding: 0; }';
       $this->longurl_hash);
 
     if ($query->execute()) {
+      statsd_bump('shorturl_store');
       return true;
     } else {
       error500('Something has gone wrong! :( ... Try again? Please?');
+      statsd_bump('shorturl_store_fail');
       return false;
     }
   }

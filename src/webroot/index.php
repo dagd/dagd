@@ -4,6 +4,8 @@
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 require_once dirname(__FILE__).'/resources/php/index_resources.php';
 
+$start = microtime(true);
+
 require_application('base');
 
 // All of the applications that we route to.
@@ -114,3 +116,6 @@ $instance = $instance->newInstance();
 $instance->setRouteMatches($route_matches);
 debug('Response from Controller', '');
 echo $instance->finalize();
+
+$end = microtime(true);
+statsd_time('response_time', ($end - $start) * 1000);
