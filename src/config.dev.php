@@ -4,9 +4,9 @@ class DaGdConfig {
   public static $config = array(
     'general.environment' => 'development',
 
-    'general.debug' => true,
+    'general.debug' => false,
 
-    'general.display_errors' => true,
+    'general.display_errors' => false,
 
     'general.baseurl' => 'http://dagd.local', // DO *NOT* include trailing '/'.
 
