@@ -41,7 +41,7 @@ class DaGdConfig {
     ),
 
     // Control statsd metrics collection.
-    'general.statsd' => true,
+    'general.statsd' => false,
 
     'general.statsd_host' => 'localhost',
 
