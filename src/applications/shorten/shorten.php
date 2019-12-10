@@ -71,6 +71,7 @@ body, h2 { margin: 0; padding: 0; }';
     $blacklist_strings = DaGdConfig::get('shorten.longurl_blacklist_strings');
     foreach ($blacklist_strings as $string) {
       if (strpos($url, $string) !== false) {
+        statsd_bump('shorturl_blacklisted_string');
         statsd_bump('shorturl_blacklisted');
         return true;
       }
@@ -80,6 +81,7 @@ body, h2 { margin: 0; padding: 0; }';
     $blacklist_regexes = DaGdConfig::get('shorten.longurl_blacklist');
     foreach ($blacklist_regexes as $regex) {
       if (preg_match('#'.$regex.'#i', $url)) {
+        statsd_bump('shorturl_blacklisted_regex');
         statsd_bump('shorturl_blacklisted');
         return true;
       }
@@ -91,6 +93,7 @@ body, h2 { margin: 0; padding: 0; }';
     if (count($dnsbl_servers) !== 0) {
       $host = parse_url($url, PHP_URL_HOST);
       if ($host !== false && !query_dnsbl($host)) {
+        statsd_bump('shorturl_blacklisted_dnsbl');
         statsd_bump('shorturl_blacklisted');
         return true;
       }
@@ -102,6 +105,7 @@ body, h2 { margin: 0; padding: 0; }';
     if ($safe_browsing_enabled) {
       $safe_url = query_safe_browsing($url);
       if ($safe_url === false) {
+        statsd_bump('shorturl_blacklisted_safebrowsing');
         statsd_bump('shorturl_blacklisted');
         return true;
       }
@@ -116,13 +120,15 @@ body, h2 { margin: 0; padding: 0; }';
     $whitelist_strings = DaGdConfig::get('shorten.longurl_whitelist_strings');
     foreach ($whitelist_strings as $string) {
       if (strpos($url, $string) !== false) {
-          return true;
+        statsd_bump('shorturl_whitelisted');
+        return true;
       }
     }
 
     $whitelist_regexes = DaGdConfig::get('shorten.longurl_whitelist');
     foreach ($whitelist_regexes as $regex) {
       if (preg_match('#'.$regex.'#i', $url)) {
+        statsd_bump('shorturl_whitelisted');
         return true;
       }
     }
@@ -133,7 +139,10 @@ body, h2 { margin: 0; padding: 0; }';
     $query = $this->db_connection->prepare(
       'SELECT id,longurl FROM shorturls WHERE shorturl=? AND enabled=1');
     $query->bind_param('s', $shorturl);
+    $start = microtime(true);
     $query->execute();
+    $end = microtime(true);
+    statsd_time('query_time_getLongURL', ($end - $start) * 1000);
     $query->bind_result($this->stored_url_id, $this->long_url);
     $query->fetch();
     $query->close();
@@ -152,7 +161,10 @@ body, h2 { margin: 0; padding: 0; }';
       'SELECT id,creation_dt,longurl FROM shorturls '.
       'WHERE shorturl=? AND enabled=1');
     $shorturls_query->bind_param('s', $shorturl);
+    $start = microtime(true);
     $shorturls_query->execute();
+    $end = microtime(true);
+    statsd_time('query_time_stats_select', ($end - $start) * 1000);
     $shorturls_query->bind_result($id, $creation_dt, $longurl);
     $shorturls_query->fetch();
     $shorturls_query->close();
@@ -170,7 +182,10 @@ body, h2 { margin: 0; padding: 0; }';
       'SELECT count(ip),count(distinct ip) FROM shorturl_access '.
       'WHERE shorturl_id=?');
     $access_query->bind_param('i', $id);
+    $start = microtime(true);
     $access_query->execute();
+    $end = microtime(true);
+    statsd_time('query_time_stats_access', ($end - $start) * 1000);
     $access_query->bind_result($count_accesses, $count_distinct_accesses);
     $access_query->fetch();
     $access_query->close();
@@ -190,7 +205,10 @@ body, h2 { margin: 0; padding: 0; }';
       'SELECT id,shorturl FROM shorturls WHERE longurl_hash=? AND enabled=1 '.
       'AND custom_shorturl=0 ORDER BY id DESC LIMIT 1');
     $query->bind_param('s', $longurl_hash);
+    $start = microtime(true);
     $query->execute();
+    $end = microtime(true);
+    statsd_time('query_time_getNonCustomShortURL', ($end - $start) * 1000);
     $query->bind_result($this->stored_url_id, $this->short_url);
     $query->fetch();
     $query->close();
@@ -208,7 +226,13 @@ body, h2 { margin: 0; padding: 0; }';
       $stored_url_id,
       $client_ip,
       $useragent);
-    if ($query->execute()) {
+
+    $start = microtime(true);
+    $res = $query->execute();
+    $end = microtime(true);
+    statsd_time('query_time_LogURLAccess', ($end - $start) * 1000);
+
+    if ($res) {
       return true;
     } else {
       return false;
@@ -262,7 +286,12 @@ body, h2 { margin: 0; padding: 0; }';
       $this->custom_url,
       $this->longurl_hash);
 
-    if ($query->execute()) {
+    $start = microtime(true);
+    $res = $query->execute();
+    $end = microtime(true);
+    statsd_time('query_time_store_shorturl_insert', ($end - $start) * 1000);
+
+    if ($res) {
       statsd_bump('shorturl_store');
       return true;
     } else {
