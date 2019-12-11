@@ -342,8 +342,8 @@ body, h2 { margin: 0; padding: 0; }';
         // ultimately it comes down to maximum InnoDB index key length and this
         // being a workaround to make it quicker to add random longurls. We want
         // to re-use random shorturls when shortening the same longurl and
-        // without being able to longurl into an index, our lookup times were
-        // crazy on random url inserts.
+        // without being able to add longurl into an index, our lookup times
+        // were crazy on random url inserts.
         $this->store_url = false;
       } else {
         $this->short_url = randstr(rand(4, 5));
