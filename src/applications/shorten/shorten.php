@@ -332,6 +332,17 @@ body, h2 { margin: 0; padding: 0; }';
       $this->longurl_hash = hash('sha256', $this->long_url);
       $this->getNonCustomShortURL($this->longurl_hash);
       if ($this->short_url) {
+        // The idea here is that we query against the hash which has an index
+        // that we hit with getNonCustomShortURL.
+        // If we get a result, then it's stored in $this->short_url, and we don't
+        // want to re-insert it, so we set store_url false.
+        //
+        // See 1d3974d741eab5765cf9e20ca5e7277be1747699 for some reasoning, but
+        // ultimately it comes down to maximum InnoDB index key length and this
+        // being a workaround to make it quicker to add random longurls. We want
+        // to re-use random shorturls when shortening the same longurl and
+        // without being able to longurl into an index, our lookup times were
+        // crazy on random url inserts.
         $this->store_url = false;
       } else {
         $this->short_url = randstr(rand(4, 5));
