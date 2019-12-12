@@ -350,7 +350,7 @@ body, h2 { margin: 0; padding: 0; }';
         while (!$this->isFreeShortURL()) {
           debug('Hash collision', 'Calling randstr again');
           statsd_bump('shorturl_random_hash_collision');
-          $this->short_url = randstr(4, 5);
+          $this->short_url = randstr(rand(4, 5));
         }
       }
       statsd_bump('shorturl_new_random');
