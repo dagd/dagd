@@ -217,6 +217,16 @@ class DaGdConfig {
     // Regex to validate custom short URLs against
     'shorten.custom_url_regex' => '@^[\d\w-_]+$@i',
 
+    // Minimum length random shorturl.
+    'shorten.random_min_length' => 4,
+
+    // Maximum length random shorturl.
+    'shorten.random_max_length' => 6,
+
+    // Which characters can be in a random shorturl?
+    'shorten.random_charset' =>
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+
     // The default transient whois server.
     'whois.transient_server' => array(
       'server' => 'whois.arin.net',

@@ -1,6 +1,6 @@
 <?php
 function randstr($length) {
-  $charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  $charset = DaGdConfig::get('shorten.random_charset');
   $result = '';
 
   while ($length--) {

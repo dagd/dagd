@@ -346,11 +346,13 @@ body, h2 { margin: 0; padding: 0; }';
         // were crazy on random url inserts.
         $this->store_url = false;
       } else {
-        $this->short_url = randstr(rand(4, 5));
+        $min = DaGdConfig::get('shorten.random_min_length');
+        $max = DaGdConfig::get('shorten.random_max_length');
+        $this->short_url = randstr(rand($min, $max));
         while (!$this->isFreeShortURL()) {
           debug('Hash collision', 'Calling randstr again');
           statsd_bump('shorturl_random_hash_collision');
-          $this->short_url = randstr(rand(4, 5));
+          $this->short_url = randstr(rand($min, $max));
         }
       }
       statsd_bump('shorturl_new_random');
