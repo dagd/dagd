@@ -103,6 +103,7 @@ body, h2 { margin: 0; padding: 0; }';
     $safe_browsing_enabled = DaGdConfig::get('shorten.safe_browsing');
 
     if ($safe_browsing_enabled) {
+      statsd_bump('shorturl_blacklist_query_safebrowsing');
       $safe_url = query_safe_browsing($url);
       if ($safe_url === false) {
         statsd_bump('shorturl_blacklisted_safebrowsing');
