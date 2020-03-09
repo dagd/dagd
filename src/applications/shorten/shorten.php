@@ -390,6 +390,7 @@ body, h2 { margin: 0; padding: 0; }';
       if (preg_match('@^https?://@', $long_url)) {
 
         if ($this->isBannedAuthor()) {
+          statsd_bump('shorturl_author_ip_banned');
           error403();
           return false;
         }
