@@ -38,6 +38,7 @@ class DaGdConfig {
       'isp',
       'dns',
       'leftpad',
+      'roll',
     ),
 
     // Control statsd metrics collection.
@@ -94,6 +95,9 @@ class DaGdConfig {
       ),
       '/dns/(.+)/?$' => array(
         'controller' => 'DaGdDNSController',
+      ),
+      '/roll/(\d+)?d(\d+)(?:([ +-])(\d+))?/?$' => array(
+          'controller' => 'DaGdRollController',
       ),
       '/status/(\d+)/?(.+)?/?' => array(
         'controller' => 'DaGdStatusController',
