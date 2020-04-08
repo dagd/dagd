@@ -1,15 +1,17 @@
-FROM registry.access.redhat.com/ubi8/ubi-minimal
+#FROM registry.access.redhat.com/ubi8/ubi-minimal
+FROM centos:7
 
 MAINTAINER rick@elrod.me
 
-RUN microdnf install -y \
+RUN yum install -y \
         httpd \
         php \
         php-mysqlnd \
         php-gd \
         php-pear \
         git \
-        && microdnf clean all \
+	nc \
+        && yum clean all \
         && pear install Net_DNS2
 
 ENV DaGdConfigFile ../container/config.container.php
