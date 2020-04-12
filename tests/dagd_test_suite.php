@@ -114,6 +114,7 @@ class DaGdTestRunner {
 abstract class DaGdTest {
   public static $test_url;
   protected $path;
+  protected $response;
   protected $headers;
   protected $tolerate_failure;
   protected $accept = '*/*';
@@ -172,14 +173,26 @@ abstract class DaGdTest {
       array(
         'http' => array(
           'ignore_errors' => $ignore_errors,
+          'follow_location' => false,
           'header' => array(
             'Accept: '.$this->accept."\r\n",
           ),
         ),
       )
     );
+
     $obtain = @file_get_contents($this::$test_url.$this->path, false, $context);
-    $this->headers = $http_response_header;
+
+    $this->response = $http_response_header[0];
+
+    foreach (array_slice($http_response_header, 1) as $header) {
+      $header_split = explode(': ', $header, 2);
+      if (count($header_split) > 1) {
+        list($name, $value) = $header_split;
+        $this->headers[$name] = $value;
+      }
+    }
+
     if ($this->original_user_agent) {
       ini_set('user_agent', $this->original_user_agent);
     }
@@ -192,6 +205,14 @@ abstract class DaGdTest {
         'Call retrieve() before calling getHeaders()!');
     }
     return $this->headers;
+  }
+
+  protected function getResponse() {
+    if (!$this->response) {
+      throw new Exception(
+        'Call retrieve() before calling getResponse()!');
+    }
+    return $this->response;
   }
 
   protected function test($condition, $summary) {
@@ -219,12 +240,11 @@ final class DaGdResponseCodeTest extends DaGdTest {
 
   public function run() {
     $this->retrieve();
-    $headers = $this->getHeaders();
-    $match = preg_match('@'.$this->expected_code.'@', $headers[0]);
+    $match = preg_match('@'.$this->expected_code.'@', $this->response);
     return $this->test(
       $match,
       'give correct HTTP Response code ('.$this->expected_code.' ?= '.
-      $headers[0].')');
+      $this->response.')');
   }
 }
 
@@ -237,17 +257,8 @@ final class DaGdContentTypeTest extends DaGdTest {
   }
 
   public function run() {
-
     $this->retrieve();
     $headers = $this->getHeaders();
-
-    foreach ($headers as $header) {
-      $header_split = explode(': ', $header, 2);
-      if (count($header_split) > 1) {
-        list($name, $value) = $header_split;
-        $headers[$name] = $value;
-      }
-    }
     $correctness = strstr($headers['Content-Type'], $this->expected_mimetype);
     return $this->test(
       $correctness,
