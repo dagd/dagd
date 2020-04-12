@@ -25,4 +25,9 @@ cp -v container/dagd-httpd.conf /etc/httpd/conf.d/
 
 # We load mpm_prefork in our config.
 rm /etc/httpd/conf.modules.d/00-mpm.conf
+
+# Immediately before we start, touch a file to tell CI that we are
+# ready to start working.
+touch .ready-for-ci
+
 httpd -D FOREGROUND
