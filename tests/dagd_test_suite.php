@@ -316,8 +316,8 @@ $runner->arm(
 /* // Ensure that whois is functioning. */
 $runner->arm(
   id(new DaGdRegexTest('/w/google.com', '@ns1.google.com@')));
-$runner->arm(
-  id(new DaGdRegexTest('/w/da.gd', '@bill.ns.cloudflare.com@i')));
+//$runner->arm(
+//  id(new DaGdRegexTest('/w/da.gd', '@bill.ns.cloudflare.com@i')));
 $runner->arm(
   id(new DaGdRegexTest('/w/4.2.2.2', '@Level 3 Parent@')));
 $runner->arm(
