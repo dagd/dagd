@@ -2,8 +2,6 @@
 <?php
 // Sorry, this probably isn't as neat as you expected. But this is our test suite. :P
 
-require_once dirname(dirname(__FILE__)).'/src/resources/global_resources.php';
-
 define('SUCCESS', 0);
 define('FAILURE', 1);
 define('TOLERATED_FAILURE', 2);
