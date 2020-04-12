@@ -288,6 +288,46 @@ final class DaGdRegexTest extends DaGdTest {
   }
 }
 
+final class DaGdHeaderRegexTest extends DaGdTest {
+  private $regex;
+  private $invert;
+
+  public function __construct(
+    $test_path,
+    $header_key,
+    $pattern,
+    $invert = false) {
+
+    $this->path = $test_path;
+    $this->header_key = $header_key;
+    $this->regex = $pattern;
+    $this->invert = $invert;
+  }
+
+  public function run() {
+    $content = $this->retrieve(true);
+    $headers = $this->getHeaders();
+
+    if (!isset($headers[$this->header_key])) {
+      return $this->test(false, 'header must exist');
+    }
+
+    $value = $headers[$this->header_key];
+
+    if ($this->invert) {
+      $match = !preg_match($this->regex, $value);
+      return $this->test(
+          $match,
+          'header '.$this->header_key.' must NOT match: '.$this->regex);
+    } else {
+      $match = preg_match($this->regex, $value);
+      return $this->test(
+          $match,
+          'header '.$this->header_key.' must match: '.$this->regex);
+    }
+  }
+}
+
 function id($a) {
   return $a;
 }
@@ -545,12 +585,26 @@ $runner->arm(
 
 $runner->arm(
   id(new DaGdResponseCodeTest('/g', 302)));
-
 $runner->arm(
   id(new DaGdResponseCodeTest('/g/foo', 302)));
-
 $runner->arm(
   id(new DaGdResponseCodeTest('/fbook', 302)));
+
+$runner->arm(
+  id(new DaGdHeaderRegexTest('/g', 'Location', '@^http://google.com$@')));
+$runner->arm(
+  id(
+    new DaGdHeaderRegexTest(
+      '/g/?foo=bar',
+      'Location',
+      '@^http://google.com\?foo=bar$@')));
+$runner->arm(
+  id(
+    new DaGdHeaderRegexTest(
+      '/g/foo',
+      'Location',
+      '@^http://google.com/foo$@')));
+
 
 /************ ?strip ************/
 $runner->arm(
