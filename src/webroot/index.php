@@ -19,12 +19,6 @@ foreach ($applications as $application) {
 
 ini_set('user_agent', DaGdConfig::get('general.useragent'));
 
-if (!$_GET['__path__']) {
-  throw new Exception(
-    'No __path__ GET variable was found. '.
-    'Your rewrite rules are incorrect!');
-}
-
 $required_extensions = DaGdConfig::get('general.required_extensions');
 foreach ($required_extensions as $extension) {
   if (!extension_loaded($extension)) {
@@ -33,7 +27,8 @@ foreach ($required_extensions as $extension) {
   }
 }
 
-$requested_path = $_GET['__path__'];
+$request_uri = $_SERVER['REQUEST_URI'];
+$requested_path = preg_replace('/\?.*/', '', $request_uri);
 $request_method = $_SERVER['REQUEST_METHOD'];
 $route_matches = null;
 $metadata_match = null;
@@ -45,7 +40,7 @@ if (!is_html_useragent()) {
   $routes += DaGdConfig::get('general.cli_routemap');
 }
 $routes += DaGdConfig::get('general.routemap');
-
+debug('', $requested_path);
 foreach ($routes as $route => $metadata) {
   if (preg_match('#^'.$route.'#', $requested_path, $route_matches)) {
     if (is_string($metadata) && preg_match('#^https?://#', $metadata)) {
@@ -66,7 +61,7 @@ foreach ($routes as $route => $metadata) {
         $metadata['methods'] = $default_methods;
       }
       if (!in_array($request_method, $metadata['methods'])) {
-        // If we the current request method doesn't match, continue on, but
+        // If the current request method doesn't match, continue on, but
         // mark that we found a controller that regex-matched, so we can return
         // a 405 instead of a 404.
         $regex_match_wrong_method = true;

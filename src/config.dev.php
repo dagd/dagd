@@ -87,7 +87,7 @@ class DaGdConfig {
       '/c/(store)/(.+?)/(.+?)/?$' => array(
         'controller' => 'DaGdCommanderController',
       ),
-      '/c/(.+?)(?:/| )(.+?)/?$' => array(
+      '/c/(.+?)(?:/| |%20)(.+?)/?$' => array(
         'controller' => 'DaGdCommanderController',
       ),
       '/c/?(json|)?/?$' => array(
