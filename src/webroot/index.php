@@ -40,7 +40,7 @@ if (!is_html_useragent()) {
   $routes += DaGdConfig::get('general.cli_routemap');
 }
 $routes += DaGdConfig::get('general.routemap');
-debug('', $requested_path);
+
 foreach ($routes as $route => $metadata) {
   if (preg_match('#^'.$route.'#', $requested_path, $route_matches)) {
     if (is_string($metadata) && preg_match('#^https?://#', $metadata)) {
