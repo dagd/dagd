@@ -570,7 +570,7 @@ $runner->arm(
 $runner->arm(
   id(
     new DaGdRegexTest(
-      '/s?url=http://google.com/&shorturl=g',
+      '/s?url=http://google.com&shorturl=g',
       '@/g@'))
       ->setPreparatory(true)
       ->setTolerateFailure(true));
