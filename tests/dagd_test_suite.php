@@ -10,7 +10,7 @@ class DaGdTestRunner {
   private $concurrency = 5;
   private $pids = array();
   private $tests = array();
-  private $last_started = 0;
+  private $last_started = -1;
   private $return_code = 0;
 
   private $passes = 0;
@@ -70,39 +70,44 @@ class DaGdTestRunner {
       }
     }
 
-    // We do this a bit "oddly" -- split up the tests into $concurrency
-    // chunks and spawn children that work on those chunks.
-    $num_chunks = ceil(count($remaining_tests) / $this->concurrency);
-    $chunks = array_chunk($remaining_tests, $num_chunks);
-
-    foreach ($chunks as $chunk) {
-      $pid = pcntl_fork();
-      if ($pid === -1) {
-        echo 'Could not fork child thread.';
-        exit(1);
-      }
-      if ($pid === 0) {
-        $exit = SUCCESS;
-        foreach ($chunk as $test) {
-          $rc = $test->run();
+    while (true) {
+      while (count($this->pids) < $this->concurrency) {
+        $this->last_started++;
+        if ($this->last_started == count($remaining_tests)) {
+          // We can't return here because we still need to wait for the last
+          // of the threads to clean up. But we can break out, do that final
+          // cleanup, and then return.
+          break;
+        }
+        $pid = pcntl_fork();
+        if ($pid === -1) {
+          echo 'Could not fork child thread.';
+          exit(1);
+        }
+        if ($pid === 0) {
+          $exit = SUCCESS;
+          $rc = $remaining_tests[$this->last_started]->run();
           if ($rc != SUCCESS) {
             $exit = $rc;
           }
+          exit($exit);
+        } else {
+          $this->pids[] = $pid;
         }
-        exit($exit);
-      } else {
-        $this->pids[] = $pid;
+      }
+
+      foreach ($this->pids as $idx => $pid) {
+        $status = null;
+        pcntl_waitpid($pid, $status);
+        $rc = pcntl_wexitstatus($status);
+        $this->handleRC($rc);
+        unset($this->pids[$idx]);
+      }
+
+      if ($this->last_started == count($remaining_tests)) {
+        return $this->return_code;
       }
     }
-
-    foreach ($this->pids as $pid) {
-      $status = null;
-      pcntl_waitpid($pid, $status);
-      $rc = pcntl_wexitstatus($status);
-      $this->handleRC($rc);
-    }
-
-    return $this->return_code;
   }
 }
 
