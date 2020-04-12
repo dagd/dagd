@@ -7,7 +7,9 @@ services:
   - docker
 
 before_script:
-  - pushd container && docker-compose up & && popd
+  - pushd container
+  - docker-compose up &
+  - popd
 
 script:
   - ./tests/dagd_test_suite.php http://localhost:8080
