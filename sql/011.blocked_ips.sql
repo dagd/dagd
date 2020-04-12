@@ -1,4 +1,4 @@
-CREATE TABLE dagd.blocked_ips (
+CREATE TABLE blocked_ips (
   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
   ip_start VARBINARY(16) NOT NULL,
   ip_end VARBINARY(16) NOT NULL,
