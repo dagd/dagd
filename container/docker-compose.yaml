@@ -12,7 +12,7 @@ services:
     image: mariadb:latest
     restart: always
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: dagd
     # If we just use the default temporary container root, initialization is
     # INSANELY slow. Instead we mount it as an explicit tmpfs volume.
