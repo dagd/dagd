@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__).'/constants.php';
+
 abstract class DaGdTest {
   protected $path;
   protected $response;
