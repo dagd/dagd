@@ -148,24 +148,19 @@ abstract class DaGdTest {
     return $this;
   }
 
-  protected function fail($text, $exit = false) {
+  protected function fail($text, $output = '') {
     if ($this->tolerate_failure) {
       echo chr(27)."[1;33m".'*** (tolerable failure) '.$text.' ***'.chr(27)."[0m"."\n";
     } else {
       echo chr(27)."[1;31m".'*** '.$text.' ***'.chr(27)."[0m"."\n";
     }
-    if ($exit && !$this->tolerate_failure) {
-      echo "Exiting with status code '1' - to bypass a git pre-commit hook,\n";
-      echo "pass `--no-verify` to your `git commit` command.\n";
-      exit(1);
+    if ($output != '') {
+      echo '    Output was: '.chr(27)."[1;35m".$output.chr(27)."[0m"."\n";
     }
   }
 
-  protected function pass($text, $exit = false) {
+  protected function pass($text) {
     echo chr(27)."[1;32m".'*** '.$text.' ***'.chr(27)."[0m"."\n";
-    if ($exit) {
-      exit(0);
-    }
   }
 
   protected function retrieve($ignore_errors = false) {
@@ -215,12 +210,12 @@ abstract class DaGdTest {
     return $this->response;
   }
 
-  protected function test($condition, $summary) {
+  protected function test($condition, $summary, $output = '') {
     if ($condition) {
       $this->pass('Test PASSED ['.$this->path.']: '.$summary);
       return SUCCESS;
     } else {
-      $this->fail('Test FAILED ['.$this->path.']: '.$summary);
+      $this->fail('Test FAILED ['.$this->path.']: '.$summary, $output);
       if ($this->tolerate_failure) {
         return TOLERATED_FAILURE;
       } else {
@@ -244,7 +239,8 @@ final class DaGdResponseCodeTest extends DaGdTest {
     return $this->test(
       $match,
       'give correct HTTP Response code ('.$this->expected_code.' ?= '.
-      $this->response.')');
+        $this->response.')',
+      $this->response);
   }
 }
 
@@ -262,7 +258,8 @@ final class DaGdContentTypeTest extends DaGdTest {
     $correctness = strstr($headers['Content-Type'], $this->expected_mimetype);
     return $this->test(
       $correctness,
-      'return correct mimetype ('.$this->expected_mimetype.')');
+      'return correct mimetype ('.$this->expected_mimetype.')',
+      $headers['Content-Type']);
   }
 }
 
@@ -280,10 +277,16 @@ final class DaGdRegexTest extends DaGdTest {
     $content = $this->retrieve(true);
     if ($this->invert) {
       $match = !preg_match($this->regex, $content);
-      return $this->test($match, 'must NOT match pattern: '.$this->regex);
+      return $this->test(
+        $match,
+        'must NOT match pattern: '.$this->regex,
+        $content);
     } else {
       $match = preg_match($this->regex, $content);
-      return $this->test($match, 'must match pattern: '.$this->regex);
+      return $this->test(
+        $match,
+        'must match pattern: '.$this->regex,
+        $content);
     }
   }
 }
@@ -317,13 +320,15 @@ final class DaGdHeaderRegexTest extends DaGdTest {
     if ($this->invert) {
       $match = !preg_match($this->regex, $value);
       return $this->test(
-          $match,
-          'header '.$this->header_key.' must NOT match: '.$this->regex);
+        $match,
+        'header '.$this->header_key.' must NOT match: '.$this->regex,
+        $value);
     } else {
       $match = preg_match($this->regex, $value);
       return $this->test(
-          $match,
-          'header '.$this->header_key.' must match: '.$this->regex);
+        $match,
+        'header '.$this->header_key.' must match: '.$this->regex,
+        $value);
     }
   }
 }
