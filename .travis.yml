@@ -20,4 +20,7 @@ branches:
     - master
 
 notifications:
-  webhooks: https://sl.da.gd/travisci?channel=%23dagd
+  webhooks:
+    if: type != cron
+    urls:
+      - https://sl.da.gd/travisci?channel=%23dagd
