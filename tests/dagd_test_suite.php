@@ -33,6 +33,13 @@ $runner->arm(
 $runner->arm(
   id(new DaGdRegexTest('/', '@various conditions@')));
 
+$runner->arm(
+  id(new DaGdRegexTest('/?text=0', '@<form@')));
+
+$runner->arm(
+  id(new DaGdRegexTest('/', '@<form@'))
+    ->setAccept('text/html'));
+
 /*********** /ip ***********/
 
 // See if /ip contains a number followed by a '.'
@@ -227,7 +234,7 @@ $runner->arm(
 
 /************ /help ************/
 $runner->arm(
-  id(new DaGdRegexTest('/help', '@pixels: /image/200x400/png@'))
+  id(new DaGdRegexTest('/help', '@pixels: <a href="/image/200x400/png"@'))
   ->setAccept('text/html'));
 $runner->arm(
   id(

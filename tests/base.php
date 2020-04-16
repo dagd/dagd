@@ -91,7 +91,7 @@ abstract class DaGdTest {
     if ($this->original_user_agent) {
       ini_set('user_agent', $this->original_user_agent);
     }
-    return strip_tags($obtain);
+    return $obtain;
   }
 
   protected function getHeaders() {
