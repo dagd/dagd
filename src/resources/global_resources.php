@@ -273,3 +273,7 @@ function help($class) {
   }
   return $return;
 }
+
+function id($a) {
+  return $a;
+}

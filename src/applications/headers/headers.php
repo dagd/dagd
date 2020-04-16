@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__FILE__).'/resources/getallheaders.php';
+require_once dirname(__FILE__).'/resources/dagd_get_headers.php';
 
 final class DaGdHeadersController extends DaGdBaseClass {
   public $__help__ = array(
@@ -9,36 +10,64 @@ final class DaGdHeadersController extends DaGdBaseClass {
     'examples' => array(
       array(
         'arguments' => null,
-        'summary' => 'The headers your browser is sending in its request'),
+        'summary' => 'The headers your browser is sending in its request',
+      ),
       array(
         'arguments' => array('google.com'),
-        'summary' => 'The headers that "http://google.com/" sends'),
-    ));
+        'summary' =>
+          'The headers that "http://google.com/" sends, including redirects',
+      ),
+      array(
+        'arguments' => null,
+        'request' => array(
+          'url' => 'http://google.com',
+        ),
+        'summary' =>
+          'The headers that "http://google.com/" sends, including redirects',
+      ),
+      array(
+        'arguments' => array('http://google.com'),
+        'request' => array(
+          'redirects' => 'false',
+        ),
+        'summary' =>
+        'The headers that "http://google.com/" sends, without redirects'),
+      ),
+  );
 
   protected $wrap_html = true;
 
   public function render() {
-    $headers = array();
-    $response = '';
+    // Allow the url to be passed as a request parameter or as a path segment.
+    $site = null;
 
     if (count($this->route_matches) > 1) {
       $site = $this->route_matches[1];
+    } else {
+      $site = request_or_default('url');
+    }
 
+    if (!empty($site)) {
       if (!preg_match('@^https?://@i', $site)) {
         $site = 'http://'.$site;
       }
 
-      $headers = @get_headers($site);
+      $follow_redirects = request_or_default('redirects', true);
+
+      $headers = id(new DaGdHeaderGetter())
+        ->setSite($site)
+        ->setFollowRedirects($follow_redirects)
+        ->requestHeaders();
+
       if (!$headers) {
         error400('Headers could not be retrieved for that domain.');
         return;
       }
 
-      foreach ($headers as $header) {
-        $response .= $header."\n";
-      }
-
+      return $headers;
     } else {
+      // If we didn't get a URL passed, then assume the user is asking for the
+      // headers they sent. Send them back.
       $headers = getallheaders();
       foreach ($headers as $key => $value) {
         if (server_or_default('HTTP_X_DAGD_PROXY') == "1") {
