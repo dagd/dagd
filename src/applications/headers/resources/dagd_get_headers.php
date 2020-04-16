@@ -56,11 +56,17 @@ class DaGdHeaderGetter {
     return $this;
   }
 
+  protected function cleanup() {
+    if ($this->curl) {
+      curl_close($this->curl);
+    }
+    $this->curl = null;
+  }
+
   public function requestHeaders() {
     $this->createClient();
     $out = curl_exec($this->curl);
-    curl_close($this->curl);
-    $this->curl = null;
+    $this->cleanup();
     return $out;
   }
 }
