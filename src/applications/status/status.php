@@ -1,17 +1,19 @@
 <?php
 final class DaGdStatusController extends DaGdBaseClass {
-  public $__help__ = array(
-    'title' => 'status',
-    'summary' => 'Generate a response with the given status code.',
-    'path' => 'status',
-    'examples' => array(
-      array(
-        'arguments' => array('404'),
-        'summary' => 'Generate a 404 (not found) response.'),
-      array(
-        'arguments' => array('500', 'testing foo'),
-        'summary' => 'Generate a 500 response with the message "testing foo"'),
-    ));
+  public function getHelp() {
+    return array(
+      'title' => 'status',
+      'summary' => 'Generate a response with the given status code.',
+      'path' => 'status',
+      'examples' => array(
+        array(
+          'arguments' => array('404'),
+          'summary' => 'Generate a 404 (not found) response.'),
+        array(
+          'arguments' => array('500', 'testing foo'),
+          'summary' => 'Generate a 500 response with the message "testing foo"'),
+      ));
+  }
 
   protected $wrap_html = true;
   protected $never_newline = true;

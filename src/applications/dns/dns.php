@@ -1,18 +1,20 @@
 <?php
 
 final class DaGdDNSController extends DaGdBaseClass {
-  public $__help__ = array(
-    'title' => 'dns',
-    'summary' => 'Fetch and return all DNS records for a given hostname.',
-    'path' => 'dns',
-    'examples' => array(
-      array(
-        'summary' => 'Get DNS records for google.com',
-        'arguments' => array(
-          'google.com',
+  public function getHelp() {
+    array(
+      'title' => 'dns',
+      'summary' => 'Fetch and return all DNS records for a given hostname.',
+      'path' => 'dns',
+      'examples' => array(
+        array(
+          'summary' => 'Get DNS records for google.com',
+          'arguments' => array(
+            'google.com',
+          ),
         ),
-      ),
-    ));
+      ));
+  }
 
   protected $wrap_html = true;
 

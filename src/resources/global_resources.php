@@ -234,7 +234,9 @@ function help($class) {
   $return = '';
 
   $help_getter = new ReflectionClass($class);
-  if ($help = idx($help_getter->getDefaultProperties(), '__help__')) {
+  $instance = $help_getter->newInstance();
+  $help = $instance->getHelp();
+  if ($help) {
     $return .= '<h3 id="'.$help['title'].'">';
     $return .= '<a href="#'.$help['title'].'">#</a> ';
     $return .= $help['summary']."</h3>\n";

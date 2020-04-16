@@ -1,29 +1,31 @@
 <?php
 
 final class DaGdImageController extends DaGdBaseClass {
-  public $__help__ = array(
-    'title' => 'image',
-    'summary' => 'Generate almost-arbitrarily sized images.',
-    'path' => 'image',
-    'examples' => array(
-      array(
-        'summary' => 'Generate a PNG that is 200x400 pixels',
-        'arguments' => array(
-          '200x400',
-          'png',
+  public function getHelp() {
+    return array(
+      'title' => 'image',
+      'summary' => 'Generate almost-arbitrarily sized images.',
+      'path' => 'image',
+      'examples' => array(
+        array(
+          'summary' => 'Generate a PNG that is 200x400 pixels',
+          'arguments' => array(
+            '200x400',
+            'png',
+          ),
         ),
-      ),
-      array(
-        'summary' => 'Generate a JPEG that is 20x20 pixels with a background',
-        'arguments' => array(
-          '20*20',
-          'jpg',
+        array(
+          'summary' => 'Generate a JPEG that is 20x20 pixels with a background',
+          'arguments' => array(
+            '20*20',
+            'jpg',
+          ),
+          'request' => array(
+            'bgcolor' => '7ca931',
+          ),
         ),
-        'request' => array(
-          'bgcolor' => '7ca931',
-        ),
-      ),
-    ));
+      ));
+  }
 
   private $width;
   private $height;

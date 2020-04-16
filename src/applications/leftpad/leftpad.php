@@ -1,18 +1,20 @@
 <?php
 final class DaGdLeftPadController extends DagdBaseClass {
-  public $__help__ = array(
-    'title' => 'leftpad',
-    'summary' => 'Left pad a string. As a service.',
-    'path' => 'leftpad',
-    'examples' => array(
-      array(
-        'arguments' => array('[length]', '[padding character]', '[input]'),
-        'summary' => 'Left-pads the input string with padding character',
-      ),
-      array(
-        'arguments' => array('10', '@', 'hello'),
-        'summary' => 'Returns "@@@@@hello"')
-    ));
+  public function getHelp() {
+    return array(
+      'title' => 'leftpad',
+      'summary' => 'Left pad a string. As a service.',
+      'path' => 'leftpad',
+      'examples' => array(
+        array(
+          'arguments' => array('[length]', '[padding character]', '[input]'),
+          'summary' => 'Left-pads the input string with padding character',
+        ),
+        array(
+          'arguments' => array('10', '@', 'hello'),
+          'summary' => 'Returns "@@@@@hello"')
+      ));
+  }
 
   protected $wrap_html = true;
 

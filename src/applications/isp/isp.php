@@ -2,17 +2,19 @@
 require_once dirname(__FILE__).'/../whois/resources/dagd_whois.php';
 
 final class DaGdISPController extends DaGdBaseClass {
-  public $__help__ = array(
-    'title' => 'isp',
-    'summary' => 'Return the name of your ISP, or that of the given IP.',
-    'path' => 'isp',
-    'examples' => array(
-      array(
-        'summary' => 'Return the name of your ISP'),
-      array(
-        'arguments' => array('69.171.234.21'),
-        'summary' => 'Return the name of the ISP of the given address.'),
-    ));
+  public function getHelp() {
+    array(
+      'title' => 'isp',
+      'summary' => 'Return the name of your ISP, or that of the given IP.',
+      'path' => 'isp',
+      'examples' => array(
+        array(
+          'summary' => 'Return the name of your ISP'),
+        array(
+          'arguments' => array('69.171.234.21'),
+          'summary' => 'Return the name of the ISP of the given address.'),
+      ));
+  }
 
   protected $wrap_html = true;
 

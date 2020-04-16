@@ -1,26 +1,28 @@
 <?php
 
 final class DaGdCommanderController extends DaGdBaseClass {
-  public $__help__ = array(
-    'title' => 'commander',
-    'summary' => 'A very simple yubnub replacement.',
-    'path' => 'c',
-    'examples' => array(
-      array(
-        'summary' => 'Add a command to the database',
-        'arguments' => array(
-          'store',
-          'g',
-          'https://www.google.com/search?q=$PARAMETERS',
+  public function getHelp() {
+    return array(
+      'title' => 'commander',
+      'summary' => 'A very simple yubnub replacement.',
+      'path' => 'c',
+      'examples' => array(
+        array(
+          'summary' => 'Add a command to the database',
+          'arguments' => array(
+            'store',
+            'g',
+            'https://www.google.com/search?q=$PARAMETERS',
+          ),
         ),
-      ),
-      array(
-        'arguments' => array(
-          'g',
-          'foobar',
-        ),
-        'summary' => 'Redirect to https://www.google.com/search?q=foobar'),
-    ));
+        array(
+          'arguments' => array(
+            'g',
+            'foobar',
+          ),
+          'summary' => 'Redirect to https://www.google.com/search?q=foobar'),
+      ));
+  }
 
   private $command;
   private $url;

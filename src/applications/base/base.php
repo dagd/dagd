@@ -28,7 +28,9 @@ abstract class DaGdBaseClass {
   protected $style = '';
 
   // This is used for DaGdHelpController to generate its list of commands.
-  public $__help__ = null;
+  public function getHelp() {
+    return array();
+  }
 
   // If true, make ?strip ineffective -- never allow a newline to terminate
   // output.
@@ -102,7 +104,7 @@ abstract class DaGdBaseClass {
       $controller_response = $this->render();
 
       if ($this->wrap_html) {
-        $title = idx($this->__help__, 'title', 'Welcome!');
+        $title = idx($this->getHelp(), 'title', 'Welcome!');
         $response .= "<!doctype html>\n";
         $response .= '<html>';
         $response .= '  <head>';

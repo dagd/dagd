@@ -1,36 +1,38 @@
 <?php
 
 final class DagdRollController extends DaGdBaseClass {
-  public $__help__ = array(
-    'title' => 'roll',
-    'summary' => 'Roll a die or multiple dice.',
-    'path' => 'roll',
-    'examples' => array(
-      array(
-        'summary' => 'Roll one 4-sided die',
-        'arguments' => array(
-          'd4',
+  public function getHelp() {
+    return array(
+      'title' => 'roll',
+      'summary' => 'Roll a die or multiple dice.',
+      'path' => 'roll',
+      'examples' => array(
+        array(
+          'summary' => 'Roll one 4-sided die',
+          'arguments' => array(
+            'd4',
+          ),
         ),
-      ),
-      array(
-        'summary' => 'Roll two 4-sided dice',
-        'arguments' => array(
-          '2d4',
+        array(
+          'summary' => 'Roll two 4-sided dice',
+          'arguments' => array(
+            '2d4',
+          ),
         ),
-      ),
-      array(
-        'summary' => 'Roll one 4-sided die and add 5 to the result',
-        'arguments' => array(
-          'd4+5',
+        array(
+          'summary' => 'Roll one 4-sided die and add 5 to the result',
+          'arguments' => array(
+            'd4+5',
+          ),
         ),
-      ),
-      array(
-        'summary' => 'Roll three 20-sided dice and subtract 1 from the result',
-        'arguments' => array(
-          '2d20-1',
+        array(
+          'summary' => 'Roll three 20-sided dice and subtract 1 from the result',
+          'arguments' => array(
+            '2d20-1',
+          ),
         ),
-      ),
-    ));
+      ));
+  }
 
   public function render() {
     $dice = idx($this->route_matches, 1);

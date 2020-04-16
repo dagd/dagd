@@ -1,26 +1,28 @@
 <?php
 
 final class DaGdEditCountController extends DaGdBaseClass {
-  public $__help__ = array(
-    'title' => 'editcount',
-    'summary' => 'Gives wikipedia edit count for a user.',
-    'path' => 'ec',
-    'examples' => array(
-      array(
-        'arguments' => array('CodeBlock'),
-        'summary' => 'en.wikipedia.org editcount for user "CodeBlock"'),
-      array(
-        'arguments' => array('CodeBlock'),
-        'request' => array(
-          'lang' => 'fr'),
-        'summary' => 'fr.wikipedia.org editcount for user "CodeBlock"'),
-      array(
-        'arguments' => array('CodeBlock'),
-        'request' => array(
-          'lang' => 'en',
-          'proj' => 'wikiquote'),
-        'summary' => 'en.wikiquote.org editcount for user "CodeBlock"'),
-    ));
+  public function getHelp() {
+    return array(
+      'title' => 'editcount',
+      'summary' => 'Gives wikipedia edit count for a user.',
+      'path' => 'ec',
+      'examples' => array(
+        array(
+          'arguments' => array('CodeBlock'),
+          'summary' => 'en.wikipedia.org editcount for user "CodeBlock"'),
+        array(
+          'arguments' => array('CodeBlock'),
+          'request' => array(
+            'lang' => 'fr'),
+          'summary' => 'fr.wikipedia.org editcount for user "CodeBlock"'),
+        array(
+          'arguments' => array('CodeBlock'),
+          'request' => array(
+            'lang' => 'en',
+            'proj' => 'wikiquote'),
+          'summary' => 'en.wikiquote.org editcount for user "CodeBlock"'),
+      ));
+  }
 
   protected $wrap_html = true;
 

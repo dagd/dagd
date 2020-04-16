@@ -7,21 +7,23 @@ require_once dirname(__FILE__).'/coshorten.php';
 require_once dirname(__FILE__).'/stats.php';
 
 final class DaGdShortenController extends DaGdBaseClass {
-  public $__help__ = array(
-    'title' => 'shorten',
-    'summary' => 'Shorten your long URLs (/, /s, /shorten).',
-    'path' => '',
-    'examples' => array(
-      array(
-        'arguments' => null,
-        'request' => array(
-          'url' => 'http://some_long_url',
-          'shorturl' => 'slug'),
-        'summary' => 'Shorten a URL'),
-      array(
-        'arguments' => array('g'),
-        'summary' => 'An example short URL with a custom suffix'),
-    ));
+  public function getHelp() {
+    array(
+      'title' => 'shorten',
+      'summary' => 'Shorten your long URLs (/, /s, /shorten).',
+      'path' => '',
+      'examples' => array(
+        array(
+          'arguments' => null,
+          'request' => array(
+            'url' => 'http://some_long_url',
+            'shorturl' => 'slug'),
+          'summary' => 'Shorten a URL'),
+        array(
+          'arguments' => array('g'),
+          'summary' => 'An example short URL with a custom suffix'),
+      ));
+  }
 
   protected $wrap_html = true;
   protected $wrap_pre = false;

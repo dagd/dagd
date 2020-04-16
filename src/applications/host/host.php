@@ -1,17 +1,19 @@
 <?php
 final class DaGdHostController extends DaGdBaseClass {
-  public $__help__ = array(
-    'title' => 'host',
-    'summary' => 'Return the IP or hostname of the given value.',
-    'path' => 'host',
-    'examples' => array(
-      array(
-        'arguments' => array('google.com'),
-        'summary' => 'Get a comma-separated list of IPs for google.com'),
-      array(
-        'arguments' => array('127.0.0.1'),
-        'summary' => 'Get the hostname for the PTR of 127.0.0.1')
-    ));
+  public function getHelp() {
+    return array(
+      'title' => 'host',
+      'summary' => 'Return the IP or hostname of the given value.',
+      'path' => 'host',
+      'examples' => array(
+        array(
+          'arguments' => array('google.com'),
+          'summary' => 'Get a comma-separated list of IPs for google.com'),
+        array(
+          'arguments' => array('127.0.0.1'),
+          'summary' => 'Get the hostname for the PTR of 127.0.0.1')
+      ));
+  }
 
   protected $wrap_html = true;
 

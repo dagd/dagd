@@ -3,37 +3,39 @@ require_once dirname(__FILE__).'/resources/getallheaders.php';
 require_once dirname(__FILE__).'/resources/dagd_get_headers.php';
 
 final class DaGdHeadersController extends DaGdBaseClass {
-  public $__help__ = array(
-    'title' => 'headers',
-    'summary' => 'Show HTTP headers for various conditions.',
-    'path' => 'headers',
-    'examples' => array(
-      array(
-        'arguments' => null,
-        'summary' => 'The headers your browser is sending in its request',
-      ),
-      array(
-        'arguments' => array('google.com'),
-        'summary' =>
-          'The headers that "http://google.com/" sends, including redirects',
-      ),
-      array(
-        'arguments' => null,
-        'request' => array(
-          'url' => 'http://google.com',
+  public function getHelp() {
+    return array(
+      'title' => 'headers',
+      'summary' => 'Show HTTP headers for various conditions.',
+      'path' => 'headers',
+      'examples' => array(
+        array(
+          'arguments' => null,
+          'summary' => 'The headers your browser is sending in its request',
         ),
-        'summary' =>
-          'The headers that "http://google.com/" sends, including redirects',
-      ),
-      array(
-        'arguments' => array('http://google.com'),
-        'request' => array(
-          'redirects' => '0',
+        array(
+          'arguments' => array('google.com'),
+          'summary' =>
+            'The headers that "http://google.com/" sends, including redirects',
         ),
-        'summary' => 'The headers that "http://google.com/" sends, without redirects (redirects can be 0 or 1)',
+        array(
+          'arguments' => null,
+          'request' => array(
+            'url' => 'http://google.com',
+          ),
+          'summary' =>
+            'The headers that "http://google.com/" sends, including redirects',
+        ),
+        array(
+          'arguments' => array('http://google.com'),
+          'request' => array(
+            'redirects' => '0',
+          ),
+          'summary' => 'The headers that "http://google.com/" sends, without redirects (redirects can be 0 or 1)',
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   protected $wrap_html = true;
 

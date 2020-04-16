@@ -1,14 +1,16 @@
 <?php
 final class DaGdIPController extends DaGdBaseClass {
-  public $__help__ = array(
-    'title' => 'ip',
-    'summary' => 'Returns your current IP address.',
-    'path' => 'ip',
-    'examples' => array(
-      array(
-        'arguments' => null,
-        'summary' => null),
-    ));
+  public function getHelp() {
+    return array(
+      'title' => 'ip',
+      'summary' => 'Returns your current IP address.',
+      'path' => 'ip',
+      'examples' => array(
+        array(
+          'arguments' => null,
+          'summary' => null),
+      ));
+  }
 
   protected $wrap_html = true;
 
