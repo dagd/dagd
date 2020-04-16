@@ -31,7 +31,9 @@ final class DaGdHeadersController extends DaGdBaseClass {
           'request' => array(
             'redirects' => '0',
           ),
-          'summary' => 'The headers that "http://google.com/" sends, without redirects (redirects can be 0 or 1)',
+          'summary' =>
+            'The headers that "http://google.com/" sends, without redirects '.
+            '(redirects can be 0 or 1)',
         ),
       ),
     );
