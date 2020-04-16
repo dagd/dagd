@@ -229,8 +229,8 @@ $runner->arm(
 $runner->arm(
   id(
     new DaGdRegexTest(
-      '/isp/2001:470:8:624:211c:aaaa:1111:1111',
-      '@Tunnelbroker@')));
+      '/isp/2607:f8b0:4000:812::200e',
+      '@Google@')));
 
 /************ /help ************/
 $runner->arm(
