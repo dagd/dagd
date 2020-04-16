@@ -244,29 +244,29 @@ function help($class) {
       if ($example['summary']) {
         $return .= $example['summary'].': ';
       }
-      $return .= $prefix.$help['path'];
+      $link = $prefix.$help['path'];
       if (array_key_exists('arguments', $example)) {
         $arguments = $example['arguments'];
         if ($arguments) {
           if ($help['path']) {
-            $return .= $separator;
+            $link .= $separator;
           }
-          $return .= implode($separator, $arguments);
+          $link .= implode($separator, $arguments);
         }
       }
       if (array_key_exists('request', $example)) {
         $iteration = 0;
         foreach ($example['request'] as $param => $param_example) {
           if ($request_sep) {
-            $return .= $request_sep;
+            $link .= $request_sep;
           } else {
-            $return .= ($iteration === 0) ? '?' : '&';
+            $link .= ($iteration === 0) ? '?' : '&';
           }
-          $return .= $param.'='.$param_example;
+          $link .= $param.'='.$param_example;
           $iteration++;
         }
       }
-
+      $return .= '<a href="'.$link.'">'.$link.'</a>';
       $return .= "</li>\n";
     }
     $return .= "</ul>\n";

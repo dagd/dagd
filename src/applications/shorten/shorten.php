@@ -10,7 +10,7 @@ final class DaGdShortenController extends DaGdBaseClass {
   public $__help__ = array(
     'title' => 'shorten',
     'summary' => 'Shorten your long URLs (/, /s, /shorten).',
-    'path' => 's',
+    'path' => '',
     'examples' => array(
       array(
         'arguments' => null,
