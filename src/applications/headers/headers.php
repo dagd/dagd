@@ -28,11 +28,11 @@ final class DaGdHeadersController extends DaGdBaseClass {
       array(
         'arguments' => array('http://google.com'),
         'request' => array(
-          'redirects' => 'false',
+          'redirects' => '0',
         ),
-        'summary' =>
-        'The headers that "http://google.com/" sends, without redirects'),
+        'summary' => 'The headers that "http://google.com/" sends, without redirects (redirects can be 0 or 1)',
       ),
+    ),
   );
 
   protected $wrap_html = true;
@@ -59,12 +59,12 @@ final class DaGdHeadersController extends DaGdBaseClass {
         ->setFollowRedirects($follow_redirects)
         ->requestHeaders();
 
-      if (!$headers) {
+      if (empty($headers)) {
         error400('Headers could not be retrieved for that domain.');
         return;
       }
 
-      return $headers;
+      return implode("", $headers);
     } else {
       // If we didn't get a URL passed, then assume the user is asking for the
       // headers they sent. Send them back.
