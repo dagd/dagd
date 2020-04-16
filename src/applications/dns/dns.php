@@ -2,7 +2,7 @@
 
 final class DaGdDNSController extends DaGdBaseClass {
   public function getHelp() {
-    array(
+    return array(
       'title' => 'dns',
       'summary' => 'Fetch and return all DNS records for a given hostname.',
       'path' => 'dns',

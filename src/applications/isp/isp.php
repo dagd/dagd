@@ -3,7 +3,7 @@ require_once dirname(__FILE__).'/../whois/resources/dagd_whois.php';
 
 final class DaGdISPController extends DaGdBaseClass {
   public function getHelp() {
-    array(
+    return array(
       'title' => 'isp',
       'summary' => 'Return the name of your ISP, or that of the given IP.',
       'path' => 'isp',

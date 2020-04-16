@@ -8,7 +8,7 @@ require_once dirname(__FILE__).'/stats.php';
 
 final class DaGdShortenController extends DaGdBaseClass {
   public function getHelp() {
-    array(
+    return array(
       'title' => 'shorten',
       'summary' => 'Shorten your long URLs (/, /s, /shorten).',
       'path' => '',
