@@ -7,6 +7,7 @@ require_once dirname(__FILE__).'/test_content_type.php';
 require_once dirname(__FILE__).'/test_header_regex.php';
 require_once dirname(__FILE__).'/test_regex.php';
 require_once dirname(__FILE__).'/test_response_code.php';
+require_once dirname(__FILE__).'/test_response_regex.php';
 
 function id($a) {
   return $a;
@@ -215,6 +216,8 @@ $runner->arm(
   id(new DaGdResponseCodeTest('/status/403', 403)));
 $runner->arm(
   id(new DaGdResponseCodeTest('/status/321/hi', 321)));
+$runner->arm(
+  id(new DaGdResponseRegexTest('/status/321/hi', '@321 hi$@')));
 
 /************ /isp/[xxxxxxx] ************/
 $runner->arm(
