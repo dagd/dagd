@@ -324,6 +324,10 @@ $runner->arm(
 $runner->arm(
   id(new DaGdRegexTest('/roll/3d1-1', '@^2$@')));
 $runner->arm(
+  id(new DaGdRegexTest('/roll/3d10', '@^\d+$@')));
+
+/************ /leftpad/ ************/
+$runner->arm(
   id(new DaGdRegexTest('/leftpad/10/z/foo', '@^z{7}foo$@')));
 
 /************ ?darkmode cookie ************/
