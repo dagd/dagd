@@ -43,9 +43,8 @@ $runner->arm(
 
 /*********** /ip ***********/
 
-// See if /ip contains a number followed by a '.'
 $runner->arm(
-  id(new DaGdRegexTest('/ip', '@[0-9]\.@')));
+  id(new DaGdRegexTest('/ip', '@(?:[0-9]+\.){3}[0-9]+$@')));
 
 /*********** /ec/CodeBlock ***********/
 
@@ -275,6 +274,12 @@ $runner->arm(
       ->setTolerateFailure(true));
 
 $runner->arm(
+  id(
+    new DaGdRegexTest(
+      '/coshorten/g',
+      '@http://google.com@')));
+
+$runner->arm(
   id(new DaGdResponseCodeTest('/g', 302)));
 $runner->arm(
   id(new DaGdResponseCodeTest('/g/foo', 302)));
@@ -319,7 +324,12 @@ $runner->arm(
 $runner->arm(
   id(new DaGdRegexTest('/roll/3d1-1', '@^2$@')));
 $runner->arm(
-  id(new DaGdRegexTest('/roll/3d10', '@^\d+$@')));
+  id(new DaGdRegexTest('/leftpad/10/z/foo', '@^z{7}foo$@')));
+
+/************ ?darkmode cookie ************/
+$runner->arm(
+  id(new DaGdHeaderRegexTest('/?darkmode', 'Set-Cookie', '@^darkmode=true;@'))
+    ->setAccept('text/html'));
 
 $runner->run();
 
