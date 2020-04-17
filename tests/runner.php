@@ -9,6 +9,7 @@ class DaGdTestRunner {
   private $last_started = -1;
   private $return_code = 0;
   private $base_url = '';
+  private $groups_filter = array();
 
   private $passes = 0;
   private $tolerated_failures = 0;
@@ -24,6 +25,16 @@ class DaGdTestRunner {
 
   public function getFailures() {
     return $this->failures;
+  }
+
+  public function setGroupsFilter(array $groups) {
+    $this->groups_filter = $groups;
+    return $this;
+  }
+
+  public function addGroupFilter($group) {
+    $this->groups_filter[] = $group;
+    return $this;
   }
 
   public function getReturnCode() {
@@ -66,6 +77,8 @@ class DaGdTestRunner {
   public function run($start_test = 0) {
     // Run preparatory tests first. These have to be done in a particular
     // order, so we can't just throw them to the dogs...er, child processes.
+    // We run the prepatory tests even when filters are active. This is to
+    // avoid having to implement a notion of 'test group dependencies.'
     $remaining_tests = array();
     foreach ($this->tests as $test) {
       // While we're here, also tell the test who is running it.
@@ -76,7 +89,17 @@ class DaGdTestRunner {
         $rc = $test->run();
         $this->handleRC($rc);
       } else {
-        $remaining_tests[] = $test;
+        if (empty($this->groups_filter)) {
+          $remaining_tests[] = $test;
+        } else {
+          $test_groups = $test->getGroups();
+          foreach ($test_groups as $group) {
+            if (in_array($group, $this->groups_filter)) {
+              $remaining_tests[] = $test;
+              break;
+            }
+          }
+        }
       }
     }
 

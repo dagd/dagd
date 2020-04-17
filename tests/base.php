@@ -10,6 +10,7 @@ abstract class DaGdTest {
   protected $accept = '*/*';
   private $original_user_agent;
   private $preparatory = false;
+  private $groups = array('default');
 
   abstract public function run();
 
@@ -25,6 +26,20 @@ abstract class DaGdTest {
 
   public function getPreparatory() {
     return $this->preparatory;
+  }
+
+  public function setGroups(array $groups) {
+    $this->groups = $groups;
+    return $this;
+  }
+
+  public function getGroups() {
+    return $this->groups;
+  }
+
+  public function addGroup($group) {
+    $this->groups[] = $group;
+    return $this;
   }
 
   public function setUserAgent($user_agent) {
