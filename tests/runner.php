@@ -74,7 +74,7 @@ class DaGdTestRunner {
     }
   }
 
-  public function run($start_test = 0) {
+  public function run() {
     // Run preparatory tests first. These have to be done in a particular
     // order, so we can't just throw them to the dogs...er, child processes.
     // We run the prepatory tests even when filters are active. This is to
