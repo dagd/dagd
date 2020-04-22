@@ -108,9 +108,31 @@ header('X-Git-Commit: '.$git_latest_commit);
 
 $instance = new ReflectionClass($metadata_match['controller']);
 $instance = $instance->newInstance();
-$instance->setRouteMatches($route_matches);
+
+$write_dbh = new mysqli(
+  DaGdConfig::get('mysql.host'),
+  DaGdConfig::get('mysql.user'),
+  DaGdConfig::get('mysql.password'),
+  DaGdConfig::get('mysql.database'));
+
+$read_dbh = $write_dbh;
+$readonly_host = DaGdConfig::get('readonly_mysql.host');
+
+if (!empty($readonly_host)) {
+  $read_dbh = new mysqli(
+    DaGdConfig::get('readonly_mysql.host'),
+    DaGdConfig::get('readonly_mysql.user'),
+    DaGdConfig::get('readonly_mysql.password'),
+    DaGdConfig::get('readonly_mysql.database'));
+}
+
 debug('Response from Controller', '');
-echo $instance->finalize();
+
+echo $instance
+  ->setRouteMatches($route_matches)
+  ->setWriteDB($write_dbh)
+  ->setReadDB($read_dbh)
+  ->finalize();
 
 $end = microtime(true);
 statsd_time('response_time', ($end - $start) * 1000);

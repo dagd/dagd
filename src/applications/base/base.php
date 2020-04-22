@@ -10,9 +10,6 @@ abstract class DaGdBaseClass {
   // Enable text-UA specific html stripping?
   protected $text_html_strip = true;
 
-  // This is "global" for now, and probably needs to be refactored.
-  protected $db_connection;
-
   // This contains matches that the router finds in the accessed URL.
   protected $route_matches = null;
 
@@ -27,6 +24,14 @@ abstract class DaGdBaseClass {
   // Custom stylization for apps.
   protected $style = '';
 
+  // A database handler we can safely write to. Might be geographically distant
+  // and thus slow for common reads.
+  protected $write_db;
+
+  // A database handler we can read from. Usually geographically local and
+  // therefore faster for reads than the write database handler.
+  protected $read_db;
+
   // This is used for DaGdHelpController to generate its list of commands.
   public function getHelp() {
     return array();
@@ -40,12 +45,29 @@ abstract class DaGdBaseClass {
   protected $darkmode = false;
 
   public function __construct() {
-    global $__db_handler;
-    $this->db_connection = $__db_handler;
   }
 
   public function setRouteMatches($matches=null) {
     $this->route_matches = $matches;
+    return $this;
+  }
+
+  public function setReadDB($read_db) {
+    $this->read_db = $read_db;
+    return $this;
+  }
+
+  public function getReadDB() {
+    return $this->read_db;
+  }
+
+  public function setWriteDB($write_db) {
+    $this->write_db = $write_db;
+    return $this;
+  }
+
+  public function getWriteDB() {
+    return $this->write_db;
   }
 
   public function render() {

@@ -17,7 +17,12 @@ final class DaGdCoShortenController extends DaGdBaseClass {
   protected $wrap_pre = false;
 
   public function render() {
-    $longurl = new DagdShortenController();
+    // Controllers are final so we cannot inherit from DaGdShortenController.
+    // We must construct it anew and set it it up manually.
+    $longurl = id(new DaGdShortenController())
+      ->setRouteMatches($this->route_matches)
+      ->setReadDB($this->getReadDB())
+      ->setWriteDB($this->getWriteDB());
     $text = $longurl->getLongURL($this->route_matches[1]);
     if ($text === null) {
       return error404();

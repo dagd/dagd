@@ -1,6 +1,15 @@
 #!/usr/bin/env php
 <?php
+
 require_once dirname(__FILE__).'/../src/resources/global_resources.php';
+
+// We manage our own raw connection handler here; this might be better
+// abstracted somewhere at some point.
+$__db_handler = new mysqli(
+  DaGdConfig::get('mysql.host'),
+  DaGdConfig::get('mysql.user'),
+  DaGdConfig::get('mysql.password'),
+  DaGdConfig::get('mysql.database'));
 
 $patch_number = 0;
 $current_schema = 0;

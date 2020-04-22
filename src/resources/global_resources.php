@@ -14,8 +14,6 @@ if ($display_errors) {
   ini_set('display_errors', true);
 }
 
-require_once dirname(__FILE__).'/sql.php';
-
 function handle_exception($e) {
   $debug = DaGdConfig::get('general.debug');
   $email = DaGdConfig::get('exceptions.email');

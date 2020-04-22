@@ -28,7 +28,7 @@ final class DaGdCommanderController extends DaGdBaseClass {
   private $url;
 
   private function addCommand() {
-    $query = $this->db_connection->prepare(
+    $query = $this->getWriteDB()->prepare(
       'INSERT INTO command_redirects(author_ip, command, url) VALUES(?, ?, ?)');
     $query->bind_param(
       'sss',
@@ -43,7 +43,7 @@ final class DaGdCommanderController extends DaGdBaseClass {
   }
 
   private function getURL($command) {
-    $query = $this->db_connection->prepare(
+    $query = $this->getReadDB()->prepare(
       'SELECT url FROM command_redirects WHERE command=? AND enabled=1');
     $query->bind_param('s', $command);
     $query->execute();
@@ -54,7 +54,7 @@ final class DaGdCommanderController extends DaGdBaseClass {
 
   private function getAllCommands() {
     $rows = array();
-    $result = $this->db_connection->query(
+    $result = $this->getReadDB()->query(
       'SELECT command, url, creation_dt FROM command_redirects WHERE '.
       'enabled=1');
     while ($row = $result->fetch_array(MYSQLI_ASSOC)) {

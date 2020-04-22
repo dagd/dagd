@@ -347,11 +347,22 @@ class DaGdConfig {
       'ricky@elrod.me',
     ),
 
-    // MySQL settings
+    // MySQL settings - these can be used for reads *and* writes, but if
+    // readonly_mysql.host is set, it will be preferred in certain cases for
+    // reads.
     'mysql.host' => 'localhost',
     'mysql.user' => 'root',
     'mysql.password' => '',
     'mysql.database' => 'dagd',
+
+    // Read-only MySQL settings. These will be preferred for most reads if
+    // readonly_mysql.host is non-null. This allows for distributing dagd
+    // servers and giving them local reads while still writing to a distant
+    // master. It is recommended to use a separate, read-only user for this.
+    'readonly_mysql.host' => null,
+    'readonly_mysql.user' => 'readonly',
+    'readonly_mysql.password' => '',
+    'readonly_mysql.database' => 'dagd',
 
     // IsItUp Settings
     'isitup.max_redirects' => 5,

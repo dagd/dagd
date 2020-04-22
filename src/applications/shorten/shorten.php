@@ -48,7 +48,7 @@ body, h2 { margin: 0; padding: 0; }';
   private $store_url = true;
 
   private function isFreeShortURL() {
-    $query = $this->db_connection->prepare(
+    $query = $this->getReadDB()->prepare(
       'SELECT COUNT(*) FROM shorturls WHERE shorturl=?');
     $query->bind_param('s', $this->short_url);
     $query->execute();
@@ -120,7 +120,7 @@ body, h2 { margin: 0; padding: 0; }';
   }
 
   private function isBannedAuthor() {
-    $query = $this->db_connection->prepare(
+    $query = $this->getReadDB()->prepare(
       'SELECT COUNT(*) FROM blocked_ips WHERE '.
       'inet6_aton(?) between ip_start and ip_end');
     $query->bind_param('s', $this->owner_ip);
@@ -154,7 +154,7 @@ body, h2 { margin: 0; padding: 0; }';
   }
 
   public function getLongURL($shorturl) {
-    $query = $this->db_connection->prepare(
+    $query = $this->getReadDB()->prepare(
       'SELECT id,longurl FROM shorturls WHERE shorturl=? AND enabled=1');
     $query->bind_param('s', $shorturl);
     $start = microtime(true);
@@ -175,7 +175,7 @@ body, h2 { margin: 0; padding: 0; }';
     $longurl = null;
 
     // Get some initial info
-    $shorturls_query = $this->db_connection->prepare(
+    $shorturls_query = $this->getReadDB()->prepare(
       'SELECT id,creation_dt,longurl FROM shorturls '.
       'WHERE shorturl=? AND enabled=1');
     $shorturls_query->bind_param('s', $shorturl);
@@ -196,7 +196,7 @@ body, h2 { margin: 0; padding: 0; }';
     $count_accesses = null;
     $count_distinct_accesses = null;
 
-    $access_query = $this->db_connection->prepare(
+    $access_query = $this->getReadDB()->prepare(
       'SELECT count(ip),count(distinct ip) FROM shorturl_access '.
       'WHERE shorturl_id=?');
     $access_query->bind_param('i', $id);
@@ -219,7 +219,7 @@ body, h2 { margin: 0; padding: 0; }';
   }
 
   private function getNonCustomShortURL($longurl_hash) {
-    $query = $this->db_connection->prepare(
+    $query = $this->getReadDB()->prepare(
       'SELECT id,shorturl FROM shorturls WHERE longurl_hash=? AND enabled=1 '.
       'AND custom_shorturl=0 ORDER BY id DESC LIMIT 1');
     $query->bind_param('s', $longurl_hash);
@@ -234,7 +234,7 @@ body, h2 { margin: 0; padding: 0; }';
   }
 
   private function logURLAccess() {
-    $query = $this->db_connection->prepare(
+    $query = $this->getWriteDB()->prepare(
       'INSERT INTO shorturl_access(shorturl_id, ip, useragent) VALUES(?,?,?)');
     $stored_url_id = $this->stored_url_id;
     $client_ip = client_ip();
@@ -292,7 +292,7 @@ body, h2 { margin: 0; padding: 0; }';
     if (!$this->store_url) {
       return true;
     }
-    $query = $this->db_connection->prepare(
+    $query = $this->getWriteDB()->prepare(
       'INSERT INTO shorturls(shorturl, longurl, owner_ip, custom_shorturl, '.
       'longurl_hash) VALUES(?, ?, ?, ?, ?);');
     $query->bind_param(
