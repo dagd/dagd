@@ -301,6 +301,17 @@ $runner->arm(
       'Location',
       '@^http://google.com/foo$@')));
 
+/************ /stats/ ************/
+$runner->arm(
+  id(new DaGdResponseCodeTest('/stats/g', 200))
+  ->addGroup('stats'));
+
+$runner->arm(
+  id(
+    new DaGdRegexTest(
+      '/stats/g',
+      '@distinct_accesses: \d@'))
+    ->addGroup('stats'));
 
 /************ ?strip ************/
 $runner->arm(
