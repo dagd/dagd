@@ -25,19 +25,25 @@ class DaGdShortenController extends DaGdBaseClass {
       ));
   }
 
-  protected $wrap_html = true;
-  protected $wrap_pre = false;
-  protected $style = '#bar {
-    background-color: #3c6eb4;
-    color: #f8f8f8;
-    padding: 15px;
+  public function configure() {
+    $style = '#bar {
+      background-color: #3c6eb4;
+      color: #f8f8f8;
+      padding: 15px;
+    }
+    #main { padding: 0 15px; }
+    .links { margin-left: 30px; }
+    table { border-spacing: 30px; border-collapse: separate; }
+    td { padding: 10px 0; }
+    h2 { font-family: overpass, sans-serif !important; }
+    body, h2 { margin: 0; padding: 0; }';
+
+    $this
+      ->setWrapHtml(true)
+      ->setWrapPre(false)
+      ->setStyle($style);
+    return $this;
   }
-#main { padding: 0 15px; }
-.links { margin-left: 30px; }
-table { border-spacing: 30px; border-collapse: separate; }
-td { padding: 10px 0; }
-h2 { font-family: overpass, sans-serif !important; }
-body, h2 { margin: 0; padding: 0; }';
 
   private $long_url;
   private $longurl_hash;
@@ -448,7 +454,7 @@ body, h2 { margin: 0; padding: 0; }';
       $this->escape = false;
 
       $darkmode_link = '<a href="/?darkmode=1">dark mode</a>';
-      if ($this->darkmode) {
+      if ($this->getDarkmode()) {
         $darkmode_link = '<a href="/?darkmode=0">light mode</a>';
       }
 

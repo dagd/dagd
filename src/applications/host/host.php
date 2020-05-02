@@ -15,7 +15,10 @@ final class DaGdHostController extends DaGdBaseClass {
       ));
   }
 
-  protected $wrap_html = true;
+  public function configure() {
+    return $this
+      ->setWrapHtml(true);
+  }
 
   public function render() {
     if (filter_var($this->route_matches[1], FILTER_VALIDATE_IP)) {

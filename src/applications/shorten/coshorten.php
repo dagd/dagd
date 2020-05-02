@@ -13,9 +13,11 @@ class DaGdCoShortenController extends DaGdShortenController {
             ));
     }
 
-  protected $wrap_html = true;
-  protected $wrap_pre = false;
-  protected $style = '';
+  public function configure() {
+    parent::configure()
+      ->setStyle(null);
+    return $this;
+  }
 
   public function render() {
     $text = $this->getLongURL($this->route_matches[1]);

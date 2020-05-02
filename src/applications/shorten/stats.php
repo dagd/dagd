@@ -13,9 +13,12 @@ final class DaGdStatsController extends DaGdShortenController {
       ));
   }
 
-  protected $wrap_html = true;
-  protected $wrap_pre = true;
-  protected $style = '';
+  public function configure() {
+    parent::configure()
+      ->setWrapPre(true)
+      ->setStyle(null);
+    return $this;
+  }
 
   public function render() {
     $stats = $this->getStatsForURL($this->route_matches[1]);

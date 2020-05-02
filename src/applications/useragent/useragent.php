@@ -12,7 +12,10 @@ final class DaGdUserAgentController extends DaGdBaseClass {
       ));
   }
 
-  protected $wrap_html = true;
+  public function configure() {
+    return $this
+      ->setWrapHtml(true);
+  }
 
   public function render() {
     return $_SERVER['HTTP_USER_AGENT'];

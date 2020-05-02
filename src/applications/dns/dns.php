@@ -16,10 +16,14 @@ final class DaGdDNSController extends DaGdBaseClass {
       ));
   }
 
-  protected $wrap_html = true;
+  public function configure() {
+    return $this
+      ->setWrapHtml(true);
+  }
 
   private $dns;
 
+  // TODO: Generalize and move to global_resources.
   private function append_if_exists($string, $array, $key) {
     if (idx($array, $key)) {
       return $string.$array[$key].' ';

@@ -47,9 +47,76 @@ abstract class DaGdBaseClass {
   public function __construct() {
   }
 
+  public function setEscape($escape) {
+    $this->escape = $escape;
+    return $this;
+  }
+
+  public function getEscape() {
+    return $this->escape;
+  }
+
+  public function setWrapPre($wrap_pre) {
+    $this->wrap_pre = $wrap_pre;
+    return $this;
+  }
+
+  public function getWrapPre() {
+    return $this->wrap_pre;
+  }
+
+  public function setTextHtmlStrip($text_html_strip) {
+    $this->text_html_strip = $text_html_strip;
+    return $this;
+  }
+
+  public function getTextHtmlStrip() {
+    return $this->text_html_strip;
+  }
+
   public function setRouteMatches($matches=null) {
     $this->route_matches = $matches;
     return $this;
+  }
+
+  public function getRouteMatches() {
+    return $this->route_matches;
+  }
+
+  public function setTextContentType($text_content_type) {
+    $this->text_content_type = $text_content_type;
+    return $this;
+  }
+
+  public function getTextContentType() {
+    return $this->text_content_type;
+  }
+
+  public function setWrapHtml($wrap_html) {
+    $this->wrap_html = $wrap_html;
+    return $this;
+  }
+
+  public function getWrapHtml() {
+    return $this->wrap_html;
+  }
+
+  public function setStyle($style) {
+    $this->style = $style;
+    return $this;
+  }
+
+  public function getStyle() {
+    return $this->style;
+  }
+
+  public function setWriteDB($write_db) {
+    $this->write_db = $write_db;
+    return $this;
+  }
+
+  public function getWriteDB() {
+    return $this->write_db;
   }
 
   public function setReadDB($read_db) {
@@ -61,13 +128,57 @@ abstract class DaGdBaseClass {
     return $this->read_db;
   }
 
-  public function setWriteDB($write_db) {
-    $this->write_db = $write_db;
+  public function setNeverNewline($never_newline) {
+    $this->never_newline = $never_newline;
     return $this;
   }
 
-  public function getWriteDB() {
-    return $this->write_db;
+  public function getNeverNewline() {
+    return $this->never_newline;
+  }
+
+  public function setDarkmode($darkmode) {
+    $this->darkmode = $darkmode;
+    return $this;
+  }
+
+  public function getDarkmode() {
+    return $this->darkmode;
+  }
+
+  // Controllers can implement this to set various controller configuration
+  // parameters by calling the setters above. It gets called in finalize().
+  public function configure() {
+    return $this;
+  }
+
+  private function configureDarkmodeIfNecessary() {
+    if (isset($_REQUEST['darkmode'])) {
+      $darkmode_req = request_or_default('darkmode', false, true, true);
+      $darkmode_bool = 'false';
+      if ($darkmode_req) {
+        $darkmode_bool = 'true';
+      }
+      setcookie(
+        'darkmode',
+        $darkmode_bool,
+        time() + (60 * 60 * 24 * 365),
+        '/');
+      $_COOKIE['darkmode'] = $darkmode_bool;
+    }
+
+    $darkmode_cookie = idx($_COOKIE, 'darkmode');
+    $this->setDarkmode($darkmode_cookie === 'true');
+
+    $darkmode = '';
+    if (idx($_COOKIE, 'darkmode') === 'true') {
+      $darkmode = 'body { ';
+      $darkmode .= '  background-color: #333;';
+      $darkmode .= '  color: #ddd;';
+      $darkmode .= '}';
+      $darkmode .= 'a, a:active, a:visited { color: #ccc; }';
+    }
+    return $darkmode;
   }
 
   public function render() {
@@ -83,6 +194,8 @@ abstract class DaGdBaseClass {
   }
 
   public function finalize() {
+    $darkmode_style = $this->configureDarkmodeIfNecessary();
+    $this->configure();
     $response = null;
 
     if ($this->text_html_strip && !is_html_useragent()) {
@@ -94,35 +207,13 @@ abstract class DaGdBaseClass {
     } else {
       $response = '';
 
-      if (isset($_REQUEST['darkmode'])) {
-        $darkmode_req = request_or_default('darkmode', false, true, true);
-        $darkmode_bool = 'false';
-        if ($darkmode_req) {
-            $darkmode_bool = 'true';
-        }
-        setcookie(
-          'darkmode',
-          $darkmode_bool,
-          time() + (60 * 60 * 24 * 365),
-          '/');
-        $_COOKIE['darkmode'] = $darkmode_bool;
-      }
-
-      $darkmode_cookie = idx($_COOKIE, 'darkmode');
-      $this->darkmode = $darkmode_cookie === 'true' ? true : false;
-
-      $darkmode = '';
-      if (idx($_COOKIE, 'darkmode') === 'true') {
-        $darkmode = 'body { ';
-        $darkmode .= '  background-color: #333;';
-        $darkmode .= '  color: #ddd;';
-        $darkmode .= '}';
-        $darkmode .= 'a, a:active, a:visited { color: #ccc; }';
-      }
-
       // We need this to be early-ish because it can set properties we use
       // below such as $this->style. However, controllers need to access
       // $this->darkmode, so it has to be after we set that.
+      //
+      // 2020-05-02: This is less-true now, controllers should only set
+      // $this->style from configure(), and $this->getDarkmode() (set early)
+      // should be used instead of direct access to $this->darkmode.
       $controller_response = $this->render();
 
       if ($this->wrap_html) {
@@ -138,34 +229,35 @@ abstract class DaGdBaseClass {
         $response .= '    <title>da.gd: '.$title.'</title>';
         $response .= '    <style>';
         $response .= '      *:not(pre):not(code) { font-family: sans-serif; }';
-        $response .= $darkmode;
-        $response .= $this->style;
+        $response .= $darkmode_style;
+        $response .= $this->getStyle();
         $response .= '    </style>';
         $response .= '  </head>';
         $response .= '  <body>';
       }
 
-      if ($this->escape) {
+      if ($this->getEscape()) {
         $controller_response = htmlspecialchars(
           $controller_response,
           ENT_HTML5,
           'UTF-8');
       }
 
-      if ($this->wrap_pre) {
+      if ($this->getWrapPre()) {
         $controller_response = '<pre>'.$controller_response.'</pre>';
       }
 
       $response .= $controller_response;
 
-      if ($this->wrap_html) {
+      if ($this->getWrapHtml()) {
         $response .= '  </body>';
         $response .= '</html>';
       }
     }
 
-    if (!$this->never_newline && !request_or_default('strip', false, true, true)) {
-        $response .= "\n";
+    if (!$this->getNeverNewline() &&
+        !request_or_default('strip', false, true, true)) {
+      $response .= "\n";
     }
 
     return $response;

@@ -27,6 +27,14 @@ final class DaGdImageController extends DaGdBaseClass {
       ));
   }
 
+  public function configure() {
+    return $this
+      ->setEscape(false)
+      ->setWrapPre(false)
+      ->setTextHtmlStrip(false)
+      ->setTextContentType(false);
+  }
+
   private $width;
   private $height;
   private $bgcolor;
@@ -88,11 +96,6 @@ final class DaGdImageController extends DaGdBaseClass {
       hexdec($r),
       hexdec($g),
       hexdec($b));
-
-    $this->escape = false;
-    $this->wrap_pre = false;
-    $this->text_html_strip = false;
-    $this->text_content_type = false;
 
     // Generate the image.
     header('Content-Type: '.$imagetypes[$this->filetype]['contenttype']);

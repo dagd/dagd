@@ -16,7 +16,10 @@ final class DaGdLeftPadController extends DagdBaseClass {
       ));
   }
 
-  protected $wrap_html = true;
+  public function configure() {
+    return $this
+      ->setWrapHtml(true);
+  }
 
   public function render() {
     $length = (int)$this->route_matches[1];

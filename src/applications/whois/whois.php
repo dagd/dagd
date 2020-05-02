@@ -17,7 +17,10 @@ final class DaGdWhoisController extends DaGdBaseClass {
       ));
   }
 
-  protected $wrap_html = true;
+  public function configure() {
+    return $this
+      ->setWrapHtml(true);
+  }
 
   public function render() {
     $query = $this->route_matches[1];

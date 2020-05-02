@@ -39,7 +39,10 @@ final class DaGdHeadersController extends DaGdBaseClass {
     );
   }
 
-  protected $wrap_html = true;
+  public function configure() {
+    return $this
+      ->setWrapHtml(true);
+  }
 
   public function render() {
     // Allow the url to be passed as a request parameter or as a path segment.
