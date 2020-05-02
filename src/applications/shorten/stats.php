@@ -1,6 +1,6 @@
 <?php
 
-final class DaGdStatsController extends DaGdBaseClass {
+final class DaGdStatsController extends DaGdShortenController {
   public function getHelp() {
     return array(
       'title' => 'stats',
@@ -15,13 +15,10 @@ final class DaGdStatsController extends DaGdBaseClass {
 
   protected $wrap_html = true;
   protected $wrap_pre = true;
+  protected $style = '';
 
   public function render() {
-    $ctrl = id(new DaGdShortenController())
-      ->setRouteMatches($this->route_matches)
-      ->setReadDB($this->getReadDB())
-      ->setWriteDB($this->getWriteDB());
-    $stats = $ctrl->getStatsForURL($this->route_matches[1]);
+    $stats = $this->getStatsForURL($this->route_matches[1]);
     if ($stats === null) {
       return error404();
     }

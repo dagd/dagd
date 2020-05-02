@@ -6,7 +6,7 @@ require_once dirname(__FILE__).'/resources/safe_browsing.php';
 require_once dirname(__FILE__).'/coshorten.php';
 require_once dirname(__FILE__).'/stats.php';
 
-final class DaGdShortenController extends DaGdBaseClass {
+class DaGdShortenController extends DaGdBaseClass {
   public function getHelp() {
     return array(
       'title' => 'shorten',

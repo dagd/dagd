@@ -1,6 +1,6 @@
 <?php
 
-final class DaGdCoShortenController extends DaGdBaseClass {
+class DaGdCoShortenController extends DaGdShortenController {
     public function getHelp() {
         return array(
             'title' => 'coshorten',
@@ -15,15 +15,10 @@ final class DaGdCoShortenController extends DaGdBaseClass {
 
   protected $wrap_html = true;
   protected $wrap_pre = false;
+  protected $style = '';
 
   public function render() {
-    // Controllers are final so we cannot inherit from DaGdShortenController.
-    // We must construct it anew and set it it up manually.
-    $longurl = id(new DaGdShortenController())
-      ->setRouteMatches($this->route_matches)
-      ->setReadDB($this->getReadDB())
-      ->setWriteDB($this->getWriteDB());
-    $text = $longurl->getLongURL($this->route_matches[1]);
+    $text = $this->getLongURL($this->route_matches[1]);
     if ($text === null) {
       return error404();
     }
