@@ -30,8 +30,10 @@ class DaGdShortenController extends DaGdBaseClass {
       background-color: #3c6eb4;
       color: #f8f8f8;
       padding: 15px;
+      height: 30px;
+      line-height: 30px;
     }
-    #main { padding: 0 15px; }
+    .constraint { width: 700px; margin: 0 auto; }
     .links { margin-left: 30px; }
     table { border-spacing: 30px; border-collapse: separate; }
     td { padding: 10px 0; }
@@ -449,34 +451,166 @@ class DaGdShortenController extends DaGdBaseClass {
         return help('DaGdShortenController');
       }
 
-      // Not a text useragent because we didn't return above.
-      // Bring in the form. // TODO: html in strings = bad.
-      $this->escape = false;
+      $longurl_tr = tag(
+        'tr',
+        array(
+          tag('td', 'Long URL: '),
+          tag(
+            'td',
+            tag(
+              'input',
+              null,
+              array(
+                'type' => 'text',
+                'name' => 'url',
+                'id' => 'url',
+                'size' => '35',
+                'placeholder' => 'https://google.com/',
+                'autofocus' => TAG_ATTR_BARE,
+              )
+            )
+          ),
+        )
+      );
 
-      $darkmode_link = '<a href="/?darkmode=1">dark mode</a>';
-      if ($this->getDarkmode()) {
-        $darkmode_link = '<a href="/?darkmode=0">light mode</a>';
-      }
+      $shorturl_tr = tag(
+        'tr',
+        array(
+          tag(
+            'td',
+            'Custom short URL: ',
+            array(
+              'style' => 'white-space: nowrap;',
+            )
+          ),
+          tag(
+            'td',
+            array(
+              tag(
+                'input',
+                null,
+                array(
+                  'type' => 'text',
+                  'maxlength' => '10',
+                  'name' => 'shorturl',
+                  'size' => '10',
+                  'placeholder' => 'g',
+                  'autofocus' => TAG_ATTR_BARE,
+                )
+              ),
+              tag('br'),
+              tag('small', '(blank for random, max 10)'),
+            )
+          ),
+        )
+      );
 
-      $content = '<div id="bar"><h2>da.gd</h2></div>
-<div id="main">
-<form method="POST" action="/">
-<table>
-  <tr><td>Long URL: </td><td><input type="text" name="url" id="url" size="35" placeholder="https://google.com/" autofocus /></td></tr>
-  <tr><td>Custom short URL: </td><td><input type="text" name="shorturl" size="10" maxlength="10" placeholder="g" /><br />
-    <small>(blank for random, max 10)</small></td></tr>
-  <tr><td colspan=2><input style="width: 100%;" type="submit" value="Shorten URL" /></td></tr>
-</table>
-</form>
-<div class="links">
-  <a href="/help">help</a> |
-  <a href="https://github.com/codeblock/dagd">open source</a> | '.$darkmode_link.' |
-  <a href="https://www.patreon.com/relrod">donate</a>
-  <br />
-  <small>report abuse to abuse@da.gd</small>
-</div>
-</div>';
-      return $content;
+      $submit_tr = tag(
+        'tr',
+        tag(
+          'td',
+          tag(
+            'input',
+            null,
+            array(
+              'type' => 'submit',
+              'value' => 'Shorten URL',
+              'style' => 'width: 100%',
+            )
+          ),
+          array(
+            'colspan' => '2',
+          )
+        )
+      );
+
+      $abuse_tr = tag(
+        'tr',
+        tag(
+          'td',
+          tag(
+            'small',
+            'report abuse to abuse@da.gd'
+          )
+        )
+      );
+
+      $form = tag(
+        'form',
+        tag(
+          'table',
+          array(
+            $longurl_tr,
+            $shorturl_tr,
+            $submit_tr,
+            $abuse_tr,
+          )
+        ),
+        array(
+          'method' => 'POST',
+          'action' => '/',
+        )
+      );
+
+      $darkmode_link = tag(
+        'a',
+        $this->getDarkmode() ? 'light mode' : 'dark mode',
+        array(
+          'href' => $this->getDarkmode() ? '/?darkmode=0' : '/?darkmode=1',
+        )
+      );
+
+      $links = array(
+        tag('a', 'help', array('href' => '/help')),
+        ' | ',
+        tag(
+          'a',
+          'open source',
+          array('href' => 'https://github.com/relrod/dagd')
+        ),
+        ' | ',
+        $darkmode_link,
+        ' | ',
+        tag('a', 'donate', array('href' => 'https://www.patreon.com/relrod')),
+      );
+
+      $links_div = tag(
+        'div',
+        array(
+          tag('h2', 'da.gd', array('style' => 'float: left; display: inline;')),
+          tag(
+            'div',
+            $links,
+            array(
+              'style' => 'float: right; display: inline;'
+            )
+          ),
+        ),
+        array(
+          'class' => 'constraint',
+        )
+      );
+
+      $navbar = tag(
+        'div',
+        $links_div,
+        array(
+          'id' => 'bar',
+          'style' => 'overflow: auto;',
+        )
+      );
+
+      return array(
+        $navbar,
+        tag(
+          'div',
+          $form,
+          array(
+            'id' => 'main',
+            'class' => 'constraint',
+          )
+        ),
+      );
     }
   }
 }
