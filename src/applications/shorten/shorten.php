@@ -239,7 +239,7 @@ Long URL: <input type="text" name="url" id="url" size="35" autofocus /><br />
 Custom short URL (leave blank for random): <input type="text" name="shorturl" size="20" maxlength="10" /><br />
 <input type="submit" value="Shorten URL" />
 </form>
-[help](/help) | [open source](http://github.com/codeblock/dagd)';
+[help](/help) | [open source](http://github.com/relrod/dagd)';
       $markup = new DaGdMarkup($content);
       $markup = $markup->render();
       $markup .= '<script>window.onload = function() {document.getElementById("url").focus();}</script>';
