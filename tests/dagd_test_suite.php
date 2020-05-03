@@ -414,8 +414,8 @@ $runner->arm(
                 'i',
                 'and this is bold and italic'
               ),
-            ),
-          )
+            )
+          ),
         )
       ),
       '<p>multiplestrings<b>and this is bold<i>and this is '.
