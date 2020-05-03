@@ -76,6 +76,7 @@ final class DaGdHeadersController extends DaGdBaseClass {
       // If we didn't get a URL passed, then assume the user is asking for the
       // headers they sent. Send them back.
       $headers = getallheaders();
+      $response = '';
       foreach ($headers as $key => $value) {
         if (server_or_default('HTTP_X_DAGD_PROXY') == "1") {
           if (strpos($key, 'X-Forwarded-') === 0 ||
@@ -83,7 +84,6 @@ final class DaGdHeadersController extends DaGdBaseClass {
             continue;
           }
         }
-
         $response .= $key.': '.$value."\n";
       }
     }
