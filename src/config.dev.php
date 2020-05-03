@@ -39,6 +39,7 @@ class DaGdConfig {
       'dns',
       'leftpad',
       'roll',
+      'metrics',
     ),
 
     // Control statsd metrics collection.
@@ -111,6 +112,9 @@ class DaGdConfig {
       '/leftpad/([0-9]+)/(.+)/(.+)/?$' => array(
         'controller' => 'DaGdLeftPadController',
       ),
+      '/metrics/(.+)/(.+)/?$' => array(
+        'controller' => 'DaGdMetricsController',
+      ),
       '/coshorten/([^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdCoShortenController',
       ),
@@ -147,6 +151,13 @@ class DaGdConfig {
     // We fatal if these aren't found.
     'general.required_extensions' => array(
       'gd',
+    ),
+
+    // Which IPs can access /metrics?
+    'metrics.allowed_ips' => array(
+      '127.0.0.1',
+      '::1',
+      '172.19.0.1',
     ),
 
     // Regexes we blacklist on.
