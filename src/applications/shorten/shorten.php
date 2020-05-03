@@ -495,7 +495,6 @@ class DaGdShortenController extends DaGdBaseClass {
                   'name' => 'shorturl',
                   'size' => '10',
                   'placeholder' => 'g',
-                  'autofocus' => TAG_ATTR_BARE,
                 )
               ),
               tag('br'),
