@@ -198,15 +198,13 @@ abstract class DaGdBaseClass {
     $this->configure();
     $response = null;
 
-    if ($this->text_html_strip && !is_html_useragent()) {
+    if ($this->getTextHtmlStrip() && !is_html_useragent()) {
       if ($this->text_content_type) {
         header('Content-type: text/plain; charset=utf-8');
         header('X-Content-Type-Options: nosniff');
       }
       $response = $this->renderCLI();
     } else {
-      $response = '';
-
       // We need this to be early-ish because it can set properties we use
       // below such as $this->style. However, controllers need to access
       // $this->darkmode, so it has to be after we set that.
@@ -216,43 +214,73 @@ abstract class DaGdBaseClass {
       // should be used instead of direct access to $this->darkmode.
       $controller_response = $this->render();
 
-      if ($this->wrap_html) {
-        $title = idx($this->getHelp(), 'title', 'Welcome!');
-        $response .= "<!doctype html>\n";
-        $response .= '<html>';
-        $response .= '  <head>';
-        $response .= '    <meta charset="utf-8">';
-        $response .= '    <meta name="keywords" content="dagd,da.gd,url,'.
-                     'shorten,shortening,open,source,foss,github">';
-        $response .= '    <meta name="description" content="The da.gd URL '.
-                     'shortening service">';
-        $response .= '    <title>da.gd: '.$title.'</title>';
-        $response .= '    <style>';
-        $response .= '      *:not(pre):not(code) { font-family: sans-serif; }';
-        $response .= $darkmode_style;
-        $response .= $this->getStyle();
-        $response .= '    </style>';
-        $response .= '  </head>';
-        $response .= '  <body>';
+      if (!$this->getWrapHtml()) {
+        return $controller_response;
       }
 
-      if ($this->getEscape()) {
-        $controller_response = htmlspecialchars(
-          $controller_response,
-          ENT_HTML5,
-          'UTF-8');
-      }
+      $title = idx($this->getHelp(), 'title', 'Welcome!');
+
+      $head = tag(
+        'head',
+        array(
+          tag(
+            'meta',
+            null,
+            array('charset' => 'utf-8')
+          ),
+          tag(
+            'meta',
+            null,
+            array(
+              'name' => 'keywords',
+              'content' =>
+                'dagd,da.gd,url,shorten,shortening,open,source,foss',
+            )
+          ),
+          tag(
+            'meta',
+            null,
+            array(
+              'name' => 'description',
+              'content' => 'The da.gd URL shortening service',
+            )
+          ),
+          tag(
+            'title',
+            'da.gd: '.$title
+          ),
+          tag(
+            'style',
+            array(
+              '*:not(pre):not(code) { font-family: sans-serif; }',
+              $darkmode_style,
+              $this->getStyle(),
+            ),
+            array(),
+            true
+          ),
+        )
+      );
 
       if ($this->getWrapPre()) {
-        $controller_response = '<pre>'.$controller_response.'</pre>';
+        $controller_response = tag(
+          'pre',
+          $controller_response);
       }
 
-      $response .= $controller_response;
-
-      if ($this->getWrapHtml()) {
-        $response .= '  </body>';
-        $response .= '</html>';
-      }
+      $response = "<!doctype html>\n";
+      $response .= tag(
+        'html',
+        array(
+          $head,
+          tag(
+            'body',
+            $controller_response,
+            array(),
+            !$this->getEscape() // Potentially dangerous
+          ),
+        )
+      )->renderSafe();
     }
 
     if (!$this->getNeverNewline() &&

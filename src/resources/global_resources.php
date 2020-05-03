@@ -7,6 +7,8 @@ if (!$config_file ||
   throw new Exception("No configuration file could be loaded.");
 }
 
+include_once(dirname(__FILE__).'/tag.php');
+
 $display_errors = DaGdConfig::get('general.display_errors');
 if ($display_errors) {
   ini_set('error_reporting', E_ALL);
