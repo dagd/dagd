@@ -8,6 +8,7 @@ require_once dirname(__FILE__).'/test_header_regex.php';
 require_once dirname(__FILE__).'/test_regex.php';
 require_once dirname(__FILE__).'/test_response_code.php';
 require_once dirname(__FILE__).'/test_response_regex.php';
+require_once dirname(__FILE__).'/test_tag_unit.php';
 
 function id($a) {
   return $a;
@@ -345,6 +346,82 @@ $runner->arm(
 $runner->arm(
   id(new DaGdHeaderRegexTest('/?darkmode', 'Set-Cookie', '@^darkmode=true;@'))
     ->setAccept('text/html'));
+
+/************ Tag unit tests ************/
+$runner->arm(
+  id(
+    new DaGdTagUnitTest(
+      tag('h1', 'hello'),
+      '<h1>hello</h1>'))
+  ->addGroup('unit')
+  ->addGroup('tag'));
+
+$runner->arm(
+  id(
+    new DaGdTagUnitTest(
+      tag('br'),
+      '<br/>'))
+  ->addGroup('unit')
+  ->addGroup('tag'));
+
+$runner->arm(
+  id(
+    new DaGdTagUnitTest(
+      tag('a', 'quote "quote" quote', array('href' => '/"foo"')),
+      '<a href="/&quot;foo&quot;">quote "quote" quote</a>'))
+  ->addGroup('unit')
+  ->addGroup('tag'));
+
+$runner->arm(
+  id(
+    new DaGdTagUnitTest(
+      tag('p', 'Foo & Bar, LLC.'),
+      '<p>Foo &amp; Bar, LLC.</p>'))
+  ->addGroup('unit')
+  ->addGroup('tag'));
+
+$runner->arm(
+  id(
+    new DaGdTagUnitTest(
+      tag(
+        'p',
+        array(
+          'multiple',
+          'strings',
+          tag(
+            'b',
+            'and this is bold'
+          )
+        )
+      ),
+      '<p>multiplestrings<b>and this is bold</b></p>'))
+  ->addGroup('unit')
+  ->addGroup('tag'));
+
+$runner->arm(
+  id(
+    new DaGdTagUnitTest(
+      tag(
+        'p',
+        array(
+          'multiple',
+          'strings',
+          tag(
+            'b',
+            array(
+              'and this is bold',
+              tag(
+                'i',
+                'and this is bold and italic'
+              ),
+            ),
+          )
+        )
+      ),
+      '<p>multiplestrings<b>and this is bold<i>and this is '.
+      'bold and italic</i></b></p>'))
+  ->addGroup('unit')
+  ->addGroup('tag'));
 
 $runner->run();
 
