@@ -1,5 +1,7 @@
 <?php
 
+const TAG_ATTR_BARE = 1;
+
 // Needs setters/getters if we make this non-final.
 final class Tag {
   protected $name;
@@ -37,7 +39,11 @@ final class Tag {
   public function renderSafe() {
     $attrs = array();
     foreach ($this->attributes as $attr => $val) {
-      $attrs[] = $attr.'="'.htmlspecialchars($val).'"';
+      $attr_str = $attr;
+      if ($val !== TAG_ATTR_BARE) {
+        $attr_str .= '="'.htmlspecialchars($val).'"';
+      }
+      $attrs[] = $attr_str;
     }
     $tag = '<'.$this->name;
     if (!empty($attrs)) {
