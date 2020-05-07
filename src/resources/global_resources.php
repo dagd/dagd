@@ -64,6 +64,11 @@ Your friendly da.gd server',
 }
 set_exception_handler('handle_exception');
 
+function require_application($name) {
+  require_once dirname(__FILE__).'/../applications/'.$name.'/'.$name.'.php';
+  return;
+}
+
 function is_html_useragent() {
   if (!isset($_REQUEST['text']) &&
     array_key_exists('HTTP_ACCEPT', $_SERVER)) {

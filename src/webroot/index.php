@@ -2,7 +2,6 @@
 
 // Resources that help us do cool things.
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
-require_once dirname(__FILE__).'/resources/php/index_resources.php';
 
 $start = microtime(true);
 
