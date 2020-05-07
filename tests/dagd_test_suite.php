@@ -302,6 +302,15 @@ $runner->arm(
       'Location',
       '@^http://google.com/foo$@')));
 
+$runner->arm(
+  id(
+    new DaGdRegexTest(
+      '/s?url=https://some.spam.url&shorturl=spam',
+      '@Blacklisted original URL@')));
+
+$runner->arm(
+  id(new DaGdResponseCodeTest('/s?url=https://some.spam.url', 400)));
+
 /************ /stats/ ************/
 $runner->arm(
   id(new DaGdResponseCodeTest('/stats/g', 200))

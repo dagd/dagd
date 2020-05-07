@@ -1,8 +1,7 @@
 <?php
 
-require_once dirname(__FILE__).'/resources/dnsbl.php';
 require_once dirname(__FILE__).'/resources/random_string.php';
-require_once dirname(__FILE__).'/resources/safe_browsing.php';
+require_once dirname(__FILE__).'/resources/blacklist.php';
 require_once dirname(__FILE__).'/coshorten.php';
 require_once dirname(__FILE__).'/stats.php';
 
@@ -68,63 +67,8 @@ class DaGdShortenController extends DaGdBaseClass {
     return !(bool)$count;
   }
 
-  // This function actually does quite a bit.
-  // It checks our string-list of blacklisted URLs.
-  // Then it checks our regex-list of blacklisted URL patterns.
-  // Then it checks DNSBL.
-  // Then it checks the Safe Browsing API.
-  // Our bottleneck will *always* be the network actions here, but still we
-  // should optimize for speed here where we can, because this function gets
-  // called on newly created URLs as well as on URL access.
   private function blacklisted($url) {
-    // First, check the array of strings and do direct substring searches
-    // because they are significantly faster than regexes.
-    $blacklist_strings = DaGdConfig::get('shorten.longurl_blacklist_strings');
-    foreach ($blacklist_strings as $string) {
-      if (strpos($url, $string) !== false) {
-        statsd_bump('shorturl_blacklisted_string');
-        statsd_bump('shorturl_blacklisted');
-        return true;
-      }
-    }
-
-    // If we're still here, then try the regexes.
-    $blacklist_regexes = DaGdConfig::get('shorten.longurl_blacklist');
-    foreach ($blacklist_regexes as $regex) {
-      if (preg_match('#'.$regex.'#i', $url)) {
-        statsd_bump('shorturl_blacklisted_regex');
-        statsd_bump('shorturl_blacklisted');
-        return true;
-      }
-    }
-
-    // Next attempt is dnsbl, if there are any dnsbl server suffixes defined.
-    $dnsbl_servers = DaGdConfig::get('shorten.dnsbl');
-
-    if (count($dnsbl_servers) !== 0) {
-      $host = parse_url($url, PHP_URL_HOST);
-      if ($host !== false && !query_dnsbl($host)) {
-        statsd_bump('shorturl_blacklisted_dnsbl');
-        statsd_bump('shorturl_blacklisted');
-        return true;
-      }
-    }
-
-    // If we are *still* here, move on to the Safe Browsing API.
-    $safe_browsing_enabled = DaGdConfig::get('shorten.safe_browsing');
-
-    if ($safe_browsing_enabled) {
-      statsd_bump('shorturl_blacklist_query_safebrowsing');
-      $safe_url = query_safe_browsing($url);
-      if ($safe_url === false) {
-        statsd_bump('shorturl_blacklisted_safebrowsing');
-        statsd_bump('shorturl_blacklisted');
-        return true;
-      }
-    }
-
-    // Otherwise we haven't found a match, so it's not blacklisted.
-    return false;
+    return id(new Blacklist($url))->check();
   }
 
   private function isBannedAuthor() {

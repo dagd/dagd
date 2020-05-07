@@ -166,7 +166,10 @@ class DaGdConfig {
     // Strings we blacklist on. These are attempted before
     // shorten.longurl_blacklist because doing substring searches is
     // significantly faster than doing regex matches.
-    'shorten.longurl_blacklist_strings' => array(),
+    'shorten.longurl_blacklist_strings' => array(
+      // A non-existent default, mainly for integration tests
+      'some.spam.url',
+    ),
 
     // Regexes we whitelist on to avoid checking dnsbl.
     'shorten.longurl_whitelist' => array(),
