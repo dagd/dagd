@@ -33,7 +33,7 @@ class DaGdShortenController extends DaGdBaseClass {
       line-height: 30px;
     }
     .constraint { width: 700px; margin: 0 auto; }
-    .links { margin-left: 30px; }
+    #bar a, #bar a:active, #bar a:visited { color: #ccc; }
     table { border-spacing: 30px; border-collapse: separate; }
     td { padding: 10px 0; }
     h2 { font-family: overpass, sans-serif !important; }
