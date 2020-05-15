@@ -8,6 +8,7 @@ if (!$config_file ||
 }
 
 include_once(dirname(__FILE__).'/tag.php');
+include_once(dirname(__FILE__).'/cowsay.php');
 
 $display_errors = DaGdConfig::get('general.display_errors');
 if ($display_errors) {

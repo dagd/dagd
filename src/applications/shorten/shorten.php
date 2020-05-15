@@ -392,6 +392,7 @@ class DaGdShortenController extends DaGdBaseClass {
       // a 'url' - Show the form so that we can create a new short-url.
       if (!is_html_useragent()) {
         // No use in showing a form for text UAs. Rather, show help text.
+        // TODO: Move this to renderCLI()
         return help('DaGdShortenController');
       }
 
@@ -555,5 +556,11 @@ class DaGdShortenController extends DaGdBaseClass {
         ),
       );
     }
+  }
+
+  public function renderCowsay() {
+    $cs = new Cowsay();
+    $cs->setMessage('Welcome to da.gd!');
+    return $cs->render();
   }
 }

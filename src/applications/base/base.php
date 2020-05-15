@@ -193,17 +193,30 @@ abstract class DaGdBaseClass {
     return strip_tags($this->render());
   }
 
+  public function renderCowsay() {
+    $cs = new Cowsay();
+    $cs->setMessage($this->renderCLI());
+    return $cs->render();
+  }
+
   public function finalize() {
     $darkmode_style = $this->configureDarkmodeIfNecessary();
     $this->configure();
     $response = null;
 
-    if ($this->getTextHtmlStrip() && !is_html_useragent()) {
+    // ?cow implies text handler
+    $cow = request_or_default('cow', false, true, true);
+
+    if ($this->getTextHtmlStrip() && (!is_html_useragent() || $cow)) {
       if ($this->getTextContentType()) {
         header('Content-type: text/plain; charset=utf-8');
         header('X-Content-Type-Options: nosniff');
       }
-      $response = $this->renderCLI();
+      if ($cow) {
+        $response = $this->renderCowsay();
+      } else {
+        $response = $this->renderCLI();
+      }
     } else {
       // We need this to be early-ish because it can set properties we use
       // below such as $this->style. However, controllers need to access
