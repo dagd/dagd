@@ -107,7 +107,7 @@ class Cowsay {
 
   protected function balloon() {
     $message = str_replace("\r\n", "\n", $this->getMessage());
-    $message = str_replace("\t", ' ', $this->getMessage());
+    $message = str_replace("\t", ' ', $message);
     $wrapped = wordwrap(
       $message,
       $this->getWidth() - 4,
