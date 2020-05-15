@@ -209,8 +209,7 @@ abstract class DaGdBaseClass {
 
     if ($this->getTextHtmlStrip() && (!is_html_useragent() || $cow)) {
       if ($this->getTextContentType()) {
-        header('Content-type: text/plain; charset=utf-8');
-        header('X-Content-Type-Options: nosniff');
+        send_text_headers();
       }
       if ($cow) {
         $response = $this->renderCowsay();

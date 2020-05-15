@@ -102,9 +102,30 @@ function debug($title, $text = null) {
   }
 }
 
+function send_text_headers() {
+  header('Content-type: text/plain; charset=utf-8');
+  header('X-Content-Type-Options: nosniff');
+}
+
+function render_optional_cow($text, $cow='dagd/surprised-pika') {
+  if ($cow) {
+    $cs = new Cowsay();
+    $cs->setCow($cow);
+    $cs->setMessage($text);
+    return $cs->render();
+  } else {
+    return $text;
+  }
+}
+
 function error404($echo = '404 - route not found', $status_text = 'Not Found') {
   header('HTTP/1.1 404 '.$status_text);
-  echo $echo;
+  send_text_headers();
+  echo render_optional_cow(
+    "You: I would like to visit a non-existent page.\n".
+    "dagd: I cannot allow this to happen. Here's a 404.\n".
+    "You:");
+  die();
 }
 
 function error403($echo = '403 - forbidden', $status_text = 'Forbidden') {

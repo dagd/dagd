@@ -17,7 +17,7 @@ class Cowsay {
   }
 
   public function setCow($cow) {
-    if (!preg_match('/[0-9a-z\-]+/i', $cow)) {
+    if ($cow[0] == '/' || !preg_match('/[\/0-9a-z\-]+/i', $cow)) {
       throw new Exception('Cow name must only include 0-9, a-z, A-Z, -');
     }
     $cow = str_replace('.cow', '', $cow);
