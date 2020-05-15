@@ -557,10 +557,4 @@ class DaGdShortenController extends DaGdBaseClass {
       );
     }
   }
-
-  public function renderCowsay() {
-    $cs = new Cowsay();
-    $cs->setMessage('Welcome to da.gd!');
-    return $cs->render();
-  }
 }
