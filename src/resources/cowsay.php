@@ -172,7 +172,7 @@ class Cowsay {
     }
 
     $ret = $this->balloon();
-    $ret .= implode("\n", $out)."\n";
+    $ret .= rtrim(implode("\n", $out));
     return $ret;
   }
 }
