@@ -42,6 +42,17 @@ class DaGdConfig {
       'metrics',
     ),
 
+    // Directories searched for class autoloading. Paths relative to 'src/'.
+    // These are passed to glob(), so can contain wildcards. Each directory is
+    // searched for *.php files, and the class name exported by the file *must*
+    // match the filename (sans ".php"). This is not yet used for application
+    // loading but that is a planned enhancement.
+    // Note that this does NOT recurse into subdirectories, they must be listed
+    // individually.
+    'general.autoload_search' => array(
+      'resources/http/',
+    ),
+
     // Control statsd metrics collection.
     'general.statsd' => false,
 

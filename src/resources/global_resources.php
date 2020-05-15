@@ -7,6 +7,22 @@ if (!$config_file ||
   throw new Exception("No configuration file could be loaded.");
 }
 
+function __dagd_autoload($cls) {
+  $paths = DaGdConfig::get('general.autoload_search');
+  foreach ($paths as $path) {
+    $path = trim($path, '/').'/';
+    // Paths are expected to be relative to 'src'
+    $src = dirname(dirname(__FILE__));
+    $files = glob($src.'/'.$path.'/'.$cls.'.php');
+    if (!empty($files)) {
+      include_once $files[0];
+      break;
+    }
+  }
+}
+
+spl_autoload_register('__dagd_autoload', $throw = true);
+
 include_once(dirname(__FILE__).'/tag.php');
 include_once(dirname(__FILE__).'/cowsay.php');
 
