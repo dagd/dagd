@@ -127,11 +127,18 @@ if (!empty($readonly_host)) {
 
 debug('Response from Controller', '');
 
-echo $instance
+$response = $instance
   ->setRouteMatches($route_matches)
   ->setWriteDB($write_dbh)
   ->setReadDB($read_dbh)
   ->finalize();
+
+// Temporary, handle migration to DaGdResponse
+if ($response instanceof DaGdResponse) {
+  echo $response->render();
+} else {
+  echo $response;
+}
 
 $end = microtime(true);
 statsd_time('response_time', ($end - $start) * 1000);

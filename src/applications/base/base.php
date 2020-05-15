@@ -213,7 +213,9 @@ abstract class DaGdBaseClass {
         header('X-Content-Type-Options: nosniff');
       }
       if ($cow) {
-        $response = $this->renderCowsay();
+        // This makes a good testing point for the new DaGdResponse work
+        $response = id(new DaGdTextResponse())
+          ->setBody($this->renderCowsay());
       } else {
         $response = $this->renderCLI();
       }
@@ -298,7 +300,12 @@ abstract class DaGdBaseClass {
 
     if (!$this->getNeverNewline() &&
         !request_or_default('strip', false, true, true)) {
-      $response .= "\n";
+      // Hack for now until everything moves to DaGdResponse
+      if ($response instanceof DaGdResponse) {
+        $response->setTrailingNewline(true);
+      } else {
+        $response .= "\n";
+      }
     }
 
     return $response;
