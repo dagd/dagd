@@ -57,7 +57,7 @@ class DaGdWhois {
 
       // We can have a custom query without having a custom server...
       if (array_key_exists('query', $custom_tld)) {
-        $this->query = $custom_tld['query'].' ';
+        $this->query = $custom_tld['query'];
       }
 
       if (array_key_exists('server', $custom_tld)) {

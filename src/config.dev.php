@@ -288,6 +288,12 @@ class DaGdConfig {
         'server' => 'net.whois-servers.net',
         'query' => 'domain ',
       ),
+      'edu' => array(
+        // This one requires that we don't prefix the query with 'domain '.
+        // Oh, and avoid fallback.
+        'server' => 'edu.whois-servers.net',
+        'query' => '',
+      ),
       'de' => array(
         'server' => 'whois.denic.de',
         'query' => '-T dn,ace',

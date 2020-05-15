@@ -89,6 +89,11 @@ $runner->arm(
     new DaGdRegexTest(
       '/w/donuts.co',
       '@Registrant Organization: Donuts Inc.@')));
+$runner->arm(
+  id(
+    new DaGdRegexTest(
+      '/w/usi.edu',
+      '@University of Southern Indiana@')));
 
 /************ /headers/xxxxxxx ************/
 
