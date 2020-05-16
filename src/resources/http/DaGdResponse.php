@@ -62,7 +62,22 @@ abstract class DaGdResponse {
   }
 
   public function getHeaders() {
-    return $this->headers;
+    $headers = array();
+
+    // These unfortunately are "k: v" strings
+    $global_headers = DaGdConfig::get('general.extra_headers');
+    foreach ($global_headers as $header) {
+      $header_sp = explode(':', $header, 2);
+      if (count($header_sp) != 2) {
+        throw new Exception('Parse error in general.extra_headers');
+      }
+      $key = trim($header_sp[0]);
+      $value = trim($header_sp[1]);
+      $headers[$key] = $value;
+    }
+
+    $headers = array_merge($headers, $this->headers);
+    return $headers;
   }
 
   public function getBody() {
@@ -73,7 +88,7 @@ abstract class DaGdResponse {
     return $this->trailing_newline;
   }
 
-  public function sendHeaders() {
+  private function sendHeaders() {
     if ($this->getCode() != 200) {
       header('HTTP/1.1 '.$this->getCode().' '.$this->getMessage());
     }

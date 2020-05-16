@@ -95,16 +95,6 @@ debug('Controller', $metadata_match['controller']);
 debug('Metadata', print_r($metadata_match, true));
 debug('Pass-off', 'Passing off to controller.');
 
-// Extra headers
-$headers = DaGdConfig::get('general.extra_headers');
-foreach ($headers as $header) {
-  header($header);
-}
-$git_dir = escapeshellarg(dirname($_SERVER['SCRIPT_FILENAME']).'/../../.git/');
-$git_latest_commit = shell_exec(
-  'git --git-dir='.$git_dir.' log -1 --pretty=format:%h');
-header('X-Git-Commit: '.$git_latest_commit);
-
 $instance = new ReflectionClass($metadata_match['controller']);
 $instance = $instance->newInstance();
 
@@ -133,10 +123,22 @@ $response = $instance
   ->setReadDB($read_dbh)
   ->finalize();
 
+$git_dir = escapeshellarg(dirname($_SERVER['SCRIPT_FILENAME']).'/../../.git/');
+$git_latest_commit = shell_exec(
+  'git --git-dir='.$git_dir.' log -1 --pretty=format:%h');
+
 // Temporary, handle migration to DaGdResponse
 if ($response instanceof DaGdResponse) {
+  $response->addHeader('X-Git-Commit', $git_latest_commit);
   echo $response->render();
 } else {
+  // DaGdResponse handles adding these itself, but legacy controllers need them
+  // added here before they get rendered.
+  $headers = DaGdConfig::get('general.extra_headers');
+  foreach ($headers as $header) {
+    header($header);
+  }
+  header('X-Git-Commit: '.$git_latest_commit);
   echo $response;
 }
 
