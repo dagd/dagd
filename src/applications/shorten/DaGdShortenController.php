@@ -2,8 +2,6 @@
 
 require_once dirname(__FILE__).'/resources/random_string.php';
 require_once dirname(__FILE__).'/resources/blacklist.php';
-require_once dirname(__FILE__).'/coshorten.php';
-require_once dirname(__FILE__).'/stats.php';
 
 class DaGdShortenController extends DaGdBaseClass {
   public function getHelp() {

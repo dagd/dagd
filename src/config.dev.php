@@ -20,26 +20,15 @@ class DaGdConfig {
       'application/xhtml+xml'
     ),
 
+    // general.applications is now deprecated in favor of autoloading.
+    // Instead of having your controller in `src/applications/foo/foo.php` and
+    // adding `foo` to this array, and the controller name in
+    // `general.routemap`, simply name the controller file the same as the class
+    // name, and reference that in `general.routemap` instead.
+    // Applications loaded the legacy way will continue to work for now, for
+    // compatibility with anyone who has extended da.gd with custom apps, but
+    // autoloading should be preferred going forward.
     'general.applications' => array(
-      'ip',
-      'useragent',
-      'comingsoon',
-      'help',
-      'whois',
-      'editcount',
-      'shorten',
-      'headers',
-      'up',
-      'host',
-      'break',
-      'commander',
-      'image',
-      'status',
-      'isp',
-      'dns',
-      'leftpad',
-      'roll',
-      'metrics',
     ),
 
     // Directories searched for class autoloading. Paths relative to 'src/'.
@@ -51,6 +40,8 @@ class DaGdConfig {
     // individually.
     'general.autoload_search' => array(
       'resources/http/',
+      'applications/*/',
+      'applications/*/resources/',
     ),
 
     // Control statsd metrics collection.

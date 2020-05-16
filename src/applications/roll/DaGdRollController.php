@@ -1,6 +1,6 @@
 <?php
 
-final class DagdRollController extends DaGdBaseClass {
+final class DaGdRollController extends DaGdBaseClass {
   public function getHelp() {
     return array(
       'title' => 'roll',

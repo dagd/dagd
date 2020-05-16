@@ -6,12 +6,15 @@ Basically it comes down to this:
 
 1. Add a route to config.dev.php's `general.routemap` array...
 
-    '/test/(.+)/?$' => 'DaGdTestController',
+```php
+    '/test/(.+)/?$' => array(
+      'controller' => 'DaGdTestController',
+    ),
+```
 
-2. Create the application in src/applications. The apps are simple enough that you should be able to copy an existing one and modify it to fit your needs.
+2. Create the application directory in src/applications. The apps are simple enough that you should be able to copy an existing one and modify it to fit your needs.
 
-**NOTE: The main file of the application must be named the same as the directory it is in. For example, 'applications/test/' should have a file inside of it named 'test.php'.**
-
-3. Tell the application what 'DaGdTestController' actually is. -- That is, add the application to the `general.applications` array config.dev.php.
+The name of controllers referenced in the routemap must be the name of the file they live in.
+i.e. `DaGdTestController` should live in `src/applications/test/DaGdTestController.php`.
 
 Remember to check your web server error logs for debugging. Enable `general.debug` in the config to get detailed output (to the browser -- don't enable this in production) about what the app is doing.

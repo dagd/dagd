@@ -1,5 +1,5 @@
 <?php
-final class DaGdLeftPadController extends DagdBaseClass {
+final class DaGdLeftPadController extends DaGdBaseClass {
   public function getHelp() {
     return array(
       'title' => 'leftpad',

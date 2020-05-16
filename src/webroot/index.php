@@ -5,12 +5,10 @@ require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 
 $start = microtime(true);
 
-require_application('base');
-
-// All of the applications that we route to.
-// This is a tad inefficient as we actually load every app's code into
-// mem on each page load, and don't end up using it. If this ends up biting us
-// at some point, we can optimize this.
+// This mechanism is now deprecated in favor of autoloading.
+// This is kept around for now, for deployments which might have custom apps
+// and load them with general.applications. New applications should use
+// autoloading instead.
 $applications = DaGdConfig::get('general.applications');
 foreach ($applications as $application) {
   require_application($application);
