@@ -15,6 +15,10 @@ final class DaGdRequest {
     return $this->cookies;
   }
 
+  public function getCookie($cookie, $default = null) {
+    return idx($this->cookies, $cookie, $default);
+  }
+
   public function setRequest($request) {
     $this->request = $request;
     return $this;
@@ -79,10 +83,6 @@ final class DaGdRequest {
 
   public function wantsJson() {
     return $this->getParamOrDefault('json', false, true, true);
-  }
-
-  public function getCookie($cookie, $default = null) {
-    return idx($this->cookies, $cookie, $default);
   }
 
   public function getClientIP() {
