@@ -34,7 +34,7 @@ final class DaGdRollController extends DaGdController {
       ));
   }
 
-  public function execute($response) {
+  public function execute(DaGdResponse $response) {
     $route_matches = $this->getRequest()->getRouteMatches();
     $dice = idx($route_matches, 1);
     $sides = idx($route_matches, 2);

@@ -15,7 +15,7 @@ final class DaGdStatusController extends DaGdController {
       ));
   }
 
-  public function execute($response) {
+  public function execute(DaGdResponse $response) {
     $code = $this->getRequest()->getRouteComponent('code');
     if (!is_numeric($code)) {
       // TODO: Common codes/messages should be predefined somewhere.

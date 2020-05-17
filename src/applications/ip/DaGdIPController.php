@@ -13,7 +13,7 @@ final class DaGdIPController extends DaGdController {
       ));
   }
 
-  public function execute($response) {
+  public function execute(DaGdResponse $response) {
     return $this->getRequest()->getClientIP();
   }
 }
