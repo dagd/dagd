@@ -26,7 +26,7 @@ class Cowsay {
       $custom_cow = true;
       $cow = str_replace('dagd/', '', $cow);
     }
-    if (!preg_match('/[0-9a-z\-]+/i', $cow)) {
+    if (!preg_match('/^[0-9a-z\-]+$/i', $cow)) {
       throw new Exception('Cow name must only include 0-9, a-z, A-Z, -');
     }
     if ($custom_cow) {
