@@ -42,6 +42,7 @@ abstract class DaGdController {
     // have to handle it here if set, so we can show apps in dark mode.
     $darkmode = '';
     if ($this->getRequest()->getCookie('darkmode') === 'true') {
+      statsd_bump('dagd_dark_mode_active');
       $darkmode = 'body { ';
       $darkmode .= '  background-color: #333;';
       $darkmode .= '  color: #ddd;';

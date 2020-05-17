@@ -172,6 +172,7 @@ abstract class DaGdBaseClass {
 
     $darkmode = '';
     if (idx($_COOKIE, 'darkmode') === 'true') {
+      statsd_bump('dagd_dark_mode_active');
       $darkmode = 'body { ';
       $darkmode .= '  background-color: #333;';
       $darkmode .= '  color: #ddd;';
