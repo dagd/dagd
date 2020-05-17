@@ -42,9 +42,13 @@ abstract class DaGdController {
   }
 
   public function renderCow() {
+    $cs = new Cowsay();
+    $cs->setMessage($this->renderText());
+    return $cs->render();
   }
 
   public function renderText() {
+    return strip_tags($this->render()->renderSafe());
   }
 
   public function render() {
@@ -71,11 +75,9 @@ abstract class DaGdController {
     $request = $this->getRequest();
 
     if ($request->wantsCow()) {
-      $cs = new Cowsay();
-      $cs->setMessage(strip_tags($this->render()));
-      $cow = $cs->render();
       return id(new DaGdTextResponse())
-        ->setBody($cow);
+        ->setBody($this->renderCow())
+        ->setTrailingNewline(true);
     }
 
     if ($request->wantsText()) {
@@ -84,7 +86,7 @@ abstract class DaGdController {
         ->getParamOrDefault('strip', false, true, true);
 
       return id(new DaGdTextResponse())
-        ->setBody(strip_tags($this->render()->getBody()))
+        ->setBody($this->renderText())
         ->setTrailingNewline($wants_newline);
     }
 

@@ -62,7 +62,19 @@ final class DaGdRequest {
   }
 
   public function wantsText() {
-    return $this->getParamOrDefault('text', false, true, true);
+    $text = $this->getParamOrDefault('text', null, true, true);
+    if ($text !== null) {
+      return $text;
+    }
+
+    if ($accept = idx($this->server, 'HTTP_ACCEPT')) {
+      $accept = strtolower(str_replace(' ', '', $accept));
+      $html_accept_regex = implode('|', DaGdConfig::get('general.html_accept'));
+      return !preg_match('#(?:'.$html_accept_regex.')#i', $accept);
+    }
+
+    // If all else fails, cater to simple clients and assume text.
+    return true;
   }
 
   public function wantsJson() {
