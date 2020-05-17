@@ -74,16 +74,14 @@ abstract class DaGdController {
   }
 
   public function getBaseTemplate() {
-    return id(new DaGdBaseTemplate())
-      ->setTitle(idx($this->getHelp(), 'title', 'Welcome!'))
-      ->setStyle($this->getStyle());
+    return new DaGdBaseTemplate();
   }
 
   public function renderWithTemplate() {
     return $this
       ->getBaseTemplate()
       ->setBody($this->render())
-      //->setStyle($this->getStyle())
+      ->setStyle($this->getStyle())
       ->setTitle(idx($this->getHelp(), 'title', 'Welcome!'))
       ->getHtml();
   }
