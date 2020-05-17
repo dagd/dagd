@@ -233,48 +233,10 @@ abstract class DaGdBaseClass {
         return $controller_response;
       }
 
-      $title = idx($this->getHelp(), 'title', 'Welcome!');
-
-      $head = tag(
-        'head',
-        array(
-          tag(
-            'meta',
-            null,
-            array('charset' => 'utf-8')
-          ),
-          tag(
-            'meta',
-            null,
-            array(
-              'name' => 'keywords',
-              'content' =>
-                'dagd,da.gd,url,shorten,shortening,open,source,foss',
-            )
-          ),
-          tag(
-            'meta',
-            null,
-            array(
-              'name' => 'description',
-              'content' => 'The da.gd URL shortening service',
-            )
-          ),
-          tag(
-            'title',
-            'da.gd: '.$title
-          ),
-          tag(
-            'style',
-            array(
-              '*:not(pre):not(code) { font-family: sans-serif; }',
-              $darkmode_style,
-              $this->getStyle(),
-            ),
-            array(),
-            true
-          ),
-        )
+      $style = array(
+        '*:not(pre):not(code) { font-family: sans-serif; }',
+        $darkmode_style,
+        $this->getStyle(),
       );
 
       if ($this->getWrapPre()) {
@@ -283,19 +245,14 @@ abstract class DaGdBaseClass {
           $controller_response);
       }
 
+      $template = id(new DaGdBaseTemplate())
+        ->setTitle(idx($this->getHelp(), 'title', 'Welcome!'))
+        ->setStyle($style)
+        ->setEscape($this->getEscape())
+        ->setBody($controller_response);
+
       $response = "<!doctype html>\n";
-      $response .= tag(
-        'html',
-        array(
-          $head,
-          tag(
-            'body',
-            $controller_response,
-            array(),
-            !$this->getEscape() // Potentially dangerous
-          ),
-        )
-      )->renderSafe();
+      $response .= $template->getHtml()->renderSafe();
     }
 
     if (!$this->getNeverNewline() &&
