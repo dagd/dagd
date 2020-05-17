@@ -59,31 +59,49 @@ abstract class DaGdController {
     return array();
   }
 
-  public function renderCow() {
+  /**
+   * A string version of the response.
+   *
+   * This is used for simple controllers where the main difference between
+   * response types is just the boilerplate around their bodies.
+   *
+   * This allows such simple controllers to implement one method and have
+   * everything else "magically" work, while more complex controllers can
+   * implement render(), renderText(), renderJson(), etc. (but must either
+   * implement all of them or implement execute() so that they can fall back to
+   * it.)
+   */
+  public function execute(DaGdResponse $response) {
+    throw new Exception('execute() not rendered; unimplemented controller');
+  }
+
+  public function renderCow($response) {
     $cs = new Cowsay();
-    $cs->setMessage($this->renderText());
-    return $cs->render();
+    $cs->setMessage($this->execute($response));
+    return $response
+      ->setBody($cs->render())
+      ->setTrailingNewline(true);
   }
 
-  public function renderText() {
-    return strip_tags($this->render()->renderSafe());
+  public function renderText(DaGdTextResponse $response) {
+    $body = $this->execute($response);
+    return $response->setBody($body);
   }
 
-  public function render() {
-    throw new Exception('Unimplemented controller');
+  public function render(DaGdHTMLResponse $response) {
+    // By default we wrap things in <pre> tags and wrap a template around it.
+    $body = tag('pre', $this->execute($response));
+    $template = $this
+      ->getBaseTemplate()
+      ->setBody($body)
+      ->setStyle($this->getStyle())
+      ->setTitle(idx($this->getHelp(), 'title', 'Welcome!'))
+      ->getHtml();
+    return $response->setBody($template);
   }
 
   public function getBaseTemplate() {
     return new DaGdBaseTemplate();
-  }
-
-  public function renderWithTemplate() {
-    return $this
-      ->getBaseTemplate()
-      ->setBody($this->render())
-      ->setStyle($this->getStyle())
-      ->setTitle(idx($this->getHelp(), 'title', 'Welcome!'))
-      ->getHtml();
   }
 
   // TODO: Probably add some instanceof checks here
@@ -91,9 +109,7 @@ abstract class DaGdController {
     $request = $this->getRequest();
 
     if ($request->wantsCow()) {
-      return id(new DaGdTextResponse())
-        ->setBody($this->renderCow())
-        ->setTrailingNewline(true);
+      return $this->renderCow(new DaGdTextResponse());
     }
 
     if ($request->wantsText()) {
@@ -101,8 +117,8 @@ abstract class DaGdController {
         ->getRequest()
         ->getParamOrDefault('strip', false, true, true);
 
-      return id(new DaGdTextResponse())
-        ->setBody($this->renderText())
+      return $this
+        ->renderText(new DaGdTextResponse())
         ->setTrailingNewline($wants_newline);
     }
 
@@ -110,8 +126,7 @@ abstract class DaGdController {
       return null; // TODO
     }
 
-    return id(new DaGdHTMLResponse())
-      ->setBody($this->renderWithTemplate());
+    return $this->render(new DaGdHTMLResponse());
   }
 
   public function finalize() {

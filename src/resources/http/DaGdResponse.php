@@ -39,6 +39,10 @@ abstract class DaGdResponse {
     return $this;
   }
 
+  public function getBody() {
+    return $this->body;
+  }
+
   public function getCode() {
     return $this->code;
   }
@@ -64,10 +68,6 @@ abstract class DaGdResponse {
 
     $headers = array_merge($headers, $this->headers);
     return $headers;
-  }
-
-  public function getBody() {
-    return $this->body;
   }
 
   private function sendHeaders() {

@@ -12,7 +12,7 @@ final class DaGdUserAgentController extends DaGdController {
       ));
   }
 
-  public function render() {
-    return tag('pre', $this->getRequest()->getHeader('User-Agent'));
+  public function execute($response) {
+    return $this->getRequest()->getHeader('User-Agent');
   }
 }
