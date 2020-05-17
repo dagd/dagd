@@ -363,12 +363,7 @@ $runner->arm(
     ->setAccept('text/html'));
 
 /************ /cow/ ************/
-$runner
-  ->arm(
-    id(
-      new DaGdExactMatchTest(
-        '/cow?text=I%20am%20moo,%20hear%20me%20roar&cow=moose&eyes=AA&tongue=<>',
-        <<<EOD
+$expected = <<<EOD
  ________________________
 < I am moo, hear me roar >
  ------------------------
@@ -380,7 +375,13 @@ $runner
             <> ||----w |
                ||     ||
 
-EOD))
+EOD;
+$runner
+  ->arm(
+    id(
+      new DaGdExactMatchTest(
+        '/cow?text=I%20am%20moo,%20hear%20me%20roar&cow=moose&eyes=AA&tongue=<>',
+        $expected))
     ->addGroup('unit')
     ->addGroup('cow'));
 
