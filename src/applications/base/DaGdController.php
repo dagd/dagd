@@ -56,7 +56,7 @@ abstract class DaGdController {
     );
   }
 
-  public function getHelp() {
+  public static function getHelp() {
     return array();
   }
 

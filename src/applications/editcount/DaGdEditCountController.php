@@ -1,27 +1,35 @@
 <?php
 
 final class DaGdEditCountController extends DaGdController {
-  public function getHelp() {
-    return array(
-      'title' => 'editcount',
-      'summary' => 'Gives wikipedia edit count for a user.',
-      'path' => 'ec',
-      'examples' => array(
-        array(
-          'arguments' => array('CodeBlock'),
-          'summary' => 'en.wikipedia.org editcount for user "CodeBlock"'),
-        array(
-          'arguments' => array('CodeBlock'),
-          'request' => array(
-            'lang' => 'fr'),
-          'summary' => 'fr.wikipedia.org editcount for user "CodeBlock"'),
-        array(
-          'arguments' => array('CodeBlock'),
-          'request' => array(
-            'lang' => 'en',
-            'proj' => 'wikiquote'),
-          'summary' => 'en.wikiquote.org editcount for user "CodeBlock"'),
-      ));
+  public static function getHelp() {
+    return id(new DaGdHelp())
+      ->setTitle('editcount')
+      ->setDescription('Gives wikipedia edit count for a user.')
+      ->addPath(
+        id(new DaGdHelpPath())
+          ->setPath('ec')
+          ->addPathArg('username')
+          ->addGetArg('lang', 'language code for wikimedia project')
+          ->addGetArg('proj', 'wikimedia project to query')
+          ->setMethods(array('GET'))
+          ->addExample(
+            id(new DaGdHelpExample())
+              ->addPathArg('CodeBlock')
+              ->setCommentary(
+                'en.wikipedia.org editcount for user "CodeBlock"'))
+          ->addExample(
+            id(new DaGdHelpExample())
+              ->addPathArg('CodeBlock')
+              ->addGetArg('lang', 'fr')
+              ->setCommentary(
+                'fr.wikipedia.org editcount for user "CodeBlock"'))
+          ->addExample(
+            id(new DaGdHelpExample())
+              ->addPathArg('CodeBlock')
+              ->addGetArg('lang', 'en')
+              ->addGetArg('proj', 'wikiquote')
+              ->setCommentary(
+                'en.wikiquote.org editcount for user "CodeBlock"')));
   }
 
   public function execute(DaGdResponse $response) {

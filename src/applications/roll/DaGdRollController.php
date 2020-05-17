@@ -1,7 +1,7 @@
 <?php
 
 final class DaGdRollController extends DaGdController {
-  public function getHelp() {
+  public static function getHelp() {
     return array(
       'title' => 'roll',
       'summary' => 'Roll a die or multiple dice.',

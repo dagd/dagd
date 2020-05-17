@@ -72,10 +72,18 @@ final class DaGdHelp {
    */
   public function toOldHelp() {
     $examples = array();
-    foreach ($this->getPaths()[0]->getExamples() as $example) {
+    $path_examples = $this->getPaths()[0]->getExamples();
+    if ($path_examples) {
+      foreach ($path_examples as $example) {
+        $examples[] = array(
+          'summary' => $example->getCommentary(),
+          'request' => $example->getGetArgs(),
+        );
+      }
+    } else {
       $examples[] = array(
-        'summary' => $example->getCommentary(),
-        'request' => $example->getGetArgs(),
+        'summary' => null,
+        'request' => null,
       );
     }
     return array(

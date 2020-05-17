@@ -21,6 +21,14 @@ final class Tag {
     $this->cdata = $cdata;
   }
 
+  public function addTag(Tag $tag) {
+    if (!is_array($this->body)) {
+      throw new Exception('Attempt to add Tag to non-array parent');
+    }
+    $this->body[] = $tag;
+    return $this;
+  }
+
   protected function renderPotentialInnerTag($body) {
     // This should let us compose tags that have already been constructed.
     if ($body instanceof Tag) {

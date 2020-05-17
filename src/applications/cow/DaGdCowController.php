@@ -1,6 +1,6 @@
 <?php
 final class DaGdCowController extends DaGdController {
-  public function getHelp() {
+  public static function getHelp() {
     return id(new DaGdHelp())
       ->setTitle('cow')
       ->setDescription('Generate cows and other cow-like things.')

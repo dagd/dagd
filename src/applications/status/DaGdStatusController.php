@@ -1,6 +1,6 @@
 <?php
 final class DaGdStatusController extends DaGdController {
-  public function getHelp() {
+  public static function getHelp() {
     return array(
       'title' => 'status',
       'summary' => 'Generate a response with the given status code.',

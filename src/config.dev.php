@@ -65,6 +65,9 @@ class DaGdConfig {
       '/help/?$' => array(
         'controller' => 'DaGdHelpController',
       ),
+      '/newhelp/?(.+)?/?$' => array(
+        'controller' => 'DaGdNewHelpController',
+      ),
       '/ua/?$' => array(
         'controller' => 'DaGdUserAgentController',
       ),
