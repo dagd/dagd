@@ -1,5 +1,5 @@
 <?php
-final class DaGdUserAgentController extends DaGdBaseClass {
+final class DaGdUserAgentController extends DaGdController {
   public function getHelp() {
     return array(
       'title' => 'useragent',
@@ -12,12 +12,7 @@ final class DaGdUserAgentController extends DaGdBaseClass {
       ));
   }
 
-  public function configure() {
-    return $this
-      ->setWrapHtml(true);
-  }
-
   public function render() {
-    return $_SERVER['HTTP_USER_AGENT'];
+    return tag('pre', $this->getRequest()->getHeader('User-Agent'));
   }
 }
