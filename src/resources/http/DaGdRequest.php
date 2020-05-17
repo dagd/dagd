@@ -46,8 +46,8 @@ final class DaGdRequest {
     return $this->route_matches;
   }
 
-  public function getRouteComponent($idx) {
-    return idx($this->route_matches, $idx);
+  public function getRouteComponent($idx, $default = null) {
+    return idx($this->route_matches, $idx, $default);
   }
 
   public function getParamOrDefault(

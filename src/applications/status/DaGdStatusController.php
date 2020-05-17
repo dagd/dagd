@@ -31,14 +31,11 @@ final class DaGdStatusController extends DaGdController {
       return 'The given HTTP status code must be under 1000.';
     }
 
-    $response->setCode($code);
-    if (count($this->getRequest()->getRouteMatches()) == 2) {
-      $response->setMessage('da.gd header test');
-      return '';
-    } else {
-      $text = $this->getRequest()->getRouteComponent('text');
-      $response->setMessage($text);
-      return '';
-    }
+    $text = $this
+      ->getRequest()
+      ->getRouteComponent('message', 'da.gd header test');
+    $response->setCode((int)$code);
+    $response->setMessage($text);
+    return '';
   }
 }
