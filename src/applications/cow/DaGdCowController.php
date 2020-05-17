@@ -1,29 +1,26 @@
 <?php
 final class DaGdCowController extends DaGdController {
   public function getHelp() {
-    return array(
-      'title' => 'cow',
-      'summary' => 'Generate cows and other cow-like things.',
-      'path' => 'cow',
-      'examples' => array(
-        array(
-          'summary' => 'Generate a cow that says moo',
-          'request' => array(
-            'text' => 'moo',
-          ),
-        ),
-        array(
-          'summary' => 'Generate a moose with custom attributes',
-          'request' => array(
-            'cow' => 'moose',
-            'text' => 'moo',
-            'eyes' => '@@',
-            'thoughts' => '^',
-            'tongue' => '~',
-          ),
-        ),
-      ),
-    );
+    return id(new DaGdHelp())
+      ->setTitle('cow')
+      ->setDescription('Generate cows and other cow-like things.')
+      ->addWarning('Be sure to properly URL encode your text')
+      ->addPath(
+        id(new DaGdHelpPath())
+          ->setPath('cow')
+          ->setMethods(array('GET'))
+          ->addExample(
+            id(new DaGdHelpExample())
+              ->addGetArg('text', 'moo')
+              ->setCommentary('Generate a cow that says moo'))
+          ->addExample(
+            id(new DaGdHelpExample())
+              ->addGetArg('cow', 'moose')
+              ->addGetArg('text', 'moo')
+              ->addGetArg('eyes', '@@')
+              ->addGetArg('thoughts', '^')
+              ->addGetArg('tongue', '~')
+              ->setCommentary('Generate a moose with custom attributes')));
   }
 
   public function renderCow($response) {

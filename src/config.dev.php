@@ -41,6 +41,7 @@ class DaGdConfig {
     'general.autoload_search' => array(
       'resources/http/',
       'resources/html/',
+      'resources/help/',
       'applications/*/',
       'applications/*/resources/',
     ),

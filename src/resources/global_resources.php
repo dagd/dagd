@@ -225,6 +225,10 @@ function help($class) {
   $help_getter = new ReflectionClass($class);
   $instance = $help_getter->newInstance();
   $help = $instance->getHelp();
+  if ($help instanceof DaGdHelp) {
+    // Until the help system is rewritten entirely
+    $help = $help->toOldHelp();
+  }
   if ($help) {
     $return .= '<h3 id="'.$help['title'].'">';
     $return .= '<a href="#'.$help['title'].'">#</a> ';
