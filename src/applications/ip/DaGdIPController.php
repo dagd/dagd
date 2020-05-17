@@ -1,5 +1,6 @@
 <?php
-final class DaGdIPController extends DaGdBaseClass {
+
+final class DaGdIPController extends DaGdController {
   public function getHelp() {
     return array(
       'title' => 'ip',
@@ -12,12 +13,7 @@ final class DaGdIPController extends DaGdBaseClass {
       ));
   }
 
-  public function configure() {
-    return $this
-      ->setWrapHtml(true);
-  }
-
   public function render() {
-    return client_ip();
+    return tag('pre', $this->getRequest()->getClientIP());
   }
 }

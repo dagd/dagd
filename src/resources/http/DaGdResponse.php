@@ -6,11 +6,6 @@ abstract class DaGdResponse {
   private $headers = array();
   private $body = '';
 
-  // TODO: This is only important for text responses, so possibly should move
-  // to DaGdTextResponse, but it feels weird to implement one-off controlling
-  // methods in subclasses.
-  private $trailing_newline = false;
-
   public function setCode($code) {
     $this->code = $code;
     return $this;
@@ -18,11 +13,6 @@ abstract class DaGdResponse {
 
   public function setMessage($message) {
     $this->message = $message;
-    return $this;
-  }
-
-  public function setMimetype($mimetype) {
-    $this->mimetype = $mimetype;
     return $this;
   }
 
@@ -57,10 +47,6 @@ abstract class DaGdResponse {
     return $this->message;
   }
 
-  public function getMimetype() {
-    return $this->mimetype;
-  }
-
   public function getHeaders() {
     $headers = array();
 
@@ -82,10 +68,6 @@ abstract class DaGdResponse {
 
   public function getBody() {
     return $this->body;
-  }
-
-  public function getTrailingNewline() {
-    return $this->trailing_newline;
   }
 
   private function sendHeaders() {

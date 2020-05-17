@@ -33,6 +33,8 @@ class DaGdBaseTemplate {
     return $this->body;
   }
 
+  // Only provided for legacy controllers.
+  // New controllers should never call this.
   public function setEscape($escape) {
     $this->escape = $escape;
     return $this;

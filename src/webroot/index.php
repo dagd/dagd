@@ -116,8 +116,25 @@ if (!empty($readonly_host)) {
 
 debug('Response from Controller', '');
 
+$response = '';
+
+// Temporary conditional, handle migration to DaGdController
+if ($instance instanceof DaGdController) {
+  $request = id(new DaGdRequest())
+    ->setCookies($_COOKIE)
+    ->setRequest($_REQUEST)
+    ->setServer($_SERVER)
+    ->setRouteMatches($route_matches);
+  $instance->setRequest($request);
+} else {
+  // Things that old controllers need, but new controllers don't have
+
+  // This has moved to DaGdRequest in the new model
+  $instance->setRouteMatches($route_matches);
+}
+
+// New and old controllers provide this same interface
 $response = $instance
-  ->setRouteMatches($route_matches)
   ->setWriteDB($write_dbh)
   ->setReadDB($read_dbh)
   ->finalize();
@@ -129,7 +146,7 @@ $git_latest_commit = shell_exec(
 // Temporary, handle migration to DaGdResponse
 if ($response instanceof DaGdResponse) {
   $response->addHeader('X-Git-Commit', $git_latest_commit);
-  echo $response->render();
+  $response->render();
 } else {
   // DaGdResponse handles adding these itself, but legacy controllers need them
   // added here before they get rendered.

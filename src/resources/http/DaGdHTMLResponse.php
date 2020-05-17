@@ -16,6 +16,7 @@ final class DaGdHTMLResponse extends DaGdResponse {
         'Attempt to render DaGdHTMLResponse but body was not an instance of '.
         'Tag. Did you mean to use DaGdHTMLStringResponse instead?');
     }
-    return $body->renderSafe();
+    $body = "<!doctype html>\n".$body->renderSafe();
+    return $body;
   }
 }

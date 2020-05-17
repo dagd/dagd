@@ -202,6 +202,8 @@ function build_given_querystring() {
 
 /** Get the IP for a client.
  *  Use the header X-Forwarded-For if it exists.
+ *
+ * Deprecated: New controllers should use DaGdRequest#getClientIP
  */
 function client_ip() {
   if (server_or_default('HTTP_X_DAGD_PROXY') == "1" &&
