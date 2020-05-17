@@ -47,6 +47,19 @@ $runner->arm(
 
 $runner->arm(
   id(new DaGdRegexTest('/ip', '@(?:[0-9]+\.){3}[0-9]+$@')));
+$runner->arm(
+  id(new DaGdRegexTest('/ip', '@(?:[0-9]+\.){3}[0-9]@'))
+    ->setAccept('text/html'));
+
+/*********** /ua ***********/
+
+$runner->arm(
+  id(new DaGdRegexTest('/ua', '@^monkey$@'))
+    ->setUserAgent('monkey'));
+$runner->arm(
+  id(new DaGdRegexTest('/ua', '@>monkey@'))
+    ->setUserAgent('monkey')
+    ->setAccept('text/html'));
 
 /*********** /ec/CodeBlock ***********/
 
