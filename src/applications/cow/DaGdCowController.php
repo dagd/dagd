@@ -9,6 +9,11 @@ final class DaGdCowController extends DaGdController {
         id(new DaGdHelpPath())
           ->setPath('cow')
           ->setMethods(array('GET'))
+          ->addGetArg('cow', 'the cow to render')
+          ->addGetArg('text', 'the text to render (mind url encoding)')
+          ->addGetArg('eyes', 'substitution for eyes')
+          ->addGetArg('tongue', 'substitution for tongue')
+          ->addGetArg('thoughts', 'substitution for line to text bubble')
           ->addExample(
             id(new DaGdHelpExample())
               ->addGetArg('text', 'moo')
