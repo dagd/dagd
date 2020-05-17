@@ -77,6 +77,9 @@ abstract class DaGdController {
 
   public function renderCow($response) {
     $cs = new Cowsay();
+    if ($cow = $this->getRequest()->getParamOrDefault('cow')) {
+      $cs->setCow($cow);
+    }
     $cs->setMessage($this->execute($response));
     return $response
       ->setBody($cs->render())
