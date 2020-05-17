@@ -1,6 +1,6 @@
 <?php
 
-final class DaGdRollController extends DaGdBaseClass {
+final class DaGdRollController extends DaGdController {
   public function getHelp() {
     return array(
       'title' => 'roll',
@@ -35,11 +35,12 @@ final class DaGdRollController extends DaGdBaseClass {
   }
 
   public function render() {
-    $dice = idx($this->route_matches, 1);
-    $sides = idx($this->route_matches, 2);
+    $route_matches = $this->getRequest()->getRouteMatches();
+    $dice = idx($route_matches, 1);
+    $sides = idx($route_matches, 2);
     // NOTE: We interpret ' ' as '+' to work around URL encoding
-    $operation = idx($this->route_matches, 3, '+');
-    $op_argument = idx($this->route_matches, 4, 0);
+    $operation = idx($route_matches, 3, '+');
+    $op_argument = idx($route_matches, 4, 0);
 
     $result = 0;
     $add = intval($op_argument);
@@ -59,6 +60,6 @@ final class DaGdRollController extends DaGdBaseClass {
     }
 
     $result += $add;
-    return $result;
+    return tag('pre', $result);
   }
 }
