@@ -1,5 +1,5 @@
 <?php
-final class DaGdStatusController extends DaGdBaseClass {
+final class DaGdStatusController extends DaGdController {
   public function getHelp() {
     return array(
       'title' => 'status',
@@ -15,29 +15,30 @@ final class DaGdStatusController extends DaGdBaseClass {
       ));
   }
 
-  public function confgure() {
-    return $this
-      ->setWrapHtml(true)
-      ->setNeverNewline(true);
-  }
-
-  public function render() {
-    $code = $this->route_matches[1];
+  public function execute($response) {
+    $code = $this->getRequest()->getRouteComponent('code');
     if (!is_numeric($code)) {
-      error400('You should give a numeric HTTP status code.');
-      return;
+      // TODO: Common codes/messages should be predefined somewhere.
+      $response
+        ->setCode(400)
+        ->setMessage('Bad request');
+      return 'You should give a numeric HTTP status code.';
     }
     if ((int)$code > 999) {
-      error400('The given HTTP status code must be under 1000.');
-      return;
+      $response
+        ->setCode(400)
+        ->setMessage('Bad request');
+      return 'The given HTTP status code must be under 1000.';
     }
-    if (count($this->route_matches) == 2) {
-      header('HTTP/1.1 '.$code.' da.gd header test');
-      return;
+
+    $response->setCode($code);
+    if (count($this->getRequest()->getRouteMatches()) == 2) {
+      $response->setMessage('da.gd header test');
+      return '';
     } else {
-      $text = $this->route_matches[2];
-      header('HTTP/1.1 '.$code.' '.$text);
-      return;
+      $text = $this->getRequest()->getRouteComponent('text');
+      $response->setMessage($text);
+      return '';
     }
   }
 }

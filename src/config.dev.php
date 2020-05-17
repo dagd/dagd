@@ -103,7 +103,7 @@ class DaGdConfig {
       '/roll/(\d+)?d(\d+)(?:([ +-])(\d+))?/?$' => array(
           'controller' => 'DaGdRollController',
       ),
-      '/status/(\d+)/?(.+)?/?' => array(
+      '/status/(?P<code>\d+)/?(?P<message>.+)?/?' => array(
         'controller' => 'DaGdStatusController',
       ),
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => array(
