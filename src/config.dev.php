@@ -124,6 +124,9 @@ class DaGdConfig {
       '/stats/([^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdStatsController',
       ),
+      '/cow/?$' => array(
+        'controller' => 'DaGdCowController',
+      ),
       '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdShortenController',
         'methods' => array('GET', 'HEAD', 'POST'),

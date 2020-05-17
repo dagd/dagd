@@ -5,6 +5,7 @@
 require_once dirname(__FILE__).'/runner.php';
 require_once dirname(__FILE__).'/test_content_type.php';
 require_once dirname(__FILE__).'/test_header_regex.php';
+require_once dirname(__FILE__).'/test_exact_match.php';
 require_once dirname(__FILE__).'/test_regex.php';
 require_once dirname(__FILE__).'/test_response_code.php';
 require_once dirname(__FILE__).'/test_response_regex.php';
@@ -360,6 +361,28 @@ $runner->arm(
 $runner->arm(
   id(new DaGdHeaderRegexTest('/?darkmode', 'Set-Cookie', '@^darkmode=true;@'))
     ->setAccept('text/html'));
+
+/************ /cow/ ************/
+$runner
+  ->arm(
+    id(
+      new DaGdExactMatchTest(
+        '/cow?text=I%20am%20moo,%20hear%20me%20roar&cow=moose&eyes=AA&tongue=<>',
+        <<<EOD
+ ________________________
+< I am moo, hear me roar >
+ ------------------------
+  \
+   \   \\\\_\\\\_    _/_/
+    \      \\\\__/
+           (AA)\\\\_______
+           (__)\\\\       )\\\/\\\
+            <> ||----w |
+               ||     ||
+
+EOD))
+    ->addGroup('unit')
+    ->addGroup('cow'));
 
 /************ Tag unit tests ************/
 $runner->arm(
