@@ -1,6 +1,6 @@
 <?php
 
-final class DaGdEditCountController extends DaGdBaseClass {
+final class DaGdEditCountController extends DaGdController {
   public function getHelp() {
     return array(
       'title' => 'editcount',
@@ -24,18 +24,14 @@ final class DaGdEditCountController extends DaGdBaseClass {
       ));
   }
 
-  public function configure() {
-    return $this
-      ->setWrapHtml(true);
-  }
-
-  public function render() {
-    $query = $this->route_matches[1];
+  public function execute(DaGdResponse $response) {
+    $query = $this->getRequest()->getRouteComponent('username');
 
     // Default to english (en).
-    $language = request_or_default('lang', 'en');
+    $language = $this->getRequest()->getParamOrDefault('lang', 'en');
     if (!preg_match('@^[a-z]+$@i', $language)) {
-      error400('`lang` should only contain letters.');
+      $response->setCode(400);
+      return '`lang` should only contain letters.';
       return;
     }
 
@@ -46,18 +42,19 @@ final class DaGdEditCountController extends DaGdBaseClass {
       "wikiversity",
       "wikibooks",
       "wikiquote",
-      "wikinews");
+      "wikinews",
+     );
 
     // Default to wikipedia.org.
-    $project = request_or_default('proj', 'wikipedia');
+   $project = $this->getRequest()->getParamOrDefault('proj', 'wikipedia');
     if (!in_array($project, $wmprojects)) {
-        error400('`proj` needs to be a valid Wikimedia project.');
-        return;
+      $response->setCode(400);
+      return '`proj` needs to be a valid Wikimedia project.';
     }
 
    if (!count(dns_get_record($language.'.'.$project.'.org'))) {
-     error400($language.'.'.$project.'.org is not a valid wikipedia subdomain.');
-     return;
+     $response->setCode(400);
+     return $language.'.'.$project.'.org is not a valid wikipedia subdomain.';
    }
 
     $counts = file_get_contents(
@@ -69,6 +66,6 @@ final class DaGdEditCountController extends DaGdBaseClass {
     foreach ($json_counts as $user) {
       $total_edits += (int)$user['editcount'];
     }
-    return $total_edits;
+    return (string)$total_edits;
   }
 }
