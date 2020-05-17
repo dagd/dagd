@@ -33,9 +33,17 @@ final class DaGdStatusController extends DaGdController {
 
     $text = $this
       ->getRequest()
-      ->getRouteComponent('message', 'da.gd header test');
+      ->getRouteComponent('message', null);
     $response->setCode((int)$code);
     $response->setMessage($text);
-    return '';
+
+    if ((int)$code == 418) {
+      $cs = new Cowsay();
+      $cs->setCow('dagd/teapot');
+      $cs->setThoughts('/');
+      $cs->setMessage("418 I'm a badly drawn teapot");
+      return $cs->render();
+    }
+    return $response->getMessage();
   }
 }

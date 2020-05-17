@@ -17,11 +17,23 @@ class Cowsay {
   }
 
   public function setCow($cow) {
+    $cow = str_replace('.cow', '', $cow);
+    // This logic looks weird, but it's safer to hardcode this than to risk
+    // getting the regex wrong (now or later) and end up open to directory
+    // traversal attacks.
+    $custom_cow = false;
+    if (strpos($cow, 'dagd/') === 0) {
+      $custom_cow = true;
+      $cow = str_replace('dagd/', '', $cow);
+    }
     if (!preg_match('/[0-9a-z\-]+/i', $cow)) {
       throw new Exception('Cow name must only include 0-9, a-z, A-Z, -');
     }
-    $cow = str_replace('.cow', '', $cow);
-    $cow = file_get_contents(dirname(__FILE__).'/cows/'.$cow.'.cow');
+    if ($custom_cow) {
+      $cow = file_get_contents(dirname(__FILE__).'/cows/dagd/'.$cow.'.cow');
+    } else {
+      $cow = file_get_contents(dirname(__FILE__).'/cows/'.$cow.'.cow');
+    }
     $this->cow = $cow;
     return $this;
   }
