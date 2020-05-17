@@ -5,12 +5,11 @@ require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 
 $start = microtime(true);
 
-require_application('base');
-
 // This mechanism is now deprecated in favor of autoloading.
 // This is kept around for now, for deployments which might have custom apps
 // and load them with general.applications. New applications should use
 // autoloading instead.
+require_once dirname(__FILE__).'/../applications/base/DaGdBaseClass.php';
 $applications = DaGdConfig::get('general.applications');
 foreach ($applications as $application) {
   require_application($application);
