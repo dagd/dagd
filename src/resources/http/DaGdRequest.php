@@ -61,6 +61,13 @@ final class DaGdRequest {
     return idx($raw_request, $key, $default);
   }
 
+  public function getHeader($header) {
+    $header = strtoupper($header);
+    $header = str_replace('-', '_', $header);
+    $header = 'HTTP_'.$header;
+    return idx($this->server, $header);
+  }
+
   public function wantsCow() {
     return $this->getParamOrDefault('cow', false, true, true);
   }
@@ -71,7 +78,7 @@ final class DaGdRequest {
       return $text;
     }
 
-    if ($accept = idx($this->server, 'HTTP_ACCEPT')) {
+    if ($accept = $this->getHeader('Accept')) {
       $accept = strtolower(str_replace(' ', '', $accept));
       $html_accept_regex = implode('|', DaGdConfig::get('general.html_accept'));
       return !preg_match('#(?:'.$html_accept_regex.')#i', $accept);
@@ -86,8 +93,8 @@ final class DaGdRequest {
   }
 
   public function getClientIP() {
-    if (idx($this->server, 'HTTP_X_DAGD_PROXY') &&
-        $ip = idx($this->server, 'HTTP_X_FORWARDED_FOR')) {
+    if ($this->getHeader('x-dagd-proxy') &&
+        $ip = $this->getHeader('X-Forwarded-For')) {
       return $ip;
     }
     return idx($this->server, 'REMOTE_ADDR');
