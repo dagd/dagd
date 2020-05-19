@@ -52,7 +52,7 @@ function handle_exception($e) {
     }
   }
 
-  statsd_bump('dagd_unhandled_exception');
+  statsd_bump('unhandled_exception');
   echo 'An error has occurred within dagd! Sorry about that!';
   header('HTTP/1.0 500 Internal Server Error (Exception)');
 
