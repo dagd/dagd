@@ -22,11 +22,20 @@ class DaGdBaseTemplate {
   }
 
   public function getStyle() {
-    return '';
+    return $this->style;
   }
 
-  public function getStyleTag() {
-    return tag('style', $this->style, array(), true);
+  public function getStyleTag($minify = true) {
+    $css = $this->getStyle();
+    // Some silly minification
+    if ($minify) {
+      $css = preg_replace('/^[ \t]+/m', '', $css);
+      $css = preg_replace("/\s*[\n\r]\s*/", '', $css);
+      $css = preg_replace('/;\s*/', ';', $css);
+      $css = preg_replace('/:\s*/', ':', $css);
+      $css = preg_replace('/\s*\{\s*/', '{', $css);
+    }
+    return tag('style', $css, array(), true);
   }
 
   public function setBody($body) {
