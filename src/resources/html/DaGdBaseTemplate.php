@@ -29,7 +29,7 @@ class DaGdBaseTemplate {
     $css = $this->getStyle();
     // Some silly minification
     if ($minify) {
-      $css = preg_replace('/^[ \t]+/m', '', $css);
+      $css = preg_replace('/^\s*/m', '', $css);
       $css = preg_replace("/\s*[\n\r]\s*/", '', $css);
       $css = preg_replace('/;\s*/', ';', $css);
       $css = preg_replace('/:\s*/', ':', $css);
