@@ -246,7 +246,7 @@ abstract class DaGdBaseClass {
           $controller_response);
       }
 
-      $template = id(new DaGdBaseTemplate())
+      $template = id(new DaGdChromedAppTemplate())
         ->setTitle(idx($this->getHelp(), 'title', 'Welcome!'))
         ->setStyle($style)
         ->setEscape($this->getEscape())
@@ -254,7 +254,7 @@ abstract class DaGdBaseClass {
         ->setBody($controller_response);
 
       $response = "<!doctype html>\n";
-      $response .= $template->getHtml()->renderSafe();
+      $response .= $template->getHtmlTag()->renderSafe();
     }
 
     if (!$this->getNeverNewline() &&

@@ -104,12 +104,12 @@ abstract class DaGdController {
       ->setBody($body)
       ->setStyle($this->getStyle())
       ->setTitle(idx($help, 'title', 'Welcome!'))
-      ->getHtml();
+      ->getHtmlTag();
     return $response->setBody($template);
   }
 
   public function getBaseTemplate() {
-    return new DaGdBaseTemplate();
+    return new DaGdChromedAppTemplate();
   }
 
   // TODO: Probably add some instanceof checks here

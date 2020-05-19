@@ -226,7 +226,7 @@ EOD;
       ->setBody($help_blocks)
       ->setStyle($this->getStyle())
       ->setTitle('help')
-      ->getHtml();
+      ->getHtmlTag();
 
     return $response->setBody($template);
   }

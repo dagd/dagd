@@ -1,6 +1,6 @@
 <?php
 
-class DaGdBaseTemplate {
+abstract class DaGdTemplate {
   private $title = '';
   private $style = array();
   private $body;
@@ -13,7 +13,11 @@ class DaGdBaseTemplate {
   }
 
   public function getTitle() {
-    return tag('title', 'da.gd: '.$this->title);
+    return $this->title;
+  }
+
+  public function getTitleTag() {
+    return tag('title', $this->getTitle());
   }
 
   public function setStyle($style) {
@@ -47,6 +51,17 @@ class DaGdBaseTemplate {
     return $this->body;
   }
 
+  public function getBodyTag() {
+    return tag(
+      'body',
+      $this->getBody(),
+      array(
+        'class' => $this->getDarkmode() ? 'darkmode' : 'lightmode',
+      ),
+      !$this->getEscape() // Potentially dangerous
+    );
+  }
+
   // Only provided for legacy controllers.
   // New controllers should never call this.
   public function setEscape($escape) {
@@ -67,7 +82,7 @@ class DaGdBaseTemplate {
     return $this->darkmode;
   }
 
-  public function getHead() {
+  public function getHeadTag() {
     return tag(
       'head',
       array(
@@ -93,25 +108,18 @@ class DaGdBaseTemplate {
             'content' => 'The da.gd URL shortening service',
           )
         ),
-        $this->getTitle(),
+        $this->getTitleTag(),
         $this->getStyleTag(),
       )
     );
   }
 
-  public function getHtml($preamble = true) {
+  public function getHtmlTag($preamble = true) {
     return tag(
       'html',
       array(
-        $this->getHead(),
-        tag(
-          'body',
-          $this->getBody(),
-          array(
-            'class' => $this->getDarkmode() ? 'darkmode' : 'lightmode',
-          ),
-          !$this->getEscape() // Potentially dangerous
-        ),
+        $this->getHeadTag(),
+        $this->getBodyTag(),
       )
     );
   }
