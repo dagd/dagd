@@ -24,18 +24,25 @@ class DaGdShortenController extends DaGdBaseClass {
 
   public function configure() {
     $style = '#bar {
-      background-color: #3c6eb4;
-      color: #f8f8f8;
       padding: 15px;
-      height: 30px;
-      line-height: 30px;
+      height: 65px;
+      line-height: 65px;
+      border-bottom: 1px solid #eee;
+      font-family: "Proxima Nova", overpass, Ubuntu, sans-serif !important;
+      font-weight: 300;
+      font-size: 1.7em;
     }
-    .constraint { width: 700px; margin: 0 auto; }
+    .constraint { max-width: 50em; margin: 0 auto; }
     #bar a, #bar a:active, #bar a:visited { color: #ccc; }
     table { border-spacing: 30px; border-collapse: separate; }
     td { padding: 10px 0; }
-    h2 { font-family: overpass, sans-serif !important; }
-    body, h2 { margin: 0; padding: 0; }';
+    input[type=text] { border: 1px solid #ccc; }
+    .sitename { color: #333; float: left; font-weight: 500; }
+    .lightmode .sitename { color: #3a9; }
+    .darkmode .sitename { color: #39a; }
+    .appname { color: #888; }
+    .darkmode #bar { border-color: #555; }
+    body, .sitename { margin: 0; padding: 0; }';
 
     $this
       ->setWrapHtml(true)
@@ -504,27 +511,31 @@ class DaGdShortenController extends DaGdBaseClass {
 
       $links = array(
         tag('a', 'help', array('href' => '/help')),
-        ' | ',
         tag(
           'a',
           'open source',
           array('href' => 'https://github.com/relrod/dagd')
         ),
-        ' | ',
         $darkmode_link,
-        ' | ',
         tag('a', 'donate', array('href' => 'https://www.patreon.com/relrod')),
       );
 
       $links_div = tag(
         'div',
         array(
-          tag('h2', 'da.gd', array('style' => 'float: left; display: inline;')),
+          tag(
+            'a',
+            tag('span', 'dagd', array('class' => 'sitename')),
+            array(
+              'href' => '/',
+            )
+          ),
+          tag('span', ':shorten', array('class' => 'appname')),
           tag(
             'div',
-            $links,
+            intersperse(' / ', $links),
             array(
-              'style' => 'float: right; display: inline;'
+              'style' => 'float: right; display: inline;',
             )
           ),
         ),

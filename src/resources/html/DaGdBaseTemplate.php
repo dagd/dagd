@@ -5,6 +5,7 @@ class DaGdBaseTemplate {
   private $style = array();
   private $body;
   private $escape = true;
+  private $darkmode = false;
 
   public function setTitle($title) {
     $this->title = $title;
@@ -21,6 +22,10 @@ class DaGdBaseTemplate {
   }
 
   public function getStyle() {
+    return '';
+  }
+
+  public function getStyleTag() {
     return tag('style', $this->style, array(), true);
   }
 
@@ -42,6 +47,15 @@ class DaGdBaseTemplate {
 
   public function getEscape() {
     return $this->escape;
+  }
+
+  public function setDarkmode($darkmode) {
+    $this->darkmode = $darkmode;
+    return $this;
+  }
+
+  public function getDarkmode() {
+    return $this->darkmode;
   }
 
   public function getHead() {
@@ -71,7 +85,7 @@ class DaGdBaseTemplate {
           )
         ),
         $this->getTitle(),
-        $this->getStyle(),
+        $this->getStyleTag(),
       )
     );
   }
@@ -84,7 +98,9 @@ class DaGdBaseTemplate {
         tag(
           'body',
           $this->getBody(),
-          array(),
+          array(
+            'class' => $this->getDarkmode() ? 'darkmode' : 'lightmode',
+          ),
           !$this->getEscape() // Potentially dangerous
         ),
       )

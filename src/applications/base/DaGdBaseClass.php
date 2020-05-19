@@ -250,6 +250,7 @@ abstract class DaGdBaseClass {
         ->setTitle(idx($this->getHelp(), 'title', 'Welcome!'))
         ->setStyle($style)
         ->setEscape($this->getEscape())
+        ->setDarkmode($this->getDarkmode())
         ->setBody($controller_response);
 
       $response = "<!doctype html>\n";

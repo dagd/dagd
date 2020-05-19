@@ -272,3 +272,17 @@ function help($class) {
 function id($a) {
   return $a;
 }
+
+function intersperse($glue, array $pieces) {
+  $len = count($pieces);
+  $out = array();
+  $i = 0;
+  foreach ($pieces as $piece) {
+    $out[] = $piece;
+    if ($i != $len - 1) {
+      $out[] = $glue;
+    }
+    $i++;
+  }
+  return $out;
+}
