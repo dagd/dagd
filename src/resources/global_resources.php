@@ -249,7 +249,8 @@ function help($class) {
           $link .= implode($separator, $arguments);
         }
       }
-      if (array_key_exists('request', $example)) {
+      if (array_key_exists('request', $example) &&
+          is_array($example['request'])) {
         $iteration = 0;
         foreach ($example['request'] as $param => $param_example) {
           if ($request_sep) {
