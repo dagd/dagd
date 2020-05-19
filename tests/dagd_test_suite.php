@@ -339,7 +339,7 @@ $runner->arm(
   id(
     new DaGdRegexTest(
       '/stats/g',
-      '@accesses: \d@'))
+      '@distinct_accesses: \d@'))
     ->addGroup('stats'));
 
 /************ ?strip ************/

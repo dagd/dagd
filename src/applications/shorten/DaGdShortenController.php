@@ -151,16 +151,17 @@ class DaGdShortenController extends DaGdBaseClass {
     }
 
     $count_accesses = null;
+    $count_distinct_accesses = null;
 
     $access_query = $this->getReadDB()->prepare(
-      'SELECT count(id) FROM shorturl_access '.
+      'SELECT count(ip),count(distinct ip) FROM shorturl_access '.
       'WHERE shorturl_id=?');
     $access_query->bind_param('i', $id);
     $start = microtime(true);
     $access_query->execute();
     $end = microtime(true);
     statsd_time('query_time_stats_access', ($end - $start) * 1000);
-    $access_query->bind_result($count_accesses);
+    $access_query->bind_result($count_accesses, $count_distinct_accesses);
     $access_query->fetch();
     $access_query->close();
 
@@ -169,6 +170,7 @@ class DaGdShortenController extends DaGdBaseClass {
       'creation_dt' => $creation_dt,
       'longurl' => $longurl,
       'accesses' => $count_accesses,
+      'distinct_accesses' => $count_distinct_accesses,
     );
     return $res;
   }
@@ -190,12 +192,14 @@ class DaGdShortenController extends DaGdBaseClass {
 
   private function logURLAccess() {
     $query = $this->getWriteDB()->prepare(
-      'INSERT INTO shorturl_access(shorturl_id, useragent) VALUES(?,?)');
+      'INSERT INTO shorturl_access(shorturl_id, ip, useragent) VALUES(?,?,?)');
     $stored_url_id = $this->stored_url_id;
+    $client_ip = hash('sha256', client_ip());
     $useragent = server_or_default('HTTP_USER_AGENT', '');
     $query->bind_param(
-      'is',
+      'iss',
       $stored_url_id,
+      $client_ip,
       $useragent);
 
     $start = microtime(true);
