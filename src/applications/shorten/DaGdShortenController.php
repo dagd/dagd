@@ -514,7 +514,7 @@ class DaGdShortenController extends DaGdBaseClass {
         tag(
           'a',
           'open source',
-          array('href' => 'https://github.com/relrod/dagd')
+          array('href' => 'https://github.com/dagd/dagd')
         ),
         $darkmode_link,
         tag('a', 'donate', array('href' => 'https://www.patreon.com/relrod')),
