@@ -246,8 +246,14 @@ abstract class DaGdBaseClass {
           $controller_response);
       }
 
+      // To be removed when the old help system goes away
+      $help = $this->getHelp();
+      if ($help instanceof DaGdHelp) {
+        $help = $help->toOldHelp();
+      }
+
       $template = id(new DaGdChromedAppTemplate())
-        ->setTitle(idx($this->getHelp(), 'title', 'Welcome!'))
+        ->setTitle(idx($help, 'title', 'Welcome!'))
         ->setStyle($style)
         ->setEscape($this->getEscape())
         ->setDarkmode($this->getDarkmode())

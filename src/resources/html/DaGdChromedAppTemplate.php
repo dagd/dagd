@@ -51,16 +51,19 @@ EOD;
   }
 
   protected function getSiteName() {
-    return array(
-      tag(
-        'a',
-        tag('span', 'dagd', array('class' => 'sitename')),
-        array(
-          'href' => '/',
-        )
-      ),
-      tag('span', ':shorten', array('class' => 'appname'))
+    $out = array();
+    $out[] = tag(
+      'a',
+      tag('span', 'dagd', array('class' => 'sitename')),
+      array(
+        'href' => '/',
+      )
     );
+    $title = $this->getTitle();
+    if ($title) {
+      $out[] = tag('span', ':'.$title, array('class' => 'appname'));
+    }
+    return $out;
   }
 
   protected function getChrome() {
