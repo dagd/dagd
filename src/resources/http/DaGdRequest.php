@@ -5,9 +5,11 @@ final class DaGdRequest {
   private $request = array();
   private $server = array();
   private $route_matches = array();
+  private $session;
 
   public function setCookies($cookies) {
     $this->cookies = $cookies;
+    $this->session = id(new DaGdSession())->loadSession($this);
     return $this;
   }
 
@@ -50,6 +52,14 @@ final class DaGdRequest {
     return idx($this->route_matches, $idx, $default);
   }
 
+  public function getSession() {
+    if (!$this->session) {
+      throw new Exception(
+        'setCookies() must be called before a session can be established');
+    }
+    return $this->session;
+  }
+
   public function getParamOrDefault(
     $key,
     $default = null,
@@ -63,6 +73,17 @@ final class DaGdRequest {
       return $empty_default;
     }
     return idx($raw_request, $key, $default);
+  }
+
+  public function getHeaders() {
+    $headers = array();
+    foreach ($this->server as $k => $v) {
+      if (strpos($k, 'HTTP_') === 0) {
+        $k = str_replace('HTTP_', '', 1);
+        $headers[$k] = $v;
+      }
+      return $headers;
+    }
   }
 
   public function getHeader($header) {

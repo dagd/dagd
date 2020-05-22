@@ -3,3 +3,4 @@
 require_once dirname(__FILE__).'/../src/config.dev.php';
 DaGdConfig::$config['mysql.host'] = 'db';
 DaGdConfig::$config['general.baseurl'] = 'http://localhost:8080';
+DaGdConfig::$config['session.encryption_key'] = 'insecure development key';

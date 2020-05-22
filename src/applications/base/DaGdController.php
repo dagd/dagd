@@ -138,6 +138,8 @@ abstract class DaGdController {
   }
 
   public function finalize() {
-    return $this->chooseRenderer();
+    return $this
+      ->chooseRenderer()
+      ->setRequest($this->getRequest());
   }
 }

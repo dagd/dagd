@@ -5,6 +5,8 @@ abstract class DaGdResponse {
   private $message;
   private $headers = array();
   private $body = '';
+  private $cookies = array();
+  private $request;
 
   public function setCode($code) {
     $this->code = $code;
@@ -146,6 +148,29 @@ abstract class DaGdResponse {
     return $headers;
   }
 
+  public function setCookies($cookies) {
+    $this->cookies = $cookies;
+    return $this;
+  }
+
+  public function getCookies() {
+    // Importantly, this includes session-stored cookies.
+    $session_cookies = array();
+    if ($this->getRequest()->getSession()) {
+      $session_cookies = $this->getRequest()->getSession()->emit();
+    }
+    return array_merge($this->cookies, $session_cookies);
+  }
+
+  public function setRequest($request) {
+    $this->request = $request;
+    return $this;
+  }
+
+  public function getRequest() {
+    return $this->request;
+  }
+
   private function sendHeaders() {
     if ($this->getCode() != 200) {
       header('HTTP/1.1 '.$this->getCode().' '.$this->getMessage());
@@ -155,8 +180,27 @@ abstract class DaGdResponse {
     }
   }
 
+  private function sendCookies() {
+    $expiry = DaGdConfig::get('session.expiry') + time();
+
+    // Expire previous session cookies, we are about to reset them anyway and
+    // there might be bits of the session (if it is large) in higher-indexed
+    // session cookie keys.
+    foreach ($this->getRequest()->getCookies() as $rk => $rv) {
+      if (strpos($rk, 'DaGdSession_') === 0) {
+        setcookie($rk, null, 86401, '/', '', false, true);
+      }
+    }
+
+    foreach ($this->getCookies() as $k => $v) {
+      setcookie($k, $v, $expiry, '/', '', false, true);
+      $_COOKIE[$k] = $v;
+    }
+  }
+
   public function render() {
     $this->sendHeaders();
+    $this->sendCookies();
     echo $this->getBody();
   }
 }

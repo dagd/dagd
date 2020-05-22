@@ -163,6 +163,17 @@ class DaGdConfig {
       'gd',
     ),
 
+    // How should the session data be encrypted?
+    'session.encryption_method' => 'aes-256-cbc',
+
+    // And with what key? This must be set if using any apps that use
+    // DaGdSession, or else DaGdSession will fail loudly.
+    'session.encryption_key' => null,
+
+    // How long should sessions last? This sets the cookie expiry time.
+    // This is in seconds. Default is 30 days (60 * 60 * 24 * 30 seconds).
+    'session.expiry' => 2592000,
+
     // Which IPs can access /metrics?
     'metrics.allowed_ips' => array(
       '127.0.0.1',
