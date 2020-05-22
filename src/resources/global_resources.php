@@ -10,10 +10,15 @@ if (!$config_file ||
 function __dagd_autoload($cls) {
   $paths = DaGdConfig::get('general.autoload_search');
   foreach ($paths as $path) {
-    $path = trim($path, '/').'/';
-    // Paths are expected to be relative to 'src'
-    $src = dirname(dirname(__FILE__));
-    $files = glob($src.'/'.$path.'/'.$cls.'.php');
+    $path = rtrim($path, '/').'/';
+    $files = array();
+    // Paths are expected to be relative to 'src', or absolute for custom apps
+    if ($path[0] == '/') {
+      $files = glob($path.'/'.$cls.'.php');
+    } else {
+      $src = dirname(dirname(__FILE__));
+      $files = glob($src.'/'.$path.'/'.$cls.'.php');
+    }
     if (!empty($files)) {
       include_once $files[0];
       break;
