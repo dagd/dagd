@@ -360,9 +360,9 @@ class DaGdShortenController extends DaGdBaseClass {
             $new_link,
             array(
               'href' => $new_link,
-              'style' => 'text-align: center; display: block; margin-top: 20px;'
+              'style' => 'text-align: center; display: block; margin-top: 20px;',
             )
-          );
+          )->renderSafe();
         }
       }
       return;
