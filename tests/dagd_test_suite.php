@@ -282,16 +282,30 @@ $runner->arm(
     new DaGdRegexTest(
       '/s?url=http://google.com&shorturl=g',
       '@/g@'))
-      ->setPreparatory(true)
-      ->setTolerateFailure(true));
+    ->setPreparatory(true));
 
 $runner->arm(
   id(
     new DaGdRegexTest(
       '/s?url=http://facebook.com/&shorturl=fbook',
       '@/fbook@'))
-      ->setPreparatory(true)
-      ->setTolerateFailure(true));
+    ->setPreparatory(true));
+
+$runner->arm(
+  id(
+    new DaGdRegexTest(
+      '/s?url=http://example.com/&shorturl=example',
+      '@/example@'))
+      ->setAccept('text/plain')
+    ->setPreparatory(true));
+
+$runner->arm(
+  id(
+    new DaGdRegexTest(
+      '/s?url=http://2.example.com/&shorturl=2example',
+      '@/2example@'))
+      ->setAccept('text/html')
+    ->setPreparatory(true));
 
 $runner->arm(
   id(
