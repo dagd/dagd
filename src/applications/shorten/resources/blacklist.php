@@ -92,7 +92,7 @@ class Blacklist {
 
     if ($safe_browsing_enabled) {
       statsd_bump('shorturl_blacklist_query_safebrowsing');
-      $safe_url = query_safe_browsing($url);
+      $safe_url = query_safe_browsing($this->url);
       if ($safe_url === false) {
         statsd_bump('shorturl_blacklisted_safebrowsing');
         statsd_bump('shorturl_blacklisted');
