@@ -1,6 +1,6 @@
 <?php
-final class DaGdHostController extends DaGdBaseClass {
-  public function getHelp() {
+final class DaGdHostController extends DaGdController {
+  public static function getHelp() {
     return array(
       'title' => 'host',
       'summary' => 'Return the IP or hostname of the given value.',
@@ -15,21 +15,20 @@ final class DaGdHostController extends DaGdBaseClass {
       ));
   }
 
-  public function configure() {
-    return $this
-      ->setWrapHtml(true);
-  }
-
-  public function render() {
-    if (filter_var($this->route_matches[1], FILTER_VALIDATE_IP)) {
+  public function execute(DaGdResponse $response) {
+    $query = $this->getRequest()->getRouteMatches()[1];
+    if (filter_var($query, FILTER_VALIDATE_IP)) {
       // Treat it like an IP.
-      return gethostbyaddr($this->route_matches[1]);
+      return gethostbyaddr($query);
     } else {
       // Treat it like a hostname.
-      if (array_key_exists('noipv6', $_REQUEST)) {
-        $records = dns_get_record($this->route_matches[1], DNS_A);
+      $noipv6 = $this
+        ->getRequest()
+        ->getParamOrDefault('noipv6', false, true, true);
+      if ($noipv6) {
+        $records = dns_get_record($query, DNS_A);
       } else {
-        $records = dns_get_record($this->route_matches[1], DNS_A + DNS_AAAA);
+        $records = dns_get_record($query, DNS_A + DNS_AAAA);
       }
 
       $ips = array();
