@@ -2,8 +2,8 @@
 require_once dirname(__FILE__).'/resources/getallheaders.php';
 require_once dirname(__FILE__).'/resources/dagd_get_headers.php';
 
-final class DaGdHeadersController extends DaGdBaseClass {
-  public function getHelp() {
+final class DaGdHeadersController extends DaGdController {
+  public static function getHelp() {
     return array(
       'title' => 'headers',
       'summary' => 'Show HTTP headers for various conditions.',
@@ -39,19 +39,25 @@ final class DaGdHeadersController extends DaGdBaseClass {
     );
   }
 
-  public function configure() {
-    return $this
-      ->setWrapHtml(true);
+  /**
+   * Format a header from 'X_FOO_BAR' to 'X-Foo-Bar'.
+   */
+  private function formatHeaderName($name) {
+    $name = strtolower($name);
+    $name = str_replace('_', ' ', $name);
+    $name = ucwords($name);
+    $name = str_replace(' ', '-', $name);
+    return $name;
   }
 
-  public function render() {
+  public function execute(DaGdResponse $response) {
     // Allow the url to be passed as a request parameter or as a path segment.
     $site = null;
 
-    if (count($this->route_matches) > 1) {
-      $site = $this->route_matches[1];
+    if (count($this->getRequest()->getRouteMatches()) > 1) {
+      $site = $this->getRequest()->getRouteMatches()[1];
     } else {
-      $site = request_or_default('url');
+      $site = $this->getRequest()->getParamOrDefault('url');
     }
 
     if (!empty($site)) {
@@ -59,7 +65,9 @@ final class DaGdHeadersController extends DaGdBaseClass {
         $site = 'http://'.$site;
       }
 
-      $follow_redirects = request_or_default('redirects', true);
+      $follow_redirects = $this
+        ->getRequest()
+        ->getParamOrDefault('redirects', true);
 
       $headers = id(new DaGdHeaderGetter())
         ->setSite($site)
@@ -75,16 +83,16 @@ final class DaGdHeadersController extends DaGdBaseClass {
     } else {
       // If we didn't get a URL passed, then assume the user is asking for the
       // headers they sent. Send them back.
-      $headers = getallheaders();
+      $headers = $this->getRequest()->getHeaders();
       $response = '';
       foreach ($headers as $key => $value) {
-        if (server_or_default('HTTP_X_DAGD_PROXY') == "1") {
-          if (strpos($key, 'X-Forwarded-') === 0 ||
-              $key == 'X-DaGd-Proxy') {
-            continue;
-          }
+        $hdrkey = $this->formatHeaderName($key);
+        if ($this->getRequest()->getHeader('X-DaGd-Proxy') === '1' &&
+            (strpos($hdrkey, 'X-Forwarded-') === 0 ||
+             $hdrkey == 'Dagd-Proxy')) {
+          continue;
         }
-        $response .= $key.': '.$value."\n";
+        $response .= $hdrkey.': '.$value."\n";
       }
     }
     return $response;
