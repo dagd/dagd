@@ -79,11 +79,11 @@ final class DaGdRequest {
     $headers = array();
     foreach ($this->server as $k => $v) {
       if (strpos($k, 'HTTP_') === 0) {
-        $k = str_replace('HTTP_', '', 1);
+        $k = substr($k, strlen('HTTP_'));
         $headers[$k] = $v;
       }
-      return $headers;
     }
+    return $headers;
   }
 
   public function getHeader($header) {
