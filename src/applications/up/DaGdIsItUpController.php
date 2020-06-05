@@ -2,8 +2,8 @@
 
 require_once dirname(__FILE__).'/resources/IsItUpQuery.php';
 
-final class DaGdIsItUpController extends DaGdBaseClass {
-  public function getHelp() {
+final class DaGdIsItUpController extends DaGdController {
+  public static function getHelp() {
     return array(
       'title' => 'up',
       'summary' => 'Determine whether or not a site is up.',
@@ -30,16 +30,11 @@ final class DaGdIsItUpController extends DaGdBaseClass {
     );
   }
 
-  public function configure() {
-    return $this
-      ->setWrapHtml(true);
-  }
-
-  public function render() {
-    $url = $this->route_matches[1];
-    $verbose = request_or_default('verbose', false, true, true);
-    $sslverify = request_or_default('sslverify', false, true, true);
-    $redirects = request_or_default('redirect', true, true, true);
+  public function execute(DaGdResponse $response) {
+    $url = $this->getRequest()->getRouteMatches()[1];
+    $verbose = $this->getRequest()->param('verbose', false, true, true);
+    $sslverify = $this->getRequest()->param('sslverify', false, true, true);
+    $redirects = $this->getRequest()->param('redirect', true, true, true);
     if ($sslverify && !preg_match('#^https?://#i', $url)) {
       $url = 'https://'.$url;
     }
