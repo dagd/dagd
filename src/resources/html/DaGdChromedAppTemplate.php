@@ -23,6 +23,7 @@ input[type=text] { border: 1px solid #ccc; }
 .appname { color: #888; }
 .darkmode #bar { border-color: #555; }
 body, .sitename { margin: 0; padding: 0; }
+#app { font-family: sans-serif; }
 EOD;
     return array_merge(parent::getStyle(), array($style));
   }
@@ -98,6 +99,7 @@ EOD;
       'div',
       parent::getBody(),
       array(
+        'id' => 'app',
         'class' => 'constraint',
       ),
       !$this->getEscape() // TODO: Nix this when we can

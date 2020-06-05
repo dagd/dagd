@@ -51,7 +51,6 @@ abstract class DaGdController {
     }
 
     return array(
-      '*:not(pre):not(code) { font-family: sans-serif; }',
       $darkmode,
     );
   }

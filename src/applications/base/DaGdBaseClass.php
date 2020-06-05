@@ -235,7 +235,6 @@ abstract class DaGdBaseClass {
       }
 
       $style = array(
-        '*:not(pre):not(code) { font-family: sans-serif; }',
         $darkmode_style,
         $this->getStyle(),
       );
