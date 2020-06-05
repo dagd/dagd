@@ -75,6 +75,22 @@ final class DaGdRequest {
     return idx($raw_request, $key, $default);
   }
 
+  /**
+   * A shorter alias for getParamOrDefault().
+   */
+  public function param(
+    $key,
+    $default = null,
+    $allow_empty = false,
+    $empty_default = null) {
+
+    return $this->getParamOrDefault(
+      $key,
+      $default,
+      $allow_empty,
+      $empty_default);
+  }
+
   public function getHeaders() {
     $headers = array();
     foreach ($this->server as $k => $v) {
