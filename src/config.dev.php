@@ -44,6 +44,7 @@ class DaGdConfig {
       'resources/help/',
       'applications/*/',
       'applications/*/resources/',
+      'cli/',
     ),
 
     // Control statsd metrics collection.
