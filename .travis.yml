@@ -13,7 +13,7 @@ before_script:
 
 script:
   - while [[ ! -f .ready-for-ci ]]; do echo 'waiting for docker-compose to spin up'; sleep 1; done
-  - ./tests/dagd_test_suite.php http://localhost:8080
+  - ./tests/dagd-test -u http://localhost:8080
 
 branches:
   only:

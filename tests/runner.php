@@ -10,6 +10,7 @@ class DaGdTestRunner {
   private $return_code = 0;
   private $base_url = '';
   private $groups_filter = array();
+  private $run_preparatory = true;
 
   private $passes = 0;
   private $tolerated_failures = 0;
@@ -60,6 +61,21 @@ class DaGdTestRunner {
     return $this->base_url;
   }
 
+  /**
+   * If true, skip preparatory tests/tasks.
+   *
+   * This might cause certain tests, but can speed up test groups if you know
+   * that they aren't dependent on them.
+   */
+  public function setRunPreparatory($run_preparatory) {
+    $this->run_preparatory = $run_preparatory;
+    return $this;
+  }
+
+  public function getRunPreparatory() {
+    return $this->run_preparatory;
+  }
+
   private function handleRC($rc) {
     switch ($rc) {
     case SUCCESS:
@@ -85,7 +101,7 @@ class DaGdTestRunner {
       // This is mainly so we can access test-global configuration such as the
       // base URL.
       $test->setRunner($this);
-      if ($test->getPreparatory()) {
+      if ($test->getPreparatory() && $this->getRunPreparatory()) {
         $rc = $test->run();
         $this->handleRC($rc);
       } else {
