@@ -5,6 +5,7 @@ abstract class DaGdCLIParameter {
   private $shortname;
   private $description;
   private $required = false;
+  private $given = false;
 
   public function getKind() {
     throw new Exception('Unimplemented method: getKind()');
@@ -50,5 +51,14 @@ abstract class DaGdCLIParameter {
 
   public function getRequired() {
     return $this->required;
+  }
+
+  public function setGiven($given) {
+    $this->given = $given;
+    return $this;
+  }
+
+  public function getGiven() {
+    return $this->given;
   }
 }

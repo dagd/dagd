@@ -7,7 +7,6 @@ abstract class DaGdCLIProgram {
   private $name;
   private $description;
   private $parameters = array();
-  private $given_parameters = array();
 
   public function setName($name) {
     $this->name = $name;
@@ -53,7 +52,7 @@ abstract class DaGdCLIProgram {
   }
 
   /**
-   * Get an expected parameter by its long or short name.
+   * Get a parameter by its long or short name.
    */
   public function param($key) {
     foreach ($this->parameters as $name => $param) {
@@ -93,7 +92,7 @@ abstract class DaGdCLIProgram {
       $param = $this->param($arg);
 
       if ($param) {
-        $this->given_parameters[$param->getName()] = $param;
+        $this->parameters[$param->getName()]->setGiven(true);
 
         if ($param->getKind() == 'argument') {
           // If we found a = above, we already know the value, use it.
@@ -114,7 +113,7 @@ abstract class DaGdCLIProgram {
           foreach ($flags as $flag) {
             $param = $this->param('-'.$flag);
             if ($param) {
-              $this->given_parameters[$param->getName()] = $param;
+              $this->parameters[$param->getName()]->setGiven(true);
               $has_valid_flags = true;
             } else {
               throw new Exception('Unknown flag: -'.$flag);
@@ -128,7 +127,7 @@ abstract class DaGdCLIProgram {
     }
 
     foreach ($this->parameters as $k => $v) {
-      if ($v->getRequired() && !idx($this->given_parameters, $k)) {
+      if ($v->getRequired() && !$v->getGiven()) {
         throw new Exception('Required parameter '.$k.' not passed');
       }
     }
@@ -139,11 +138,11 @@ abstract class DaGdCLIProgram {
   }
 
   public function debugArgs() {
-    var_dump($this->given_parameters);
+    var_dump($this->parameters);
   }
 
   private function showParameterUsage($param) {
-    if (idx($this->given_parameters, $param->getName())) {
+    if ($param->getGiven()) {
       echo $this->bold($param->getName());
     } else {
       echo $param->getName();
@@ -187,12 +186,12 @@ abstract class DaGdCLIProgram {
   }
 
   public function run() {
-    if (idx($this->given_parameters, '--help')) {
+    if ($this->param('--help')->getGiven()) {
       $this->showUsage();
       exit(0);
     }
 
-    if (idx($this->given_parameters, '--debug-args')) {
+    if ($this->param('--debug-args')->getGiven()) {
       $this->debugArgs();
       exit(0);
     }
