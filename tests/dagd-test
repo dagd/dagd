@@ -583,6 +583,10 @@ EOD;
 
     // If we're given the flag to skip preparatory tests, then don't run them.
     $runner->setRunPreparatory(!$this->param('--skip-preparatory')->getGiven());
+
+    // Set concurrency/forks
+    $runner->setConcurrency($this->param('--forks')->getValue());
+
     $runner->run();
 
     echo chr(27)."[1;32m Passed        : ".$runner->getPasses().chr(27)."[0m"."\n";
@@ -612,6 +616,14 @@ $testcli->addParameter(
     ->setDescription(
       'The dagd instance to test on. Defaults to http://localhost:8080 for '.
       'use the test container.'));
+$testcli->addParameter(
+  id(new DaGdCLIArgument)
+    ->setName('--forks')
+    ->setShortname('-f')
+    ->setDefault(5)
+    ->setDescription(
+      'How many forks to use to run tests. Defaults to 5 (somewhat '.
+      'arbitrarily).'));
 $testcli->addParameter(
   id(new DaGdCLIFlag)
     ->setName('--skip-preparatory')
