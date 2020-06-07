@@ -77,6 +77,7 @@ abstract class DaGdCLIProgram {
         // We got an argument, which needs a value (otherwise it would be a
         // flag).
         $param->setValue($arg);
+        $param->setGiven(true);
         $state = 'key';
         continue;
       }
@@ -92,17 +93,23 @@ abstract class DaGdCLIProgram {
       $param = $this->param($arg);
 
       if ($param) {
-        $this->parameters[$param->getName()]->setGiven(true);
-
         if ($param->getKind() == 'argument') {
           // If we found a = above, we already know the value, use it.
           // Otherwise, the value is the next thing in $argv, so we have to set
           // $state accordingly and move on to it so we can pull it out.
           if ($value) {
             $param->setValue($value);
+            $param->setGiven(true);
           } else {
             $state = 'value';
           }
+        } else {
+          // Handle this case separately -- we don't want to set 'given' for
+          // arguments unless their value is known to exist which might be
+          // unknown until the next iteration. But if we aren't an argument
+          // (e.g. we're a flag or something else), then we can set it right
+          // away.
+          $param->setGiven(true);
         }
       } else {
         // See if someone passed a bunch of flags
