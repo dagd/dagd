@@ -643,5 +643,4 @@ $testcli->addParameter(
     ->setName('--help')
     ->setShortname('-h')
     ->setDescription('Show program help'));
-$testcli->parseArgs($argv);
-$testcli->run();
+$testcli->execute($argv);

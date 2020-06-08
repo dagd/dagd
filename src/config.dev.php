@@ -39,6 +39,7 @@ class DaGdConfig {
     // Note that this does NOT recurse into subdirectories, they must be listed
     // individually.
     'general.autoload_search' => array(
+      'resources/error/',
       'resources/http/',
       'resources/html/',
       'resources/help/',

@@ -2,6 +2,7 @@
 
 require_once(dirname(dirname(__FILE__)).'/resources/global_resources.php');
 set_exception_handler(null);
+DaGdConfig::$config['general.autoload_search'][] = 'cli/error/';
 
 abstract class DaGdCLIProgram {
   private $name;
@@ -123,25 +124,33 @@ abstract class DaGdCLIProgram {
               $this->parameters[$param->getName()]->setGiven(true);
               $has_valid_flags = true;
             } else {
-              throw new Exception('Unknown flag: -'.$flag);
+              throw new DaGdInvalidParameterCLIException(
+                'Unknown flag: -'.$flag);
             }
           }
         }
         if (!$has_valid_flags) {
-          throw new Exception('Unknown parameter: '.$arg);
+          throw new DaGdInvalidParameterCLIException(
+            'Unknown parameter: '.$arg);
         }
       }
     }
 
     foreach ($this->parameters as $k => $v) {
       if ($v->getRequired() && !$v->getGiven()) {
-        throw new Exception('Required parameter '.$k.' not passed');
+        throw new DaGdInvalidParameterCLIException(
+          'Required parameter '.$k.' not passed');
       }
     }
   }
 
-  private function bold($str) {
+  // TODO: Make these static and move to a DaGdCLI class.
+  public function bold($str) {
     return "\033[1m".$str."\033[0m";
+  }
+
+  public function red($str) {
+    return "\033[31m".$str."\033[0m";
   }
 
   public function debugArgs() {
@@ -201,6 +210,36 @@ abstract class DaGdCLIProgram {
     if ($this->param('--debug-args')->getGiven()) {
       $this->debugArgs();
       exit(0);
+    }
+  }
+
+  /**
+   * A function that gets called even if an exception is thrown, allowing
+   * programs to clean up anything they need to before exiting.
+   */
+  public function cleanup() {
+    return null;
+  }
+
+  /**
+   * A wrapper around run() which handles exceptions and cleanup.
+   */
+  public function execute(array $args) {
+    try {
+      $this->parseArgs($args);
+      $this->run();
+      $this->cleanup();
+      exit(0);
+    } catch (DaGdCLIException $ex) {
+      $ex->setProgram($this);
+      echo $ex->toCli();
+      $this->cleanup();
+      exit(1);
+    } catch (Exception $ex) {
+      // It's an exception we didn't thow ourselves, so don't bother
+      // pretty-printing it, just clean up and rethrow it.
+      $this->cleanup();
+      throw $ex;
     }
   }
 }
