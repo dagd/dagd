@@ -1,6 +1,8 @@
 <?php
 
-final class DaGdInvalidParameterCLIException extends DaGdCLIException {
+final class DaGdRequiredParameterNotPassedCLIException
+  extends DaGdCLIException {
+
   private $parameter;
 
   public function __construct($parameter) {
@@ -9,7 +11,7 @@ final class DaGdInvalidParameterCLIException extends DaGdCLIException {
   }
 
   public function getCliMessage() {
-    return 'Unknown parameter or flag: '.
+    return 'Required parameter or flag not passed: '.
       $this->getProgram()->blue($this->parameter);
   }
 }

@@ -12,18 +12,19 @@ abstract class DaGdCLIException extends DaGdException {
     return $this->program;
   }
 
-  public function toCli($colors = true) {
-    $out = '[';
+  public function getCliMessage() {
+    return null;
+  }
 
-    if ($colors) {
-      $out .= $this->getProgram()->red('ERROR');
+  public function toCli($colors = true) {
+    $str = null;
+
+    if ($this->getCliMessage()) {
+      $str = $this->getCliMessage();
     } else {
-      $out .= 'ERROR';
+      $str = $this->getMessage();
     }
 
-    $out .= '] '.$this->getMessage();
-    $out .= "\n";
-
-    return $out;
+    return $this->getProgram()->error($str, $colors);
   }
 }

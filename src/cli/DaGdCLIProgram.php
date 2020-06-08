@@ -4,7 +4,7 @@ require_once(dirname(dirname(__FILE__)).'/resources/global_resources.php');
 set_exception_handler(null);
 DaGdConfig::$config['general.autoload_search'][] = 'cli/error/';
 
-abstract class DaGdCLIProgram {
+abstract class DaGdCLIProgram extends DaGdCLI {
   private $name;
   private $description;
   private $parameters = array();
@@ -124,33 +124,21 @@ abstract class DaGdCLIProgram {
               $this->parameters[$param->getName()]->setGiven(true);
               $has_valid_flags = true;
             } else {
-              throw new DaGdInvalidParameterCLIException(
-                'Unknown flag: -'.$flag);
+              throw new DaGdInvalidParameterCLIException('-'.$flag);
             }
           }
         }
         if (!$has_valid_flags) {
-          throw new DaGdInvalidParameterCLIException(
-            'Unknown parameter: '.$arg);
+          throw new DaGdInvalidParameterCLIException($arg);
         }
       }
     }
 
     foreach ($this->parameters as $k => $v) {
       if ($v->getRequired() && !$v->getGiven()) {
-        throw new DaGdInvalidParameterCLIException(
-          'Required parameter '.$k.' not passed');
+        throw new DaGdRequiredParameterNotPassedCLIException($k);
       }
     }
-  }
-
-  // TODO: Make these static and move to a DaGdCLI class.
-  public function bold($str) {
-    return "\033[1m".$str."\033[0m";
-  }
-
-  public function red($str) {
-    return "\033[31m".$str."\033[0m";
   }
 
   public function debugArgs() {
