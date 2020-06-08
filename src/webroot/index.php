@@ -118,19 +118,21 @@ debug('Response from Controller', '');
 
 $response = '';
 
+// Thread this through even for old controllers, so they can beta some of the
+// newer, fun stuff like cows.
+$request = id(new DaGdRequest())
+  ->setCookies($_COOKIE)
+  ->setRequest($_REQUEST)
+  ->setServer($_SERVER)
+  ->setRouteMatches($route_matches);
+
 // Temporary conditional, handle migration to DaGdController
 if ($instance instanceof DaGdController) {
-  $request = id(new DaGdRequest())
-    ->setCookies($_COOKIE)
-    ->setRequest($_REQUEST)
-    ->setServer($_SERVER)
-    ->setRouteMatches($route_matches);
   $instance->setRequest($request);
 } else {
-  // Things that old controllers need, but new controllers don't have
-
   // This has moved to DaGdRequest in the new model
   $instance->setRouteMatches($route_matches);
+  $instance->setRequest($request);
 }
 
 // New and old controllers provide this same interface

@@ -32,6 +32,10 @@ abstract class DaGdBaseClass {
   // therefore faster for reads than the write database handler.
   protected $read_db;
 
+  // A temporary bridge that lets old-style controllers access some new-style
+  // goodies.
+  protected $request;
+
   // This is used for DaGdHelpController to generate its list of commands.
   public function getHelp() {
     return array();
@@ -146,6 +150,15 @@ abstract class DaGdBaseClass {
     return $this->darkmode;
   }
 
+  public function setRequest($request) {
+    $this->request = $request;
+    return $this;
+  }
+
+  public function getRequest() {
+    return $this->request;
+  }
+
   // Controllers can implement this to set various controller configuration
   // parameters by calling the setters above. It gets called in finalize().
   public function configure() {
@@ -216,6 +229,7 @@ abstract class DaGdBaseClass {
       if ($cow) {
         // This makes a good testing point for the new DaGdResponse work
         $response = id(new DaGdTextResponse())
+          ->setRequest($this->getRequest())
           ->setBody($this->renderCowsay());
       } else {
         $response = $this->renderCLI();
