@@ -124,6 +124,12 @@ final class TestCLI extends DaGdCLIProgram {
           '/w/usi.edu',
           '@University of Southern Indiana@'))
         ->addGroup('whois'));
+    $runner->arm(
+      id(
+        new DaGdRegexTest(
+          '/w/dcma.mil',
+          '@DoD Network Information Center@'))
+        ->addGroup('whois'));
 
     /************ /headers/xxxxxxx ************/
 

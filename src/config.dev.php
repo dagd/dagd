@@ -354,6 +354,9 @@ class DaGdConfig {
         'server' => 'whois.nic.name',
         'query' => 'domain = '
       ),
+      'mil' => array(
+        'server' => 'whois.iana.org',
+      ),
     ),
 
     // These referral servers are blacklisted. If we hit one of them, we simply
