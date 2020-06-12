@@ -4,6 +4,7 @@
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 
 $start = microtime(true);
+statsd_bump('framework_entry');
 
 // This mechanism is now deprecated in favor of autoloading.
 // This is kept around for now, for deployments which might have custom apps
