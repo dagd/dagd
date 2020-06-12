@@ -126,19 +126,19 @@ function debug($title, $text = null) {
 }
 
 function error404($echo = '404 - route not found', $status_text = 'Not Found') {
-  statsd_bump('status_404');
+  statsd_bump('status,code=404');
   header('HTTP/1.1 404 '.$status_text);
   echo $echo;
 }
 
 function error403($echo = '403 - forbidden', $status_text = 'Forbidden') {
-  statsd_bump('status_403');
+  statsd_bump('status,code=403');
   header('HTTP/1.1 403 '.$status_text);
   echo $echo;
 }
 
 function error400($echo = '400 - bad request', $status_text = 'Bad Request') {
-  statsd_bump('status_400');
+  statsd_bump('status,code=400');
   header('HTTP/1.1 400 '.$status_text);
   echo $echo;
 }
@@ -146,7 +146,7 @@ function error400($echo = '400 - bad request', $status_text = 'Bad Request') {
 function error405(
   $echo = '405 - method not allowed',
   $status_text = 'Method not allowed') {
-  statsd_bump('status_405');
+  statsd_bump('status,code=405');
   header('HTTP/1.1 405 '.$status_text);
   echo $echo;
 }
@@ -154,7 +154,7 @@ function error405(
 function error500(
   $echo = '500 - internal server error',
   $status_text = 'Internal Server Error') {
-  statsd_bump('status_500');
+  statsd_bump('status,code=500');
   header('HTTP/1.1 500 '.$status_text);
   echo $echo;
 }
