@@ -8,6 +8,7 @@ abstract class DaGdTest {
   protected $headers;
   protected $tolerate_failure;
   protected $accept = '*/*';
+  protected $method = 'GET';
   private $original_user_agent;
   private $preparatory = false;
   private $groups = array('default');
@@ -53,6 +54,15 @@ abstract class DaGdTest {
     return $this;
   }
 
+  public function setMethod($method) {
+    $this->method = $method;
+    return $this;
+  }
+
+  public function getMethod() {
+    return $this->method;
+  }
+
   public function setRunner($runner) {
     $this->runner = $runner;
     return $this;
@@ -81,6 +91,7 @@ abstract class DaGdTest {
     $context = stream_context_create(
       array(
         'http' => array(
+          'method' => $this->method,
           'ignore_errors' => $ignore_errors,
           'follow_location' => false,
           'header' => array(

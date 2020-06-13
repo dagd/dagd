@@ -55,6 +55,7 @@ foreach ($routes as $route => $metadata) {
       header('Location: '.$new_location);
       return;
     } else {
+      // We want to be able to route to controllers based on methods as well.
       if (!array_key_exists('methods', $metadata)) {
         $default_methods = DaGdConfig::get('general.default_methods');
         $metadata['methods'] = $default_methods;
@@ -63,11 +64,13 @@ foreach ($routes as $route => $metadata) {
         // If the current request method doesn't match, continue on, but
         // mark that we found a controller that regex-matched, so we can return
         // a 405 instead of a 404.
+        // But if we get here, track that we did, so that if no future route
+        // *and* method is a match, we can send a 405.
         $regex_match_wrong_method = true;
-        continue;
+      } else {
+        $regex_match_wrong_method = false;
       }
       $metadata_match = $metadata;
-      $regex_match_wrong_method = false;
       break;
     }
   }
