@@ -78,27 +78,24 @@ foreach ($routes as $route => $metadata) {
 
 $debug = DaGdConfig::get('general.debug');
 
-if (!$route_matches) {
-  error404();
-  if (!$debug) {
-    die();
-  }
-}
+$controller = null;
+$error_controllers = DaGdConfig::get('general.error_controllers');
 
-if ($regex_match_wrong_method) {
-  error405();
-  if (!$debug) {
-    die();
-  }
+if (!$route_matches) {
+  $controller = $error_controllers['404'];
+} else if ($regex_match_wrong_method) {
+  $controller = $error_controllers['405'];
+} else {
+  $controller = $metadata_match['controller'];
 }
 
 debug('REQUEST variables', print_r($_REQUEST, true));
 debug('Route matches', print_r($route_matches, true));
-debug('Controller', $metadata_match['controller']);
+debug('Controller', $controller);
 debug('Metadata', print_r($metadata_match, true));
 debug('Pass-off', 'Passing off to controller.');
 
-$instance = new ReflectionClass($metadata_match['controller']);
+$instance = new ReflectionClass($controller);
 $instance = $instance->newInstance();
 
 $write_dbh = new mysqli(

@@ -152,6 +152,16 @@ class DaGdConfig {
       '/et/(\d+)/?$' => 'http://www.etsy.com/listing/$1',
     ),
 
+    // These are route-level error controllers. Apps can use them if they want,
+    // but the primary purpose is for the entrypoint to toss to these if the
+    // route map isn't satisfied. They are instantiated as normal application
+    // controllers with full access to context/DB handlers, in case special
+    // logging is required in custom implementations.
+    'general.error_controllers' => array(
+      '404' => 'DaGd404Controller',
+      '405' => 'DaGd405Controller',
+    ),
+
     // These are extra headers that get applied globally
     'general.extra_headers' => array(
       'Cache-Control: no-cache',
