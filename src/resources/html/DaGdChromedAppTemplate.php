@@ -11,8 +11,9 @@ class DaGdChromedAppTemplate extends DaGdAppTemplate {
   font-family: "Proxima Nova", overpass, Ubuntu, sans-serif !important;
   font-weight: 300;
   font-size: 1.7em;
+  margin-bottom: 10px;
 }
-.constraint { max-width: 50em; margin: 0 auto; }
+.constraint { width: 85%; margin: 0 auto; max-width: 1080px; }
 #bar a, #bar a:active, #bar a:visited { color: #ccc; }
 table { border-spacing: 30px; border-collapse: separate; }
 td { padding: 10px 0; }
@@ -23,7 +24,7 @@ input[type=text] { border: 1px solid #ccc; }
 .appname { color: #888; }
 .darkmode #bar { border-color: #555; }
 body, .sitename { margin: 0; padding: 0; }
-#app { font-family: sans-serif; }
+#app { font-family: "Proxima Nova", overpass, Ubuntu, sans-serif; clear: both; }
 EOD;
     return array_merge(parent::getStyle(), array($style));
   }
@@ -91,7 +92,6 @@ EOD;
       $navbar,
       array(
         'id' => 'bar',
-        'style' => 'overflow: auto;',
       )
     );
 
