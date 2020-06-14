@@ -41,12 +41,17 @@ final class DaGdSession {
 
     $iv = hex2bin($iv_and_data[0]);
     $data = $iv_and_data[1];
-    $this->data = unserialize($this->decryptData($data, $iv));
+    $unser = unserialize($this->decryptData($data, $iv));
+    if ($unser === false) {
+      return $this->destroy();
+    }
+    $this->data = $unser;
     return $this;
   }
 
   public function destroy() {
     $this->data = array();
+    return $this;
   }
 
   private function decryptData($str, $iv) {
