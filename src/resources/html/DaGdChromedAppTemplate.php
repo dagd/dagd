@@ -23,6 +23,8 @@ input[type=text] { border: 1px solid #ccc; }
 .darkmode .sitename { color: #39a; }
 .appname { color: #888; }
 .darkmode #bar { border-color: #555; }
+body.darkmode { background-color: #333; color: #ddd; }
+body.darkmode a, body.darkmode a:active, body.darkmode a:visited { color: #ccc; }
 body, .sitename { margin: 0; padding: 0; }
 #app { font-family: "Proxima Nova", overpass, Ubuntu, sans-serif; clear: both; }
 EOD;
