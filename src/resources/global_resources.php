@@ -58,6 +58,7 @@ function handle_exception($e) {
   }
 
   statsd_bump('unhandled_exception');
+  statsd_bump('status,code=500');
   echo 'An error has occurred within dagd! Sorry about that!';
   header('HTTP/1.0 500 Internal Server Error (Exception)');
 
@@ -87,6 +88,16 @@ Your friendly da.gd server',
   die();
 }
 set_exception_handler('handle_exception');
+
+function handle_fatal($errno, $errstr, $errfile, $errline) {
+  // TODO: Copy email magic from handle_exception() and do that here too.
+  statsd_bump('unhandled_fatal');
+  statsd_bump('status,code=500');
+  echo 'An error has occurred within dagd! Sorry about that!';
+  header('HTTP/1.0 500 Internal Server Error (Exception)');
+  die();
+}
+set_error_handler('handle_fatal');
 
 function require_application($name) {
   require_once dirname(__FILE__).'/../applications/'.$name.'/'.$name.'.php';
