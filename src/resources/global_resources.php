@@ -59,8 +59,8 @@ function handle_exception($e) {
 
   statsd_bump('unhandled_exception');
   statsd_bump('status,code=500');
-  echo 'An error has occurred within dagd! Sorry about that!';
   header('HTTP/1.0 500 Internal Server Error (Exception)');
+  echo 'An error has occurred within dagd! Sorry about that!';
 
   if ($really_send_email) {
     mail(
@@ -93,8 +93,8 @@ function handle_fatal($errno, $errstr, $errfile, $errline) {
   // TODO: Copy email magic from handle_exception() and do that here too.
   statsd_bump('unhandled_fatal');
   statsd_bump('status,code=500');
-  echo 'An error has occurred within dagd! Sorry about that!';
   header('HTTP/1.0 500 Internal Server Error (Exception)');
+  echo 'An error has occurred within dagd! Sorry about that!';
   die();
 }
 set_error_handler('handle_fatal');
