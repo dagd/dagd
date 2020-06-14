@@ -124,23 +124,21 @@ abstract class DaGdController {
 
   public function render(DaGdHTMLResponse $response) {
     // By default we wrap things in <pre> tags and wrap a template around it.
-    $help = $this->getHelp();
-    if ($help instanceof DaGdHelp) {
-      $help = $help->toOldHelp();
-    }
     $body = tag('pre', $this->execute($response));
-    $template = $this
-      ->getBaseTemplate()
-      ->setBody($body)
-      ->setStyle($this->getStyle())
-      ->setTitle(idx($help, 'title', 'Welcome!'))
-      ->setDarkmode($this->getDarkmode())
-      ->getHtmlTag();
+    $template = $this->getBaseTemplate()->setBody($body)->getHtmlTag();
     return $response->setBody($template);
   }
 
   public function getBaseTemplate() {
-    return new DaGdChromedAppTemplate();
+    $help = $this->getHelp();
+    if ($help instanceof DaGdHelp) {
+      $help = $help->toOldHelp();
+    }
+
+    return id(new DaGdChromedAppTemplate())
+      ->setStyle($this->getStyle())
+      ->setTitle(idx($help, 'title', 'Welcome!'))
+      ->setDarkmode($this->getDarkmode());
   }
 
   // TODO: Probably add some instanceof checks here

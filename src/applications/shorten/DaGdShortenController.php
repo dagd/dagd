@@ -201,8 +201,6 @@ EOD;
     $template = $this
       ->getBaseTemplate()
       ->setBody($this->form())
-      ->setStyle($this->getStyle())
-      ->setTitle(idx($this->getHelp(), 'title', 'Welcome!'))
       ->getHtmlTag();
     return $response->setBody($template);
   }
