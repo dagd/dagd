@@ -134,8 +134,11 @@ class DaGdConfig {
         'controller' => 'DaGdCowController',
       ),
       '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => array(
-        'controller' => 'DaGdShortenController',
-        'methods' => array('GET', 'HEAD', 'POST'),
+        'methods' => array(
+          'GET' => 'DaGdShortenGETController',
+          'HEAD' => 'DaGdShortenGETController',
+          'POST' => 'DaGdShortenGETController',
+        ),
       ),
     ),
 

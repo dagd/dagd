@@ -1,6 +1,6 @@
 <?php
 
-final class DaGdStatsController extends DaGdShortenController {
+final class DaGdStatsController extends DaGdShortenGETController {
   public static function getHelp() {
     return array(
       'title' => 'stats',

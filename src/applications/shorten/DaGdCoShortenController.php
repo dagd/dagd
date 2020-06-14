@@ -1,6 +1,6 @@
 <?php
 
-class DaGdCoShortenController extends DaGdShortenController {
+class DaGdCoShortenController extends DaGdShortenGETController {
     public static function getHelp() {
         return array(
             'title' => 'coshorten',

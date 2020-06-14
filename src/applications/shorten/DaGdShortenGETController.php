@@ -3,7 +3,7 @@
 require_once dirname(__FILE__).'/resources/random_string.php';
 require_once dirname(__FILE__).'/resources/blacklist.php';
 
-class DaGdShortenController extends DaGdController {
+class DaGdShortenGETController extends DaGdController {
   // TODO: Port to new help system
   public static function getHelp() {
     return array(
@@ -462,14 +462,10 @@ EOD;
 
     $form = tag(
       'form',
-      tag(
-        'table',
-        array(
-          $longurl_tr,
-          $shorturl_tr,
-          $submit_tr,
-          $abuse,
-        )
+      array(
+        $longurl_field,
+        $flex,
+        $footnote,
       ),
       array(
         'method' => 'POST',
@@ -481,9 +477,7 @@ EOD;
       'div',
       array(
         $branding,
-        $longurl_field,
-        $flex,
-        $footnote,
+        $form,
         $abuse,
       )
     );
