@@ -47,31 +47,49 @@ foreach ($routes as $route => $metadata) {
       // This lets us do things like '/foo/(.*)' => 'http://google.com/$1'
       array_shift($route_matches);
       $new_location = preg_replace(
-          '@^'.$route.'@',
-          $metadata,
-          $requested_path);
+        '@^'.$route.'@',
+        $metadata,
+        $requested_path);
       $new_location .= build_given_querystring();
       debug('New Location', $new_location);
       header('Location: '.$new_location);
       return;
     } else {
-      // We want to be able to route to controllers based on methods as well.
+      // We aren't just redirecting to a URL, we're passing to a controller.
+
+      // First see if the route has request methods assigned for it.
+      // If not, give it the default set of them.
       if (!array_key_exists('methods', $metadata)) {
         $default_methods = DaGdConfig::get('general.default_methods');
         $metadata['methods'] = $default_methods;
       }
-      if (!in_array($request_method, $metadata['methods'])) {
-        // If the current request method doesn't match, continue on, but
-        // mark that we found a controller that regex-matched, so we can return
-        // a 405 instead of a 404.
-        // But if we get here, track that we did, so that if no future route
-        // *and* method is a match, we can send a 405.
-        $regex_match_wrong_method = true;
-      } else {
+
+      // Now, look at the methods a route has defined for it.
+      // If the client's $request_method is defined in it, we're done. Use that
+      // controller.
+      $methods = $metadata['methods'];
+      if ($controller = idx($methods, $request_method)) {
+        $metadata['controller'] = $controller;
+        $metadata_match = $metadata;
         $regex_match_wrong_method = false;
+        break;
+      } else {
+        // If we don't have an inner-mapping to a controller by request method,
+        // then let's see if if the client's $request_method is in a non-assoc.
+        // methods list.
+        if (in_array($request_method, $metadata['methods'])) {
+          // We have a match. We can safely assume that the 'controller' field
+          // accepts requests of this method.
+          $regex_match_wrong_method = false;
+          $metadata_match = $metadata;
+          break;
+        } else {
+          // Otherwise it's not in the assoc. map (if it exists), it's not in
+          // a non-assoc. map. But we do have a route match.
+          $regex_match_wrong_method = true;
+          break;
+        }
       }
-      $metadata_match = $metadata;
-      break;
     }
   }
 }

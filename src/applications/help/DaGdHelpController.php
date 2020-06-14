@@ -32,11 +32,33 @@ final class DaGdHelpController extends DaGdBaseClass {
     $controllers_visited = array();
 
     foreach ($routes as $path => $metadata) {
-      if (in_array($metadata['controller'], $controllers_visited)) {
-        continue;
+      // First handle the more complex case of routing based on method.
+      // Help will render these controllers as distinct apps.
+      $methods = idx($metadata, 'methods');
+      if ($methods) {
+        foreach ($methods as $method_or_index => $controller_or_method) {
+          if (is_string($method_or_index)) {
+            // We can assume the value is a controller if we're in an
+            // assoc array.
+            if (in_array($controller_or_method, $controllers_visited)) {
+              continue;
+            }
+
+            $return .= help($controller_or_method);
+            $controllers_visited[] = $controllers_visited;
+          }
+        }
       }
-      $return .= help($metadata['controller']);
-      $controllers_visited[] = $metadata['controller'];
+
+      // Now handle the simpler case of having a 'controller' key.
+      $controller = idx($metadata, 'controller');
+      if ($controller) {
+        if (in_array($controller, $controllers_visited)) {
+          continue;
+        }
+        $return .= help($controller);
+        $controllers_visited[] = $controller;
+      }
     }
     return $return;
   }
