@@ -4,7 +4,7 @@ class DaGdChromedAppTemplate extends DaGdAppTemplate {
   public function getStyle() {
     $style = <<<EOD
 #bar {
-  padding: 15px;
+  padding: 15px 0;
   height: 65px;
   line-height: 65px;
   border-bottom: 1px solid #eee;
@@ -15,7 +15,7 @@ class DaGdChromedAppTemplate extends DaGdAppTemplate {
 }
 .constraint { width: 85%; margin: 0 auto; max-width: 1080px; }
 #bar a, #bar a:active, #bar a:visited { color: #ccc; }
-table { border-spacing: 30px; border-collapse: separate; }
+table { border-spacing: 0 30px; border-collapse: separate; }
 td { padding: 10px 0; }
 input[type=text] { border: 1px solid #ccc; }
 .sitename { color: #333; float: left; font-weight: 500; }
@@ -26,7 +26,7 @@ input[type=text] { border: 1px solid #ccc; }
 body.darkmode { background-color: #333; color: #ddd; }
 body.darkmode a, body.darkmode a:active, body.darkmode a:visited { color: #ccc; }
 body, .sitename { margin: 0; padding: 0; }
-#app { font-family: "Proxima Nova", overpass, Ubuntu, sans-serif; clear: both; }
+#app { font-family: "Proxima Nova", overpass, Ubuntu, sans-serif; clear: both; box-sizing: border-box; }
 EOD;
     return array_merge(parent::getStyle(), array($style));
   }

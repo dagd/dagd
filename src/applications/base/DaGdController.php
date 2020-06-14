@@ -66,6 +66,31 @@ abstract class DaGdController {
   }
 
   /**
+   * Return an instance of an error-code controller, which will automatically
+   * set some things like status code/message for you and return a pre-composed
+   * response for you, for various mime-types. If you need anything more
+   * complex, you can either write your own error controllers, or just
+   * $response->setCode() in your own handlers and render what you like. This
+   * method is only here for convenience in the simple cases.
+   *
+   * If you use this, you MUST call the same method you are overriding on
+   * the controller that gets returned. For example if you use this from an
+   * execute() method, you must call `$this->error(404)->execute($response);`.
+   * You MAY return the result, or do other processing and use the call only for
+   * its side effects.
+   */
+  public function error($code) {
+    $controller = null;
+    switch ($code) {
+    case 404:
+      return id(new DaGd404Controller())->setRequest($this->getRequest());
+      break;
+    case 405:
+      return id(new DaGd405Controller())->setRequest($this->getRequest());
+    }
+  }
+
+  /**
    * A string version of the response.
    *
    * This is used for simple controllers where the main difference between

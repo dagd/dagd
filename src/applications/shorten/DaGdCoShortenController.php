@@ -1,7 +1,7 @@
 <?php
 
 class DaGdCoShortenController extends DaGdShortenController {
-    public function getHelp() {
+    public static function getHelp() {
         return array(
             'title' => 'coshorten',
             'summary' => 'The dual of a shorturl is a long url. This gets us back to the original URL.',

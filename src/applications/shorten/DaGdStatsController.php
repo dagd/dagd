@@ -1,7 +1,7 @@
 <?php
 
 final class DaGdStatsController extends DaGdShortenController {
-  public function getHelp() {
+  public static function getHelp() {
     return array(
       'title' => 'stats',
       'summary' => 'Display basic stats for a short url.',

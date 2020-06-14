@@ -3,8 +3,9 @@
 require_once dirname(__FILE__).'/resources/random_string.php';
 require_once dirname(__FILE__).'/resources/blacklist.php';
 
-class DaGdShortenController extends DaGdBaseClass {
-  public function getHelp() {
+class DaGdShortenController extends DaGdController {
+  // TODO: Port to new help system
+  public static function getHelp() {
     return array(
       'title' => 'shorten',
       'summary' => 'Shorten your long URLs (/, /s, /shorten).',
@@ -22,86 +23,56 @@ class DaGdShortenController extends DaGdBaseClass {
       ));
   }
 
-  public function configure() {
-    $this
-      ->setWrapHtml(true)
-      ->setWrapPre(false);
-    return $this;
+  public function getStyle() {
+    $style = <<<EOD
+#app input.submit:hover {
+  transition: all 0.5s ease;
+  background-color: #3a9;
+  color: #fff;
+}
+#app input.submit {
+  background-color: transparent;
+  transition: background-color 0.5s ease;
+  border: none;
+  font-size: 1em;
+  color: #888;
+}
+#app input.textinput, #app span#shorturl_label {
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: "Proxima Nova Condensed", Roboto, Ubuntu, sans-serif;
+  font-weight: 100;
+  font-size: 2em;
+}
+#app input#url {
+  border-radius: 3px;
+  border: 2px solid #ddd;
+  width: 100%;
+}
+#app input.textinput:focus, #app #flex:focus-within { border-color: #3a9 !important; }
+#app #shorturl_label {
+  box-sizing: border-box;
+  padding: 20px;
+  padding-right: 0;
+  font-size: 2.5em;
+  background-color: #fff;
+}
+#app input#shorturl {
+  padding-left: 0;
+  border: none;
+}
+#app #flex {
+  border: 1px solid #ddd;
+}
+EOD;
+
+    return array_merge(
+      parent::getStyle(),
+      array($style)
+    );
   }
 
-  private $long_url;
-  private $longurl_hash;
-  private $short_url;
-  private $stored_url_id;
-  private $owner_ip;
-  private $custom_url = false;
-  private $store_url = true;
-
-  private function isFreeShortURL() {
-    $query = $this->getReadDB()->prepare(
-      'SELECT COUNT(*) FROM shorturls WHERE shorturl=?');
-    $query->bind_param('s', $this->short_url);
-    $query->execute();
-    $query->bind_result($count);
-    $query->fetch();
-    $query->close();
-
-    // If we do *NOT* get one above (!), then it is free, and we return true.
-    return !(bool)$count;
-  }
-
-  private function blacklisted($url) {
-    return id(new Blacklist($url))->check();
-  }
-
-  private function isBannedAuthor() {
-    $query = $this->getReadDB()->prepare(
-      'SELECT COUNT(*) FROM blocked_ips WHERE '.
-      'inet6_aton(?) between ip_start and ip_end');
-    $query->bind_param('s', $this->owner_ip);
-    $query->execute();
-    $query->bind_result($count);
-    $query->fetch();
-    $query->close();
-
-    // Return true if the author is banned, false if not.
-    return (bool)$count;
-  }
-
-  private function whitelisted($url) {
-    // Similar to above, but for whitelisting.
-    $whitelist_strings = DaGdConfig::get('shorten.longurl_whitelist_strings');
-    foreach ($whitelist_strings as $string) {
-      if (strpos($url, $string) !== false) {
-        statsd_bump('shorturl_whitelisted');
-        return true;
-      }
-    }
-
-    $whitelist_regexes = DaGdConfig::get('shorten.longurl_whitelist');
-    foreach ($whitelist_regexes as $regex) {
-      if (preg_match('#'.$regex.'#i', $url)) {
-        statsd_bump('shorturl_whitelisted');
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public function getLongURL($shorturl) {
-    $query = $this->getReadDB()->prepare(
-      'SELECT id,longurl FROM shorturls WHERE shorturl=? AND enabled=1');
-    $query->bind_param('s', $shorturl);
-    $start = microtime(true);
-    $query->execute();
-    $end = microtime(true);
-    statsd_time('query_time_getLongURL', ($end - $start) * 1000);
-    $query->bind_result($this->stored_url_id, $this->long_url);
-    $query->fetch();
-    $query->close();
-    return $this->long_url;
-  }
-
+  /*
   public function getStatsForURL($shorturl) {
     // This function costs two queries, but they both hit already-existing
     // indexes and so they should be nearly trivial.
@@ -150,75 +121,97 @@ class DaGdShortenController extends DaGdBaseClass {
     );
     return $res;
   }
+  */
 
-  private function getNonCustomShortURL($longurl_hash) {
-    $query = $this->getReadDB()->prepare(
-      'SELECT id,shorturl FROM shorturls WHERE longurl_hash=? AND enabled=1 '.
-      'AND custom_shorturl=0 ORDER BY id DESC LIMIT 1');
-    $query->bind_param('s', $longurl_hash);
-    $start = microtime(true);
-    $query->execute();
-    $end = microtime(true);
-    statsd_time('query_time_getNonCustomShortURL', ($end - $start) * 1000);
-    $query->bind_result($this->stored_url_id, $this->short_url);
-    $query->fetch();
-    $query->close();
-    return;
-  }
+  private function redirect($matches) {
+    $surl = id(new DaGdShortURLQuery($this))
+      ->fromShort($matches[1]);
 
-  private function logURLAccess() {
-    $query = $this->getWriteDB()->prepare(
-      'INSERT INTO shorturl_access(shorturl_id, useragent) VALUES(?,?)');
-    $stored_url_id = $this->stored_url_id;
-    $useragent = server_or_default('HTTP_USER_AGENT', '');
-    $query->bind_param(
-      'is',
-      $stored_url_id,
-      $useragent);
-
-    $start = microtime(true);
-    $res = $query->execute();
-    $end = microtime(true);
-    statsd_time('query_time_LogURLAccess', ($end - $start) * 1000);
-
-    if ($res) {
-      return true;
-    } else {
-      return false;
+    if (!$surl) {
+      return null;
     }
+
+    // This check is best-effort to allow all older entries to continue
+    // working even if they don't host-parse.
+    // If it's whitelisted, don't even bother checking dnsbl
+    if (!$surl->isWhitelisted() && $surl->isBlacklisted()) {
+      return null;
+    }
+
+    $logger = new DaGdShortURLAccessLogger($this, $surl);
+    // It's fine if getHeader() is false -- the column is nullable.
+    $logger->log($this->getRequest()->getHeader('user-agent'));
+
+    // TODO: Move build_given_querystring() to DaGdRequest.
+    $qs = build_given_querystring();
+
+    $response = new DaGdRedirectResponse();
+
+    if ($matches[2]) {
+      $response->setTo($surl->getLongUrl().'/'.$matches[2].$qs);
+    } else {
+      $response->setTo($surl->getLongUrl().$qs);
+    }
+
+    statsd_bump('shorturl_access');
+    $response->addHeader('X-Original-URL', $surl->getLongUrl());
+    return $response;
   }
 
-  private function redirect_from_shorturl() {
-    $this->getLongURL($this->route_matches[1]);
-    if ($this->long_url) {
-
-      // This check is best-effort to allow all older entries to continue
-      // working even if they don't host-parse.
-      // If it's whitelisted, don't even bother checking dnsbl
-      if (!$this->whitelisted($this->long_url)) {
-        if ($this->blacklisted($this->long_url)) {
-          // If blacklisted for any reason, simply return a 404.
-          error404();
-          return false;
-        }
-      }
-
-      $this->logURLAccess();
-      statsd_bump('shorturl_access');
-      header('X-Original-URL: '.$this->long_url);
-      $qs = build_given_querystring();
-      if ($this->route_matches[2]) {
-        header('Location: '.$this->long_url.'/'.$this->route_matches[2].$qs);
+  /*
+  public function execute(DaGdResponse $response) {
+    $matches = $this->getRequest()->getRouteMatches();
+    if ($matches[1]) {
+      $will_redirect = $this->redirect($matches, $response);
+      if ($will_redirect) {
+        return '';
       } else {
-        header('Location: '.$this->long_url.$qs);
+        return id(new DaGd404Controller())->execute($response);
       }
-      return true;
-    } else {
-      error404();
-      return false;
+    }
+  }*/
+
+  /**
+   * Try to set up a DaGdRedirectResponse to the long url if it exists.
+   * Otherwise set up a 404 and render it with hopefully the right renderer.
+   *
+   * @return DaGdRedirectResponse or more generally a DaGdResponse
+   */
+  private function getRedirectResponse($matches) {
+    $redir = $this->redirect($matches);
+    if ($redir) {
+      return $redir;
+    }
+    return $this->error(404)->finalize($response);
+  }
+
+  public function renderText(DaGdTextResponse $response) {
+    $matches = $this->getRequest()->getRouteMatches();
+    if ($matches[1]) {
+      return $this->getRedirectResponse($matches);
     }
   }
 
+  public function render(DaGdHTMLResponse $response) {
+    $matches = $this->getRequest()->getRouteMatches();
+    if ($matches[1]) {
+      return $this->getRedirectResponse($matches);
+    }
+
+    $template = $this
+      ->getBaseTemplate()
+      ->setBody($this->form())
+      ->setStyle($this->getStyle())
+      ->setTitle(idx($this->getHelp(), 'title', 'Welcome!'))
+      ->getHtmlTag();
+    return $response->setBody($template);
+  }
+
+  public function execute(DaGdResponse $response) {
+    return 'That request was a bit too fancy for us.';
+  }
+
+  /*
   private function store_shorturl() {
     if (!$this->store_url) {
       return true;
@@ -381,109 +374,122 @@ class DaGdShortenController extends DaGdBaseClass {
         // TODO: Move this to renderCLI()
         return help('DaGdShortenController');
       }
+  */
 
-      $longurl_tr = tag(
-        'tr',
+  private function form() {
+    $branding = tag('h1', 'Private. Simple. Open.');
+
+    $longurl_field = tag(
+      'input',
+      null,
+      array(
+        'type' => 'url',
+        'name' => 'url',
+        'id' => 'url',
+        'size' => '35',
+        'placeholder' => 'https://example.com/long-url-here',
+        'autofocus' => TAG_ATTR_BARE,
+        'required' => TAG_ATTR_BARE,
+        'class' => 'textinput',
+      )
+    );
+
+    $shorturl_label = tag(
+      'div',
+      'https://da.gd/',
+      array(
+        'id' => 'shorturl_label',
+        'style' => 'font-family: monospace;',
+      )
+    );
+
+    $shorturl_field = tag(
+      'input',
+      null,
+      array(
+        'type' => 'text',
+        'maxlength' => '10',
+        'name' => 'shorturl',
+        'id' => 'shorturl',
+        'size' => '10',
+        'placeholder' => 'my_url*',
+        'pattern' => '[A-Za-z0-9\-_]+',
+        'style' => 'flex-grow: 12;',
+        'class' => 'textinput',
+      )
+    );
+
+    $submit = tag(
+      'input',
+      null,
+      array(
+        'type' => 'submit',
+        'value' => 'Shorten URL',
+        'style' => 'flex-grow: 1;',
+        'class' => 'submit',
+      )
+    );
+
+    $flex = tag(
+      'div',
+      array(
+        $shorturl_label,
+        $shorturl_field,
+        $submit,
+      ),
+      array(
+        'id' => 'flex',
+        'style' => 'display: flex; width: 100%; margin-top: 20px;',
+      )
+    );
+
+    $footnote = tag(
+      'div',
+      tag(
+        'small',
+        '* leave this blank for a random short URL'
+      )
+    );
+
+    $abuse = tag(
+      'div',
+      tag(
+        'small',
+        'report abuse to abuse@da.gd'
+      ),
+      array(
+        'style' => 'margin-top: 20px;',
+      )
+    );
+
+    $form = tag(
+      'form',
+      tag(
+        'table',
         array(
-          tag('td', 'Long URL: '),
-          tag(
-            'td',
-            tag(
-              'input',
-              null,
-              array(
-                'type' => 'text',
-                'name' => 'url',
-                'id' => 'url',
-                'size' => '35',
-                'placeholder' => 'https://google.com/',
-                'autofocus' => TAG_ATTR_BARE,
-              )
-            )
-          ),
+          $longurl_tr,
+          $shorturl_tr,
+          $submit_tr,
+          $abuse,
         )
-      );
+      ),
+      array(
+        'method' => 'POST',
+        'action' => '/',
+      )
+    );
 
-      $shorturl_tr = tag(
-        'tr',
-        array(
-          tag(
-            'td',
-            'Custom short URL: ',
-            array(
-              'style' => 'white-space: nowrap;',
-            )
-          ),
-          tag(
-            'td',
-            array(
-              tag(
-                'input',
-                null,
-                array(
-                  'type' => 'text',
-                  'maxlength' => '10',
-                  'name' => 'shorturl',
-                  'size' => '10',
-                  'placeholder' => 'g',
-                )
-              ),
-              tag('br'),
-              tag('small', '(blank for random, max 10)'),
-            )
-          ),
-        )
-      );
+    $app = tag(
+      'div',
+      array(
+        $branding,
+        $longurl_field,
+        $flex,
+        $footnote,
+        $abuse,
+      )
+    );
 
-      $submit_tr = tag(
-        'tr',
-        tag(
-          'td',
-          tag(
-            'input',
-            null,
-            array(
-              'type' => 'submit',
-              'value' => 'Shorten URL',
-              'style' => 'width: 100%',
-            )
-          ),
-          array(
-            'colspan' => '2',
-          )
-        )
-      );
-
-      $abuse_tr = tag(
-        'tr',
-        tag(
-          'td',
-          tag(
-            'small',
-            'report abuse to abuse@da.gd'
-          )
-        )
-      );
-
-      $form = tag(
-        'form',
-        tag(
-          'table',
-          array(
-            $longurl_tr,
-            $shorturl_tr,
-            $submit_tr,
-            $abuse_tr,
-          )
-        ),
-        array(
-          'method' => 'POST',
-          'action' => '/',
-        )
-      );
-
-      return $form;
-
-    }
+    return $app;
   }
 }
