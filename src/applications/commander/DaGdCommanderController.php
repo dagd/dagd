@@ -30,9 +30,10 @@ final class DaGdCommanderController extends DaGdBaseClass {
   private function addCommand() {
     $query = $this->getWriteDB()->prepare(
       'INSERT INTO command_redirects(author_ip, command, url) VALUES(?, ?, ?)');
+    $ip = client_ip();
     $query->bind_param(
       'sss',
-      client_ip(),
+      $ip,
       $this->route_matches[2],
       $this->route_matches[3]);
     if ($query->execute()) {
