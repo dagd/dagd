@@ -89,16 +89,6 @@ Your friendly da.gd server',
 }
 set_exception_handler('handle_exception');
 
-function handle_fatal($errno, $errstr, $errfile, $errline) {
-  // TODO: Copy email magic from handle_exception() and do that here too.
-  statsd_bump('unhandled_fatal');
-  statsd_bump('status,code=500');
-  header('HTTP/1.0 500 Internal Server Error (Exception)');
-  echo 'An error has occurred within dagd! Sorry about that!';
-  die();
-}
-set_error_handler('handle_fatal');
-
 function require_application($name) {
   require_once dirname(__FILE__).'/../applications/'.$name.'/'.$name.'.php';
   return;

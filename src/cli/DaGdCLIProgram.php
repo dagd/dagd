@@ -2,7 +2,6 @@
 
 require_once(dirname(dirname(__FILE__)).'/resources/global_resources.php');
 set_exception_handler(null);
-set_error_handler(null);
 DaGdConfig::$config['general.autoload_search'][] = 'cli/error/';
 
 abstract class DaGdCLIProgram extends DaGdCLI {
