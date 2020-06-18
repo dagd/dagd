@@ -386,6 +386,9 @@ class DaGdConfig {
       // Google can't handle its own domains
       // "That TLD is not handled by this service."
       'whois.google.com',
+      // And we get referred here but it does not answer.
+      // We time out and fall back but let's avoid it altogether.
+      'rwhois.googlefiber.net',
     ),
 
     // How long should we wait before timing out trying to hit a server we are
