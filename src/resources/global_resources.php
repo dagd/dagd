@@ -59,8 +59,15 @@ function handle_exception($e) {
 
   statsd_bump('unhandled_exception');
   statsd_bump('status,code=500');
-  header('HTTP/1.0 500 Internal Server Error (Exception)');
-  echo 'An error has occurred within dagd! Sorry about that!';
+
+  $request = id(new DaGdRequest())
+    ->setCookies($_COOKIE)
+    ->setRequest($_REQUEST)
+    ->setServer($_SERVER);
+
+  $ctrl = new DaGd500Controller();
+  $ctrl->setRequest($request);
+  $ctrl->finalize()->render();
 
   if ($really_send_email) {
     mail(
