@@ -108,7 +108,7 @@ class DaGdConfig {
         'controller' => 'DaGdDNSController',
       ),
       '/roll/(\d+)?d(\d+)(?:([ +-])(\d+))?/?$' => array(
-          'controller' => 'DaGdRollController',
+        'controller' => 'DaGdRollController',
       ),
       '/status/(?P<code>\d+)/?(?P<message>.+)?/?' => array(
         'controller' => 'DaGdStatusController',
@@ -135,11 +135,8 @@ class DaGdConfig {
         'controller' => 'DaGdCowController',
       ),
       '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => array(
-        'methods' => array(
-          'GET' => 'DaGdShortenGETController',
-          'HEAD' => 'DaGdShortenGETController',
-          'POST' => 'DaGdShortenPOSTController',
-        ),
+        'controller' => 'DaGdShortenController',
+        'methods' => array('GET', 'HEAD', 'POST'),
       ),
     ),
 
