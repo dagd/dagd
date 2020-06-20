@@ -73,6 +73,13 @@ final class DaGd500Controller extends DaGdErrorController {
 
   public function execute(DaGdResponse $response) {
     $response->setCode(500);
-    return '500 - internal server error';
+
+    $trace = '';
+    $want_trace = DaGdConfig::get('general.display_errors');
+    if ($this->exception && $want_trace) {
+      $trace = "\n".$this->exception->getMessage();
+      $trace .= "\n".$this->exception->getTraceAsString();
+    }
+    return '500 - internal server error'.$trace;
   }
 }

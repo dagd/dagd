@@ -1,6 +1,6 @@
 <?php
 
-final class DaGd404Controller extends DaGdController {
+final class DaGd404Controller extends DaGdErrorController {
   private function setup($response) {
     $response->setCode(404);
   }
