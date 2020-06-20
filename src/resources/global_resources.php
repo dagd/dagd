@@ -41,6 +41,7 @@ if ($display_errors) {
 
 function handle_exception($e) {
   $debug = DaGdConfig::get('general.debug');
+  $display_errors = DaGdConfig::get('general.display_errors');
   $email = DaGdConfig::get('exceptions.email');
   $email_in_debug = DaGdConfig::get('exceptions.email_in_debug');
   $mail_to = DaGdConfig::get('exceptions.mail_to');
@@ -67,6 +68,7 @@ function handle_exception($e) {
 
   $ctrl = new DaGd500Controller();
   $ctrl->setRequest($request);
+  $ctrl->setException($e);
   $ctrl->finalize()->render();
 
   if ($really_send_email) {

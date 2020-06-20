@@ -79,14 +79,21 @@ abstract class DaGdController {
    * You MAY return the result, or do other processing and use the call only for
    * its side effects.
    */
-  public function error($code) {
+  public function error($code, $message = null) {
     $controller = null;
     switch ($code) {
+    case 400:
+      return id(new DaGd400Controller())
+        ->setRequest($this->getRequest())
+        ->setMessage($message);
     case 404:
-      return id(new DaGd404Controller())->setRequest($this->getRequest());
-      break;
+      return id(new DaGd404Controller())
+        ->setRequest($this->getRequest())
+        ->setMessage($message);
     case 405:
-      return id(new DaGd405Controller())->setRequest($this->getRequest());
+      return id(new DaGd405Controller())
+        ->setRequest($this->getRequest())
+        ->setMessage($message);
     }
   }
 
