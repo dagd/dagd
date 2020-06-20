@@ -44,6 +44,7 @@ class DaGdConfig {
       'resources/html/',
       'resources/help/',
       'applications/*/',
+      'applications/*/error/',
       'applications/*/resources/',
       'cli/',
     ),
@@ -137,7 +138,7 @@ class DaGdConfig {
         'methods' => array(
           'GET' => 'DaGdShortenGETController',
           'HEAD' => 'DaGdShortenGETController',
-          'POST' => 'DaGdShortenGETController',
+          'POST' => 'DaGdShortenPOSTController',
         ),
       ),
     ),
