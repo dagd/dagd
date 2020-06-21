@@ -1,32 +1,33 @@
 <?php
 
-class DaGdCoShortenController extends DaGdShortenGETController {
-    public static function getHelp() {
-        return array(
-            'title' => 'coshorten',
-            'summary' => 'The dual of a shorturl is a long url. This gets us back to the original URL.',
-            'path' => 'coshorten',
-            'examples' => array(
-                array(
-                    'arguments' => array('g'),
-                    'summary' => 'An example short URL with a custom suffix'),
-            ));
-    }
-
-  public function configure() {
-    parent::configure()
-      ->setStyle(null);
-    return $this;
+class DaGdCoShortenController extends DaGdController {
+  public static function getHelp() {
+    return array(
+      'title' => 'coshorten',
+      'summary' => 'The dual of a short url is a long url. This gets us back to the original URL.',
+      'path' => 'coshorten',
+      'examples' => array(
+        array(
+          'arguments' => array('g'),
+          'summary' => 'An example short URL with a custom suffix'),
+      ));
   }
 
-  public function render() {
-    $text = $this->getLongURL($this->route_matches[1]);
-    if ($text === null) {
-      return error404();
+  public function execute(DaGdResponse $response) {
+    $shorturl = $this->getRequest()->getRoutecomponent(1);
+
+    $query = new DaGdShortURLQuery($this);
+    $surl = $query->fromShort($shorturl);
+
+    if ($surl === null) {
+      return $this->error(404)->finalize($response);
     }
+
+    $text = $surl->getLongUrl();
+
     $qs = build_given_querystring();
-    if ($this->route_matches[2]) {
-      return $text.'/'.$this->route_matches[2].$qs;
+    if ($path = $this->getRequest()->getRouteComponent(2)) {
+      return $text.'/'.$path.$qs;
     } else {
       return $text.$qs;
     }
