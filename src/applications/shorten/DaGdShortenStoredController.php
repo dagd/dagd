@@ -41,6 +41,6 @@ final class DaGdShortenStoredController extends DaGdController {
   public function execute(DaGdResponse $response) {
     $baseurl = DaGdConfig::get('general.baseurl');
     $url = $baseurl.'/'.$this->getShortUrl()->getShortUrl();
-    return $response->setBody($url);
+    return $url;
   }
 }
