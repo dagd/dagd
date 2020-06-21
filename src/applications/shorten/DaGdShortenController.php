@@ -120,6 +120,10 @@ EOD;
   }
 
   public function renderText(DaGdTextResponse $response) {
+    if (strlen($this->getRequest()->param('url', '')) > 0) {
+      return $this->storeShortUrl($response);
+    }
+
     $matches = $this->getRequest()->getRouteMatches();
     if ($matches[1]) {
       return $this->getRedirectResponse($matches, $response);
