@@ -436,7 +436,7 @@ final class TestCLI extends DaGdCLIProgram {
       id(
         new DaGdRegexTest(
           '/s?url=https://some.spam.url&shorturl=spam',
-          '@Blacklisted original URL@'))
+          '@Blacklisted long URL@'))
         ->addGroup('shorten'));
 
     $runner->arm(
