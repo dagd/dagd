@@ -1,4 +1,4 @@
-CREATE TABLE dagd.command_redirects (
+CREATE TABLE command_redirects (
   id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
   author_ip VARCHAR(45) NOT NULL,
   command VARCHAR(10) NOT NULL,
