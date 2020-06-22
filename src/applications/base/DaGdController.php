@@ -177,6 +177,16 @@ abstract class DaGdController {
     return $this->render(new DaGdHTMLResponse());
   }
 
+  /**
+   * This function by default will call chooseRenderer() to figure out, based
+   * on the request, what kind of DaGdResponse to give.
+   *
+   * Controllers can override this to have full control over the response (for
+   * example, to ALWAYS render an image). Controllers which override it must
+   * always return a subclass of DaGdResponse which has had setRequest() called
+   * on it (usually with $this->getRequest() as its argument). This ensures the
+   * session system still works as expected.
+   */
   public function finalize() {
     return $this
       ->chooseRenderer()

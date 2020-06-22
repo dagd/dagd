@@ -39,10 +39,7 @@ class DaGdConfig {
     // Note that this does NOT recurse into subdirectories, they must be listed
     // individually.
     'general.autoload_search' => array(
-      'resources/error/',
-      'resources/http/',
-      'resources/html/',
-      'resources/help/',
+      'resources/*/',
       'applications/*/',
       'applications/*/error/',
       'applications/*/resources/',
@@ -134,6 +131,9 @@ class DaGdConfig {
       '/cow/?$' => array(
         'controller' => 'DaGdCowController',
       ),
+      '/static/(?P<path>.+)$' => array(
+        'controller' => 'DaGdStaticController',
+      ),
       '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdShortenController',
         'methods' => array('GET', 'HEAD', 'POST'),
@@ -168,6 +168,23 @@ class DaGdConfig {
       'Cache-Control: no-cache',
       'Access-Control-Allow-Origin: *', // CORS
       'Expires: -1',
+    ),
+
+    // These are allowed file extensions for serving static assets.
+    // It could be added to, to include things like txt and webfonts.
+    // This serves as both a whitelist and a mapping to mime-type.
+    'general.static_extensions_whitelist' => array(
+      'css' => 'text/css; charset=utf-8',
+      'js' => 'text/javascript; charset=utf-8',
+    ),
+
+    // Where are static files loaded from? This is relative to the "src"
+    // directory and gets run through realpath() as it gets munged with the
+    // requested asset path. Right now only one path is handled, but in the
+    // future we could allow for fallback paths similar to how the autoloader
+    // works.
+    'general.static_asset_paths' => array(
+      'webroot/static',
     ),
 
     // Required PHP extensions
