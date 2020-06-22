@@ -1,6 +1,6 @@
 <?php
 
-final class DaGdStatsController extends DaGdShortenGETController {
+final class DaGdStatsController extends DaGdController {
   public static function getHelp() {
     return array(
       'title' => 'stats',
@@ -13,22 +13,100 @@ final class DaGdStatsController extends DaGdShortenGETController {
       ));
   }
 
-  public function configure() {
-    parent::configure()
-      ->setWrapPre(true)
-      ->setStyle(null);
-    return $this;
+  public function getStyle() {
+    $style = <<<EOD
+#access_graph { border: 1px solid #ddd; }
+EOD;
+
+    return array_merge(
+      parent::getStyle(),
+      array($style)
+    );
   }
 
-  public function render() {
-    $stats = $this->getStatsForURL($this->route_matches[1]);
-    if ($stats === null) {
-      return error404();
+
+  public function render(DaGdHTMLResponse $response) {
+    $shorturl = $this->getRequest()->getRouteComponent(1);
+
+    $h1 = tag('h1', 'Statistics for '.$shorturl);
+
+    $demo_graph = <<<EOD
+function getGraphWidth() {
+  return {
+    width: document.getElementById('access_graph').offsetWidth,
+    height: 400,
+  }
+}
+
+function makeChart() {
+  console.time('chart');
+  let opts = {
+    title: "Short URL Accesses",
+    width: 1080,
+    height: 400,
+    scales: {
+      x: {
+        time: false
+      },
+    },
+    series: [
+      {},
+      {
+        stroke: "green",
+      },
+    ],
+    axes: [
+      {},
+      {
+        label: 'Accesses',
+      },
+    ],
+  };
+
+  const data = [
+    [ 1, 2, 3, 4, 5, 6, 7],
+    [40,43,60,65,71,73,80],
+  ];
+
+  let u = new uPlot(opts, data, document.getElementById('access_graph'));
+
+  function throttle(cb, limit) {
+    var wait = false;
+    return function() {
+      if (!wait) {
+        requestAnimationFrame(cb);
+        wait = true;
+        setTimeout(function() {
+          wait = false;
+        }, limit);
+      }
     }
-    $resp = '';
-    foreach ($stats as $k => $v) {
-      $resp .= $k.': '.$v."\n";
-    }
-    return $resp;
+  }
+  window.addEventListener("resize", throttle(function() { u.setSize(getGraphWidth()); }, 100));
+  console.timeEnd('chart');
+}
+
+document.addEventListener('DOMContentLoaded', function(event) {
+  makeChart();
+});
+EOD;
+
+    $body = tag(
+      'div',
+      array(
+        $h1,
+        tag('div', '', array('id' => 'access_graph', 'style' => 'width: 100%;')),
+        tag('script', $demo_graph, array('type' => 'text/javascript'), true),
+      )
+    );
+
+    $template = $this
+      ->getBaseTemplate()
+      ->addStylesheet('uPlot/uPlot.min.css')
+      ->addJavascript('uPlot/uPlot.iife.min.js')
+      ->setBody($body)
+      ->getHtmlTag();
+
+    return $response->setBody($template);
   }
 }
