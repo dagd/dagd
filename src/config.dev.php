@@ -131,7 +131,7 @@ class DaGdConfig {
       '/cow/?$' => array(
         'controller' => 'DaGdCowController',
       ),
-      '/static/(?P<path>.+)$' => array(
+      '/static/(?P<mtime>\w+)/(?P<path>.+)$' => array(
         'controller' => 'DaGdStaticController',
       ),
       '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => array(
