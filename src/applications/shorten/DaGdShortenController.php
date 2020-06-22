@@ -121,7 +121,7 @@ EOD;
     if ($redir) {
       return $redir;
     }
-    return $this->error(404)->finalize($response);
+    return $this->error(404)->finalize();
   }
 
   public function renderText(DaGdTextResponse $response) {
@@ -170,7 +170,7 @@ EOD;
         ->error(
           400,
           'Cannot create something out of nothing. No long URL given.')
-        ->finalize($response);
+        ->finalize();
     }
 
     $query = new DaGdShortURLQuery($this);
@@ -180,13 +180,13 @@ EOD;
       statsd_bump('shorturl_invalid_scheme');
       return $this
         ->error(400, 'Long URL must have http:// or https:// scheme.')
-        ->finalize($response);
+        ->finalize();
     }
 
     // Is the user's IP banned?
     if ($query->isBannedIP($this->getRequest()->getClientIP())) {
       statsd_bump('shorturl_author_ip_banned');
-      return $this->error(403)->finalize($response);
+      return $this->error(403)->finalize();
     }
 
     // Is the long URL whitelisted or blacklisted?
@@ -196,7 +196,7 @@ EOD;
         // ...but it *is* blacklisted.
         return $this
           ->error(400, 'Blacklisted long URL.')
-          ->finalize($response);
+          ->finalize();
       }
     }
 
@@ -208,7 +208,7 @@ EOD;
         statsd_bump('shorturl_custom_invalid_regex');
         return $this
           ->error(400, 'Custom short URL contained invalid characters.')
-          ->finalize($response);
+          ->finalize();
       }
 
       // Has the URL been taken yet?
@@ -216,7 +216,7 @@ EOD;
         statsd_bump('shorturl_custom_not_free');
         return $this
           ->error(400, 'Short URL already taken. Pick a different one.')
-          ->finalize($response);
+          ->finalize();
       }
 
       // Is someone trying to be sneaky and take the URL of another app?
@@ -227,7 +227,7 @@ EOD;
             400,
             'Custom short URL conflicts with other da.gd URLs. '.
             'Pick a different one.')
-          ->finalize($response);
+          ->finalize();
       }
     } else {
       // We are not given a short URL. If we already have a random URL for the
@@ -240,7 +240,7 @@ EOD;
         return id(new DaGdShortenStoredController())
           ->setShortUrl($existing_shorturl)
           ->setRequest($this->getRequest())
-          ->finalize($response);
+          ->finalize();
       } else {
         // Otherwise the short URL does not exist in the database. Find a good
         // random string to use.
@@ -267,7 +267,7 @@ EOD;
     return id(new DaGdShortenStoredController())
       ->setShortUrl($surl)
       ->setRequest($this->getRequest())
-      ->finalize($response);
+      ->finalize();
   }
 
   private function form() {
