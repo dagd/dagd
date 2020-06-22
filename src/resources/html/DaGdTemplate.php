@@ -3,6 +3,8 @@
 abstract class DaGdTemplate {
   private $title = '';
   private $style = array();
+  private $stylesheets = array();
+  private $javascripts = array();
   private $body;
   private $escape = true;
   private $darkmode = false;
@@ -42,6 +44,69 @@ abstract class DaGdTemplate {
     return tag('style', $css, array(), true);
   }
 
+  public function setStylesheets($stylesheets) {
+    $this->stylesheets = $stylesheets;
+    return $this;
+  }
+
+  public function getStylesheets() {
+    return $this->stylesheets;
+  }
+
+  public function addStylesheet($stylesheet) {
+    if (!in_array($stylesheet, $this->getStylesheets())) {
+      $this->stylesheets[] = $stylesheet;
+    }
+    return $this;
+  }
+
+  public function setJavascripts($javascripts) {
+    $this->javascripts = $javascripts;
+    return $this;
+  }
+
+  public function getJavascripts() {
+    return $this->javascripts;
+  }
+
+  public function addJavascript($javascript) {
+    if (!in_array($javascript, $this->getJavascripts())) {
+      $this->javascripts[] = $javascript;
+    }
+    return $this;
+  }
+
+  private function stylesheetsToTags() {
+    $out = array();
+    foreach ($this->getStylesheets() as $stylesheet) {
+      $out[] = tag(
+        'link',
+        null,
+        array(
+          'href' => DaGdStaticController::url($stylesheet),
+          'rel' => 'stylesheet',
+          'type' => 'text/css',
+        )
+      );
+    }
+    return $out;
+  }
+
+  private function javascriptsToTags() {
+    $out = array();
+    foreach ($this->getJavascripts() as $javascript) {
+      $out[] = tag(
+        'script',
+        '',
+        array(
+          'src' => DaGdStaticController::url($javascript),
+          'type' => 'text/javascript',
+        )
+      );
+    }
+    return $out;
+  }
+
   public function setBody($body) {
     $this->body = $body;
     return $this;
@@ -54,7 +119,10 @@ abstract class DaGdTemplate {
   public function getBodyTag() {
     return tag(
       'body',
-      $this->getBody(),
+      array(
+        $this->getBody(),
+        $this->javascriptsToTags(),
+      ),
       array(
         'class' => $this->getDarkmode() ? 'darkmode' : 'lightmode',
       ),
@@ -109,6 +177,7 @@ abstract class DaGdTemplate {
           )
         ),
         $this->getTitleTag(),
+        $this->stylesheetsToTags(),
         $this->getStyleTag(),
       )
     );
