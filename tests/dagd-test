@@ -4,6 +4,7 @@
 // Activate the autoloader
 require_once(dirname(dirname(__FILE__)).'/src/resources/global_resources.php');
 
+// TODO: Throw all this junk in the autoloader path.
 require_once dirname(__FILE__).'/runner.php';
 require_once dirname(__FILE__).'/test_content_type.php';
 require_once dirname(__FILE__).'/test_header_regex.php';
@@ -11,6 +12,7 @@ require_once dirname(__FILE__).'/test_exact_match.php';
 require_once dirname(__FILE__).'/test_regex.php';
 require_once dirname(__FILE__).'/test_response_code.php';
 require_once dirname(__FILE__).'/test_response_regex.php';
+require_once dirname(__FILE__).'/test_session_regex.php';
 require_once dirname(__FILE__).'/test_tag_unit.php';
 
 final class TestCLI extends DaGdCLIProgram {
@@ -498,9 +500,24 @@ final class TestCLI extends DaGdCLIProgram {
       id(new DaGdRegexTest('/leftpad/10/z/foo', '@^z{7}foo$@'))
         ->addGroup('leftpad'));
 
-    /************ ?darkmode cookie ************/
+    /************ session cookies ************/
     $runner->arm(
-      id(new DaGdHeaderRegexTest('/?darkmode', 'Set-Cookie', '@^darkmode=true;@'))
+      id(new DaGdHeaderRegexTest('/?darkmode', 'Set-Cookie', '@^DaGdSession_@'))
+        ->addGroup('darkmode')
+        ->addGroup('session')
+        ->setAccept('text/html'));
+    $runner->arm(
+      id(new DaGdSessionRegexTest('/?darkmode', 'darkmode', '@^true$@'))
+        ->addGroup('darkmode')
+        ->addGroup('session')
+        ->setAccept('text/html'));
+    $runner->arm(
+      id(new DaGdSessionRegexTest('/?darkmode=1', 'darkmode', '@^true$@'))
+        ->addGroup('darkmode')
+        ->addGroup('session')
+        ->setAccept('text/html'));
+    $runner->arm(
+      id(new DaGdSessionRegexTest('/?darkmode=0', 'darkmode', '@^false$@'))
         ->addGroup('darkmode')
         ->addGroup('session')
         ->setAccept('text/html'));
