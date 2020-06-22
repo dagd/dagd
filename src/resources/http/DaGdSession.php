@@ -34,7 +34,7 @@ final class DaGdSession {
       $encrypted_data .= $v;
     }
 
-    return $this->loadFromEncryptedData($encrypted_data);
+    return $this->loadFromCookies($encrypted_data);
   }
 
   // This is abstracted out mainly for tests to call into, without having an
