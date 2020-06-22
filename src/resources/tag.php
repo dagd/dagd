@@ -39,7 +39,15 @@ final class Tag {
         // escaped.
         return $body;
       } else {
-        return htmlspecialchars($body, ENT_HTML5, 'UTF-8');
+        if (is_array($body)) {
+          $out = '';
+          foreach ($body as $tag) {
+            $out .= $this->renderPotentialInnerTag($tag);
+          }
+          return $out;
+        } else {
+          return htmlspecialchars($body, ENT_HTML5, 'UTF-8');
+        }
       }
     }
   }

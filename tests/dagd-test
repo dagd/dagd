@@ -603,6 +603,31 @@ EOD;
             array(
               'multiple',
               'strings',
+              tag('b', 'and this is bold'),
+              array(
+                tag('p', 'an array in an array?'),
+                array(
+                  tag('i', 'in an array'),
+                  array(
+                    tag('u', 'yo dawg'),
+                  ),
+                ),
+              ),
+            )
+          ),
+          '<p>multiplestrings<b>and this is bold</b><p>an array in an '.
+          'array?</p><i>in an array</i><u>yo dawg</u></p>'))
+      ->addGroup('unit')
+      ->addGroup('tag'));
+
+    $runner->arm(
+      id(
+        new DaGdTagUnitTest(
+          tag(
+            'p',
+            array(
+              'multiple',
+              'strings',
               tag(
                 'b',
                 array(
