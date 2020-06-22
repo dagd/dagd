@@ -36,12 +36,15 @@ class DaGdShortenController extends DaGdController {
   font-size: 1em;
   color: #888;
 }
-#app input.textinput, #app span#shorturl_label {
+#app input.textinput, #app #shorturl_label {
   padding: 20px;
   box-sizing: border-box;
   font-family: "Proxima Nova Condensed", Roboto, Ubuntu, sans-serif;
   font-weight: 100;
   font-size: 2em;
+}
+.darkmode #app input.textinput, .darkmode #app #shorturl_label {
+  background-color: #666;
 }
 #app input#url {
   border-radius: 3px;
