@@ -33,23 +33,23 @@ final class Tag {
     // This should let us compose tags that have already been constructed.
     if ($body instanceof Tag) {
       return $body->renderSafe();
-    } else {
-      if ($this->cdata) {
-        // This branch is for CDATA tags (style and script) which don't get
-        // escaped.
-        return $body;
-      } else {
-        if (is_array($body)) {
-          $out = '';
-          foreach ($body as $tag) {
-            $out .= $this->renderPotentialInnerTag($tag);
-          }
-          return $out;
-        } else {
-          return htmlspecialchars($body, ENT_HTML5, 'UTF-8');
-        }
-      }
     }
+
+    if ($this->cdata) {
+      // This branch is for CDATA tags (style and script) which don't get
+      // escaped.
+      return $body;
+    }
+
+    if (is_array($body)) {
+      $out = '';
+      foreach ($body as $tag) {
+        $out .= $this->renderPotentialInnerTag($tag);
+      }
+      return $out;
+    }
+
+    return htmlspecialchars($body, ENT_HTML5, 'UTF-8');
   }
 
   public function renderSafe() {
