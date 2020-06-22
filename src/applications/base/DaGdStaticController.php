@@ -49,8 +49,6 @@ final class DaGdStaticController extends DaGdController {
     $configured_real = realpath($allowed_path);
     $wanted_real = realpath($wanted);
 
-    var_dump($wanted_real);
-
     if (strpos($wanted_real, $configured_real) !== 0) {
       return $this->error(404)->finalize();
     }
