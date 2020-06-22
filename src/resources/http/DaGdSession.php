@@ -34,6 +34,13 @@ final class DaGdSession {
       $encrypted_data .= $v;
     }
 
+    return $this->loadFromEncryptedData($encrypted_data);
+  }
+
+  // This is abstracted out mainly for tests to call into, without having an
+  // actual DaGdRequest at their disposal. In normal cases, first-party code
+  // should go through loadSession instead.
+  public function loadFromCookies($encrypted_data) {
     $iv_and_data = explode('.', $encrypted_data);
     if (count($iv_and_data) != 2) {
       throw new Exception('Could not parse IV and encrypted session data');
