@@ -14,8 +14,10 @@ final class DaGdStatsController extends DaGdController {
   }
 
   public function getStyle() {
+    $url = DaGdStaticController::url('img/loader.gif');
     $style = <<<EOD
 #access_graph { border: 1px solid #ddd; }
+.loading { background: transparent url($url) center no-repeat; }
 EOD;
 
     return array_merge(
@@ -24,11 +26,12 @@ EOD;
     );
   }
 
-
   public function render(DaGdHTMLResponse $response) {
     $shorturl = $this->getRequest()->getRouteComponent(1);
 
     $query = new DaGdShortURLQuery($this);
+
+    // Daily access graph
     $accesses = $query->dailyAccess($shorturl, 60);
     $dates = array();
     $counts = array();
@@ -45,19 +48,18 @@ EOD;
 function getGraphWidth() {
   return {
     width: document.getElementById('access_graph').offsetWidth,
-    height: 400,
+    height: 240,
   }
 }
 
 function makeChart() {
   console.time('chart');
   let opts = {
-    title: "Short URL Accesses",
-    width: 1080,
-    height: 400,
+    title: "Accesses, last 60 days",
+    width: document.getElementById('access_graph').offsetWidth,
+    height: 240,
     scales: {
       x: {
-
       },
     },
     series: [
@@ -111,11 +113,29 @@ document.addEventListener('DOMContentLoaded', function(event) {
 });
 EOD;
 
+    $want_screenshots = DaGdConfig::get('shorten.stats_screenshots');
+    $screenshot = null;
+    if ($want_screenshots) {
+      $screenshot = tag(
+        'img',
+        null,
+        array(
+          'alt' => 'screenshot',
+          'src' => '/screenshot/'.$shorturl,
+          'class' => 'loading',
+          'height' => '240',
+          'width' => '320',
+          'style' => 'float: left;',
+        )
+      );
+    }
+
     $body = tag(
       'div',
       array(
         $h1,
-        tag('div', '', array('id' => 'access_graph', 'style' => 'width: 100%;')),
+        $screenshot,
+        tag('div', '', array('id' => 'access_graph', 'style' => 'float: right; width: 65%;')),
         tag('script', $demo_graph, array('type' => 'text/javascript'), true),
       )
     );

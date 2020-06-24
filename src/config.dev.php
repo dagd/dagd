@@ -182,6 +182,7 @@ class DaGdConfig {
     'general.static_extensions_whitelist' => array(
       'css' => 'text/css; charset=utf-8',
       'js' => 'text/javascript; charset=utf-8',
+      'gif' => 'image/gif',
     ),
 
     // Where are static files loaded from? This is relative to the "src"
@@ -288,6 +289,9 @@ class DaGdConfig {
 
     // API key from Google Console.
     'shorten.safe_browsing_api_key' => '',
+
+    // Should stats pages show screenshots when possible?
+    'shorten.stats_screenshots' => true,
 
     // API key for Google PageSpeed Insights, used for screenshot endpoints.
     'shorten.google_pagespeed_insights_key' => '',
