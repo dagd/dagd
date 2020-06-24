@@ -72,6 +72,15 @@ function makeChart() {
         label: 'Accesses',
       },
     ],
+    cursor: {
+      show: false
+    },
+    select: {
+      show: false,
+    },
+    legend: {
+      show: false,
+    },
   };
 
   const data = [
