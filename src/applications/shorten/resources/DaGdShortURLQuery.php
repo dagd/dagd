@@ -238,8 +238,8 @@ final class DaGdShortURLQuery {
 
     // Special-case the first fetch so we can use it to prepare $out.
     $query->fetch();
-    $now_date = date('Y-m-d');
     $iter_date = date('Y-m-d', strtotime($date));
+    $first_date = $iter_date;
     // We want to start with the first date in the result.
     while ($iter_date != $now_date) {
       // Store the epoch for the start of the day.
@@ -250,7 +250,7 @@ final class DaGdShortURLQuery {
 
     // And fill in the first one that we got with the fetch() above so we don't
     // drop any data.
-    $key = strtotime($iter_date);
+    $key = strtotime($first_date);
     $out[$key] = $count;
 
     // Now fetch the rest of the rows.
