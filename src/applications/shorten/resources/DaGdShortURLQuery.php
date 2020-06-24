@@ -238,6 +238,7 @@ final class DaGdShortURLQuery {
 
     // Special-case the first fetch so we can use it to prepare $out.
     $query->fetch();
+    $now_date = date('Y-m-d');
     $iter_date = date('Y-m-d', strtotime($date));
     $first_date = $iter_date;
     // We want to start with the first date in the result.
