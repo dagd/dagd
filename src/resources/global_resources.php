@@ -7,6 +7,9 @@ if (!$config_file ||
   throw new Exception("No configuration file could be loaded.");
 }
 
+$timezone = DaGdConfig::get('general.timezone');
+date_default_timezone_set($timezone);
+
 function __dagd_autoload($cls) {
   $paths = DaGdConfig::get('general.autoload_search');
   foreach ($paths as $path) {

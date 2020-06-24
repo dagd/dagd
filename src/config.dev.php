@@ -12,6 +12,9 @@ class DaGdConfig {
 
     'general.useragent' => 'da.gd/1.0',
 
+    // The timezone to use for dealing with date manipulations
+    'general.timezone' => 'UTC',
+
     // These are the "Accept:" headers we return html for.
     // Any of these can match anywhere in the Accept header.
     // These are imploded by "|", so all |'s should be escaped.
