@@ -131,6 +131,9 @@ class DaGdConfig {
       '/stats/([^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdStatsController',
       ),
+      '/screenshot/(.*)/?$' => array(
+        'controller' => 'DaGdShortenScreenshotController',
+      ),
       '/cow/?$' => array(
         'controller' => 'DaGdCowController',
       ),
@@ -285,6 +288,9 @@ class DaGdConfig {
 
     // API key from Google Console.
     'shorten.safe_browsing_api_key' => '',
+
+    // API key for Google PageSpeed Insights, used for screenshot endpoints.
+    'shorten.google_pagespeed_insights_key' => '',
 
     // Regex to validate custom short URLs against
     'shorten.custom_url_regex' => '@^[\d\w-_]+$@i',
