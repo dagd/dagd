@@ -28,6 +28,17 @@ EOD;
   public function render(DaGdHTMLResponse $response) {
     $shorturl = $this->getRequest()->getRouteComponent(1);
 
+    $query = new DaGdShortURLQuery($this);
+    $accesses = $query->dailyAccess($shorturl, 60);
+    $dates = array();
+    $counts = array();
+    foreach ($accesses as $date => $count) {
+      $dates[] = $date;
+      $counts[] = $count;
+    }
+    $dates = implode(',', $dates);
+    $counts = implode(',', $counts);
+
     $h1 = tag('h1', 'Statistics for '.$shorturl);
 
     $demo_graph = <<<EOD
@@ -46,7 +57,7 @@ function makeChart() {
     height: 400,
     scales: {
       x: {
-        time: false
+
       },
     },
     series: [
@@ -64,8 +75,8 @@ function makeChart() {
   };
 
   const data = [
-    [ 1, 2, 3, 4, 5, 6, 7],
-    [40,43,60,65,71,73,80],
+    [$dates],
+    [$counts],
   ];
 
   let u = new uPlot(opts, data, document.getElementById('access_graph'));

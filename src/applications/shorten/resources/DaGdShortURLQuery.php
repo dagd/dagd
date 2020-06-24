@@ -207,4 +207,59 @@ final class DaGdShortURLQuery {
     }
   }
 
+  /**
+   * Grab daily access counts for a given short URL. Returns an array where
+   * keys are dates of the format yyyy-mm-dd, and values are the number of
+   * accesses. Returns null if the query failed or the short URL does not exist.
+   *
+   * The column shorturl_access.shorturl_id is a FK to shorturls and
+   * automatically indexed, so this query should be pretty fast.
+   *
+   * @return array described above | null
+   */
+  public function dailyAccess($shorturl, $days) {
+    $out = array();
+
+    $date = null;
+    $count = 0;
+
+    $query = $this
+      ->controller
+      ->getReadDB()
+      ->prepare(
+        'select access_dt, count(*) from shorturl_access where '.
+        'shorturl_id=(select id from shorturls where shorturl=?) '.
+        'and access_dt >= date_sub(now(), interval ? day) group by '.
+        'year(access_dt), month(access_dt), day(access_dt) order by '.
+        'access_dt asc');
+    $query->bind_param('si', $shorturl, $days);
+    $query->execute();
+    $query->bind_result($date, $count);
+
+    // Special-case the first fetch so we can use it to prepare $out.
+    $query->fetch();
+    $now_date = date('Y-m-d');
+    $iter_date = date('Y-m-d', strtotime($date));
+    // We want to start with the first date in the result.
+    while ($iter_date != $now_date) {
+      // Store the epoch for the start of the day.
+      $key = strtotime($iter_date);
+      $out[$key] = 0;
+      $iter_date = date('Y-m-d', strtotime($iter_date.' + 1 day'));
+    }
+
+    // And fill in the first one that we got with the fetch() above so we don't
+    // drop any data.
+    $key = strtotime($iter_date);
+    $out[$key] = $count;
+
+    // Now fetch the rest of the rows.
+    while ($query->fetch()) {
+      $date_epoch = strtotime(date('Y-m-d', strtotime($date)));
+      $out[$date_epoch] = $count;
+    }
+
+    $query->close();
+    return $out;
+  }
 }
