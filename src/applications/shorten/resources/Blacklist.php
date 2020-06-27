@@ -10,6 +10,7 @@ require_once dirname(__FILE__).'/safe_browsing.php';
 class Blacklist {
   protected $url;
   protected $blacklisted = false;
+  protected $blacklist_source = '';
 
   public function __construct($url) {
     $this->url = $url;
@@ -22,6 +23,15 @@ class Blacklist {
 
   public function getBlacklisted() {
     return $this->blacklisted;
+  }
+
+  public function setBlacklistSource($blacklist_source) {
+    $this->blacklist_source = $blacklist_source;
+    return $this;
+  }
+
+  public function getBlacklistSource() {
+    return $this->blacklist_source;
   }
 
   public function checkString() {
@@ -37,6 +47,7 @@ class Blacklist {
         statsd_bump('shorturl_blacklisted_string');
         statsd_bump('shorturl_blacklisted');
         $this->setBlacklisted(true);
+        $this->setBlacklistSource('shorten.longurl_blacklist_strings');
         return $this;
       }
     }
@@ -55,6 +66,7 @@ class Blacklist {
         statsd_bump('shorturl_blacklisted_regex');
         statsd_bump('shorturl_blacklisted');
         $this->setBlacklisted(true);
+        $this->setBlacklistSource('shorten.longurl_blacklist');
         return $this;
       }
     }
@@ -76,6 +88,7 @@ class Blacklist {
         statsd_bump('shorturl_blacklisted_dnsbl');
         statsd_bump('shorturl_blacklisted');
         $this->setBlacklisted(true);
+        $this->setBlacklistSource('shorten.dnsbl');
         return $this;
       }
     }
@@ -97,6 +110,7 @@ class Blacklist {
         statsd_bump('shorturl_blacklisted_safebrowsing');
         statsd_bump('shorturl_blacklisted');
         $this->setBlacklisted(true);
+        $this->setBlacklistSource('shorten.safe_browsing');
         return $this;
       }
     }
@@ -104,13 +118,21 @@ class Blacklist {
     return $this;
   }
 
+  /**
+   * Run all checks and return $this.
+   */
+  public function checkAll() {
+    return $this
+      ->checkString()
+      ->checkRegex()
+      ->checkDNSBL()
+      ->checkSafeBrowsing();
+  }
+
   public function check() {
     try {
-      return $this
-        ->checkString()
-        ->checkRegex()
-        ->checkDNSBL()
-        ->checkSafeBrowsing()
+      $this
+        ->checkAll()
         ->getBlacklisted();
     } catch (Exception $ex) {
       return $this->getBlacklisted();
