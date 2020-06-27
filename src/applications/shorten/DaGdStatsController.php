@@ -26,6 +26,10 @@ EOD;
     );
   }
 
+  public function execute(DaGdResponse $response) {
+    return 'coming soon';
+  }
+
   public function render(DaGdHTMLResponse $response) {
     $shorturl = $this->getRequest()->getRouteComponent(1);
 
