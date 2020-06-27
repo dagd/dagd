@@ -204,7 +204,7 @@ final class TestCLI extends DaGdCLIProgram {
       id(new DaGdResponseCodeTest('/break', 500))
         ->addGroup('break'));
     $runner->arm(
-      id(new DaGdRegexTest('/break', '@An error has occurred@'))
+      id(new DaGdRegexTest('/break', '@500 - internal server error@'))
         ->addGroup('break'));
 
     /************ /c/store/xxxxxxx/xxxxxxx ************/
@@ -450,12 +450,12 @@ final class TestCLI extends DaGdCLIProgram {
       id(new DaGdResponseCodeTest('/stats/g', 200))
       ->addGroup('stats'));
 
-    $runner->arm(
-      id(
-        new DaGdRegexTest(
-          '/stats/g',
-          '@accesses: \d@'))
-        ->addGroup('stats'));
+    //$runner->arm(
+    //  id(
+    //    new DaGdRegexTest(
+    //      '/stats/g',
+    //      '@accesses: \d@'))
+    //    ->addGroup('stats'));
 
     /************ ?strip ************/
     $runner->arm(
