@@ -51,7 +51,10 @@ class DaGdShortenController extends DaGdController {
   border: 2px solid #ddd;
   width: 100%;
 }
-#app input.textinput:focus, #app #flex:focus-within { border-color: #3a9 !important; }
+#app input.textinput:focus, #app #flex:focus-within {
+  border-color: #3a9 !important;
+  outline: none;
+}
 #app #shorturl_label {
   box-sizing: border-box;
   padding: 20px;
