@@ -131,7 +131,7 @@ class Blacklist {
 
   public function check() {
     try {
-      $this
+      return $this
         ->checkAll()
         ->getBlacklisted();
     } catch (Exception $ex) {
