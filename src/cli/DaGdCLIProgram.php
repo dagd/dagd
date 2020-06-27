@@ -133,12 +133,6 @@ abstract class DaGdCLIProgram extends DaGdCLI {
         }
       }
     }
-
-    foreach ($this->parameters as $k => $v) {
-      if ($v->getRequired() && !$v->getGiven()) {
-        throw new DaGdRequiredParameterNotPassedCLIException($k);
-      }
-    }
   }
 
   public function debugArgs() {
@@ -190,14 +184,23 @@ abstract class DaGdCLIProgram extends DaGdCLI {
   }
 
   public function run() {
+    // Things to handle before checking for require parameters.
+    // In particular, we want to allow --help always
     if ($this->param('--help')->getGiven()) {
       $this->showUsage();
       exit(0);
     }
 
-    if ($this->param('--debug-args')->getGiven()) {
+    $debug_args = $this->param('--debug-args');
+    if ($debug_args && $debug_args->getGiven()) {
       $this->debugArgs();
       exit(0);
+    }
+
+    foreach ($this->parameters as $k => $v) {
+      if ($v->getRequired() && !$v->getGiven()) {
+        throw new DaGdRequiredParameterNotPassedCLIException($k);
+      }
     }
   }
 
