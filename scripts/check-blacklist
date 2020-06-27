@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+
+// Activate the autoloader
+require_once dirname(dirname(__FILE__)).'/src/resources/global_resources.php';
+
+final class BlacklistCLI extends DaGdCLIProgram {
+  function run() {
+    parent::run();
+
+    $url = $this->param('--url')->getValue();
+    $bl = id(new Blacklist($url))->checkAll();
+    if (!$bl->getBlacklisted()) {
+      echo $this->ok('The URL is NOT blacklisted');
+      exit(0);
+    }
+
+    echo $this->error('The URL is blacklisted');
+    echo 'Blacklist source: '.$bl->getBlacklistSource()."\n";
+    exit(0);
+  }
+}
+
+$cli = new BlacklistCLI();
+$cli->setName('check-blacklist');
+$cli->setDescription('Run a URL through blacklist logic');
+$cli->addParameter(
+  id(new DaGdCLIArgument)
+    ->setName('--url')
+    ->setShortname('-u')
+    ->setRequired(true)
+    ->setDescription('The long URL to run against blacklist logic'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--help')
+    ->setShortname('-h')
+    ->setDescription('Show program help'));
+$cli->execute($argv);
