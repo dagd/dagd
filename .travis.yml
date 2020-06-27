@@ -1,7 +1,7 @@
 sudo: required
 
 env:
-  - DaGdConfigFile: config.dev.php
+  - DaGdConfigFile: ../container/config.container.php
 
 services:
   - docker
