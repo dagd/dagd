@@ -16,6 +16,14 @@ abstract class DaGdCLIException extends DaGdException {
     return null;
   }
 
+  public function getPublicMessage() {
+    return $this->getCliMessage();
+  }
+
+  public function getPrivateMessage() {
+    return $this->getCliMessage();
+  }
+
   public function toCli($colors = true) {
     $str = null;
 
