@@ -57,6 +57,9 @@ final class Tag {
     foreach ($this->attributes as $attr => $val) {
       $attr_str = $attr;
       if ($val !== TAG_ATTR_BARE) {
+        if (!is_string($val)) {
+          throw new Exception('Attribute value not string: '.class_repr($val));
+        }
         $attr_str .= '="'.htmlspecialchars($val).'"';
       }
       $attrs[] = $attr_str;
