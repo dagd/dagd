@@ -4,6 +4,7 @@ final class DaGdRequest {
   private $cookies = array();
   private $request = array();
   private $server = array();
+  private $method;
   private $route_matches = array();
   private $session;
 
@@ -32,11 +33,16 @@ final class DaGdRequest {
 
   public function setServer($server) {
     $this->server = $server;
+    $this->method = $_SERVER['REQUEST_METHOD'];
     return $this;
   }
 
   public function getServer() {
     return $this->server;
+  }
+
+  public function getMethod() {
+    return $this->method;
   }
 
   public function setRouteMatches($route_matches) {
