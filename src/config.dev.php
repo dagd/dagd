@@ -211,6 +211,10 @@ class DaGdConfig {
     // This is in seconds. Default is 30 days (60 * 60 * 24 * 30 seconds).
     'session.expiry' => 2592000,
 
+    // For forms, how long should CSRF tokens be? (This is under session because
+    // that is where it gets stored.)
+    'session.form_csrf_length' => 32,
+
     // Which IPs can access /metrics?
     'metrics.allowed_ips' => array(
       '127.0.0.1',
