@@ -2,6 +2,7 @@
 
 final class DaGd404Controller extends DaGdErrorController {
   private function setup($response) {
+    statsd_bump('status,code=404');
     $response->setCode(404);
   }
 
@@ -45,7 +46,7 @@ final class DaGd404Controller extends DaGdErrorController {
   }
 
   public function execute(DaGdResponse $response) {
-    $response->setCode(404);
+    $this->setup($response);
     return '404 - route not found';
   }
 }

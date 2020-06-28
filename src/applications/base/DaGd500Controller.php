@@ -4,6 +4,7 @@ final class DaGd500Controller extends DaGdErrorController {
   private $exception;
 
   private function setup($response) {
+    statsd_bump('status,code=500');
     $response->setCode(500);
   }
 
@@ -72,7 +73,7 @@ final class DaGd500Controller extends DaGdErrorController {
   }
 
   public function execute(DaGdResponse $response) {
-    $response->setCode(500);
+    $this->setup($response);
 
     $trace = '';
     $want_trace = DaGdConfig::get('general.display_errors');
