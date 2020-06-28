@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(__FILE__).'/resources/random_string.php';
-
 class DaGdShortenController extends DaGdController {
   // TODO: Port to new help system
   public static function getHelp() {
