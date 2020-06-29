@@ -140,6 +140,9 @@ class DaGdConfig {
       '/static/(?P<mtime>\w+)/(?P<path>.+)$' => array(
         'controller' => 'DaGdStaticController',
       ),
+      '/notify(?:/|/(.+)|)$' => array(
+        'controller' => 'DaGdComingSoonController',
+      ),
       '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdShortenController',
         'methods' => array('GET', 'HEAD', 'POST'),
