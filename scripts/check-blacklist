@@ -5,7 +5,7 @@
 require_once dirname(dirname(__FILE__)).'/src/resources/global_resources.php';
 
 final class BlacklistCLI extends DaGdCLIProgram {
-  function run() {
+  public function run() {
     parent::run();
 
     $url = $this->param('--url')->getValue();

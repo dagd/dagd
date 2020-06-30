@@ -16,7 +16,7 @@ require_once dirname(__FILE__).'/test_session_regex.php';
 require_once dirname(__FILE__).'/test_tag_unit.php';
 
 final class TestCLI extends DaGdCLIProgram {
-  function run() {
+  public function run() {
     parent::run();
 
     $runner = new DaGdTestRunner();
