@@ -39,6 +39,7 @@ set -e
 
 #rm -vf ./sql/current_schema
 #./sql/patcher.php --yes
+echo 0 > sql/current_schema
 ./scripts/sql -a .
 cp -v container/dagd-httpd.conf /etc/httpd/conf.d/
 
