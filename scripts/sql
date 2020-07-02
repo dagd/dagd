@@ -89,7 +89,7 @@ final class SQLCLI extends DaGdCLIProgram {
     $current_schema_file = realpath($application.'/sql/current_schema');
     if (file_exists($current_schema_file)) {
       $contents = file_get_contents($current_schema_file);
-      if (!is_numeric(trim($contents)))) {
+      if (!is_numeric(trim($contents))) {
         $this->error(
           'Found current_schema file at '.$current_schema_file.' but it was '.
           'invalid. Something weird has happened.');
