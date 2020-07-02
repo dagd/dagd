@@ -69,4 +69,12 @@ abstract class DaGdCLI {
   public function ok($str, $colors = true) {
     return $this->status($str, $this->green('OK'), 'OK');
   }
+
+  public function info($str, $colors = true) {
+    return $this->status($str, $this->yellow('INFO'), 'INFO');
+  }
+
+  public function important($str, $colors = true) {
+    return $this->status($str, $this->cyan('IMPORTANT'), 'IMPORTANT');
+  }
 }
