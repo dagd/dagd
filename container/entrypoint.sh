@@ -37,8 +37,9 @@ done
 
 set -e
 
-rm -vf ./sql/current_schema
-./sql/patcher.php --yes
+#rm -vf ./sql/current_schema
+#./sql/patcher.php --yes
+./scripts/sql -a .
 cp -v container/dagd-httpd.conf /etc/httpd/conf.d/
 
 # We load mpm_prefork in our config.

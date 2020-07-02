@@ -1,0 +1,250 @@
+#!/usr/bin/env php
+<?php
+
+// Activate the autoloader
+require_once dirname(dirname(__FILE__)).'/src/resources/global_resources.php';
+
+final class SQLCLI extends DaGdCLIProgram {
+  private $dbh;
+
+  private function dbhError($msg) {
+    echo $this->error($msg);
+    if (strlen($this->dbh->error)) {
+      echo $this->error('`-> '.$this->dbh->error);
+    }
+  }
+
+  private function patch($sql) {
+    if (!$this->dbh->autocommit(false)) {
+      $this->dbhError('Failed to begin SQL transaction');
+      return false;
+    }
+
+    if (!$this->dbh->multi_query($sql)) {
+      $this->dbhError(
+        'Failed to add to SQL transaction, rolling back. Query was: '.$sql);
+      if (!$this->dbh->rollback()) {
+        $this->dbhError('Failed to roll back SQL transaction');
+      }
+      return false;
+    }
+
+    while ($this->dbh->more_results() && $this->dbh->next_result()) {
+      if ($result = $this->dbh->store_result()) {
+        $result->free();
+      }
+    }
+
+    if (!$this->dbh->commit()) {
+      $this->dbhError('Failed to commit SQL transaction, rolling back.');
+      if (!$this->dbh->rollback()) {
+        $this->dbhError('Failed to roll back SQL transaction');
+      }
+      return false;
+    }
+
+    $this->dbh->autocommit(true);
+    return true;
+  }
+
+  private function appName($application) {
+    return basename(realpath($application));
+  }
+
+  private function getNextPatch($application) {
+    // Try to deal with new stuff first
+    $current_schema = 0;
+    $app_name = $this->appName($application);
+    $query = $this
+      ->dbh
+      ->prepare(
+        'SELECT file_id FROM db_state WHERE application=? order by id '.
+        'desc limit 1');
+    if ($query) {
+      $query->bind_param('s', $app_name);
+      if ($query->execute()) {
+        $query->bind_result($current_schema);
+        $query->fetch();
+        $query->close();
+      } else {
+        echo $this->error('Failed to determine current schema state');
+        exit(1);
+      }
+    } else {
+      if ($this->dbh->errno != 1146) {
+        // 1146 = table does not exist. If the table does not exist, just move
+        // on and try to read the current_schema file below. This lets us handle
+        // a clean upgrade to the new db_state way of doing things. Otherwise,
+        // if the error was something else, fail out.
+        $this->dbhError('Could not determine current schema state');
+        exit(1);
+      }
+    }
+
+    if ($current_schema !== null && $current_schema > 0) {
+      return $current_schema + 1;
+    }
+
+    // For backwards compatibility, deal with current_schema files.
+    $current_schema_file = realpath($application.'/sql/current_schema');
+    if (file_exists($current_schema_file)) {
+      $contents = file_get_contents($current_schema_file);
+      if (!preg_match('/^\d+$/', trim($contents))) {
+        $this->error(
+          'Found current_schema file at '.$current_schema_file.' but it was '.
+          'invalid. Something weird has happened.');
+        exit(1);
+      }
+      $current_schema = (int)$contents;
+      return $current_schema + 1;
+    } else {
+      echo $this->error(
+        'Neither the db_schema database table nor the current_schema text '.
+        'file was found. Could not determine schema state. Aborting.');
+      exit(1);
+    }
+  }
+
+  private function applyFileOrAbort($file) {
+    $sql = file_get_contents(realpath($file));
+    if ($sql === false) {
+      echo $this->error('Failed to read file: '.$file);
+      exit(1);
+    }
+    if ($this->patch($sql)) {
+      echo $this->ok('Applied '.$file.' successfully. :-)');
+    } else {
+      echo $this->error('Failed to apply '.$file.' - see above errors.');
+      exit(1);
+    }
+    return true;
+  }
+
+  private function recordSchema($app_name, $pnumber) {
+    $query = $this
+      ->dbh
+      ->prepare(
+        'INSERT INTO db_state (application, file_id) VALUES (?,?) '.
+        'ON DUPLICATE KEY UPDATE application=?, file_id=?');
+    if ($query) {
+      $query->bind_param('sisi', $app_name, $pnumber, $app_name, $pnumber);
+      if ($query->execute()) {
+        $query->close();
+        return true;
+      }
+    }
+    echo $this->dbhError(
+      'Failed to record last change. Aborting. PROCEED CAREFULLY.');
+    echo $this->error(
+      'This means a change was applied but the fact that it was applied could '.
+      'not be logged!');
+    exit(1);
+  }
+
+  public function run() {
+    parent::run();
+
+    $this->dbh = new mysqli(
+      DaGdConfig::get('mysql.host'),
+      DaGdConfig::get('mysql.user'),
+      DaGdConfig::get('mysql.password'),
+      DaGdConfig::get('mysql.database'));
+
+    if (!$this->dbh) {
+      echo $this->error('Could not open database handler. Check config file.');
+      exit(1);
+    }
+
+    echo $this->ok('Acquired database handler.');
+
+    // A single sql file to apply
+    $file = $this->param('--file');
+    if ($file->getGiven()) {
+      $file = $file->getValue();
+      $this->applyFileOrAbort($file);
+      echo $this->important(
+        'Using --file (-f) means the SQL file gets applied but the schema ID '.
+        'does not get altered.');
+      echo $this->important(
+        'If applying a sequential schema update, you will need to manually '.
+        'set the patch ID in the db_state table.');
+    }
+
+    // A directory containing an 'sql' subdirectory with patches to apply.
+    // This will usually be an application, or the dagd root directory (where
+    // the "application" is "dagd"). We use the name of the parent directory
+    // (the directory containing the 'sql' subdirectory) to determine the name
+    // of the application.
+    $application = $this->param('--application');
+    if ($application->getGiven()) {
+      $application = $application->getValue();
+      $app_name = $this->appName($application);
+      $next_schema = $this->getNextPatch($application);
+      $last_schema = 0;
+      $already_up_to_date = true;
+      foreach (glob(realpath($application).'/sql/*.sql') as $pfile) {
+        $pfile_ex = explode('.', basename($pfile), 2);
+        if (count($pfile_ex) != 2 || !is_numeric($pfile_ex[0])) {
+          echo $this->error(
+            'Patch file '.$pfile.' has invalid filename, aborting.');
+          echo $this->error(
+            'Filename must be <sequence_number>.<short_description>.sql');
+          exit(1);
+        }
+        $pnumber = (int)$pfile_ex[0];
+        if ($pnumber >= $next_schema) {
+          $already_up_to_date = false;
+          $this->applyFileOrAbort($pfile);
+          // The above will abort if it fails. If we are still here, the patch
+          // applied successfully. If we're setting up a new install, db_state
+          // won't exist yet. In this case only record state at the very end. In
+          // every other case, we want to record the state as we go, so we don't
+          // get out of sync if the next patch fails to apply.
+          if ($next_schema != 1) {
+            $this->recordSchema($app_name, $pnumber);
+          }
+          $last_schema = $pnumber;
+          // Same here.
+          echo $this->ok('`-> Bumped '.$app_name.' schema id to '.$pnumber);
+        }
+      }
+
+      // This is for new installs
+      if ($next_schema == 1) {
+        $this->recordSchema($app_name, $pnumber);
+        echo $this->info('New installation detected. Schema is at '.$pnumber);
+      }
+
+      if ($already_up_to_date) {
+        echo $this->ok('Schema already seems to be up to date.');
+      }
+    }
+  }
+}
+
+$cli = new SQLCLI();
+$cli->setName('sql');
+$cli->setDescription('Run SQL files against the dagd database');
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--yes')
+    ->setShortname('-y')
+    ->setDescription('Never ask for confirmation, assume yes'));
+$cli->addParameter(
+  id(new DaGdCLIArgument)
+    ->setName('--file')
+    ->setShortname('-f')
+    ->setDescription('Apply this specific SQL file'));
+$cli->addParameter(
+  id(new DaGdCLIArgument)
+    ->setName('--application')
+    ->setShortname('-a')
+    ->setDescription(
+      'Path to directory containing "sql" subdirectory with ordered *.sql '.
+      'files'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--help')
+    ->setShortname('-h')
+    ->setDescription('Show program help'));
+$cli->execute($argv);
