@@ -42,6 +42,10 @@ final class DaGdAPCuCache extends DaGdCache {
   public function get($key, $default = null) {
     parent::get($key, $default);
 
+    if (!$this->isEnabled()) {
+      return $default;
+    }
+
     $res = apcu_fetch($key);
 
     // Try to be nice. If we get back false, see if it's a "false" that was
