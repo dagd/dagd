@@ -9,6 +9,7 @@ abstract class DaGdController {
   private $request;
   private $read_db;
   private $write_db;
+  private $cache;
 
   public function setRequest($request) {
     $this->request = $request;
@@ -35,6 +36,20 @@ abstract class DaGdController {
 
   public function getWriteDB() {
     return $this->write_db;
+  }
+
+  public function setCache($cache) {
+    $this->cache = $cache;
+    return $this;
+  }
+
+  public function getCache() {
+    return $this->cache;
+  }
+
+  // Another getter for the cache, just with a nicer name.
+  public function cache() {
+    return $this->cache;
   }
 
   public function getStyle() {

@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * A lightweight wrapper around caching mechanisms such as APCu or memcache.
+ *
+ * The pattern of use here is:
+ *
+ * if ($res = $cache->get($key, $default) !== null) {
+ *   return $res;
+ * } else {
+ *   $res = do_slow_work();
+ *   return $cache->set($key, $res);
+ * }
+ *
+ * Care is needed when using get() because if the value in the cache can be
+ * whatever the $default is set to (null if not passed), the caller will have
+ * no way of knowing if $res was the result of the cache hit or a cache miss
+ * which caused get() to return $default.
+ */
+abstract class DaGdCache {
+  /**
+   * Name of the cache.
+   */
+  abstract public function getName();
+
+  /**
+   * Is the cache available/enabled/online?
+   */
+  abstract public function isEnabled();
+
+  /**
+   * Set a key=value pair in the cache, with an optional TTL.
+   */
+  public function set($key, $value, $ttl = 0) {
+    statsd_bump('cache_set');
+  }
+
+  /**
+   * Determine if a key exists in the cache.
+   */
+  abstract public function contains($key);
+
+  /**
+   * Get a value from the cache if it exists, otherwise return the default.
+   */
+  public function get($key, $default = null) {
+    statsd_bump('cache_get');
+  }
+}

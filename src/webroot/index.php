@@ -148,6 +148,7 @@ $request = id(new DaGdRequest())
 // Temporary conditional, handle migration to DaGdController
 if ($instance instanceof DaGdController) {
   $instance->setRequest($request);
+  $instance->setCache(new DaGdAPCuCache());
 } else {
   // This has moved to DaGdRequest in the new model
   $instance->setRouteMatches($route_matches);

@@ -3,16 +3,19 @@ FROM centos:7
 
 MAINTAINER rick@elrod.me
 
+RUN yum install -y epel-release
+
 RUN yum install -y \
         httpd \
         php \
         php-mysqlnd \
         php-gd \
-        php-pear \
+        php-pear-Net-DNS2 \
+        php-pecl-apcu \
+        php-pecl-zendopcache \
         git \
 	nc \
-        && yum clean all \
-        && pear install Net_DNS2
+        && yum clean all
 
 ENV DaGdConfigFile ../container/config.container.php
 

@@ -4,10 +4,6 @@
  * Use Google's "PageSpeed Insights" API to fetch a screenshot of a short URL's
  * long URL.
  *
- * We could use APC/APCu to cache these, but I'm not sure it's worthwhile.
- * Stats pages aren't likely to be accessed too frequently, and when they are,
- * browsers will cache the screenshot by URL anyway.
- *
  * We could also abstract this out and potentially set up some kind of AWS
  * Lambda endpoint or similar to do screenshots.
  */
@@ -49,8 +45,7 @@ final class DaGdShortURLScreenshotGetter {
 
     $json_response = json_decode($response, true);
     $audits = $json_response['lighthouseResult']['audits'];
-    $ss= $audits['final-screenshot']['details']['data'];
-    error_log($ss);
+    $ss = $audits['final-screenshot']['details']['data'];
     return $ss;
   }
 }
