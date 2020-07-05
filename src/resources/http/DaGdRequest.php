@@ -146,4 +146,16 @@ class DaGdRequest {
     }
     return idx($this->server, 'REMOTE_ADDR');
   }
+
+  public function getFullRequestUri($include_querystring = true) {
+    $protocol = idx($this->getServer(), 'HTTPS') ? 'https' : 'http';
+    $host_and_port = idx($this->getServer(), 'HTTP_HOST');
+    $path = idx($this->getServer(), 'REQUEST_URI');
+
+    if (!$include_querystring) {
+      $path = strtok($path, '?');
+    }
+
+    return $protocol.'://'.$host_and_port.$path;
+  }
 }
