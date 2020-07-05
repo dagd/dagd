@@ -1,6 +1,6 @@
 <?php
 
-final class DaGdRequest {
+class DaGdRequest {
   private $cookies = array();
   private $request = array();
   private $server = array();
