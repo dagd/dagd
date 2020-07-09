@@ -11,6 +11,7 @@ class Blacklist {
   protected $url;
   protected $blacklisted = false;
   protected $blacklist_source = '';
+  protected $cache;
 
   public function __construct($url) {
     $this->url = $url;
@@ -32,6 +33,15 @@ class Blacklist {
 
   public function getBlacklistSource() {
     return $this->blacklist_source;
+  }
+
+  public function setCache($cache) {
+    $this->cache = $cache;
+    return $this;
+  }
+
+  public function getCache() {
+    return $this->cache;
   }
 
   public function checkString() {
@@ -103,16 +113,27 @@ class Blacklist {
 
     $safe_browsing_enabled = DaGdConfig::get('shorten.safe_browsing');
 
-    if ($safe_browsing_enabled) {
-      statsd_bump('shorturl_blacklist_query_safebrowsing');
+    if (!$safe_browsing_enabled) {
+      return $this;
+    }
+
+    $safe_url = null;
+
+    // Allows this function to be used even if setCache() is never called.
+    if ($this->getCache()) {
+      $gsb = new DaGdGoogleSafeBrowsing($this->url);
+      $key = 'gsb_'.hash('sha256', $this->url);
+      $minutes = 30;
+      $safe_url = $this->getCache()->getOrStore($key, $gsb, 60 * $minutes);
+    } else {
       $safe_url = query_safe_browsing($this->url);
-      if ($safe_url === false) {
-        statsd_bump('shorturl_blacklisted_safebrowsing');
-        statsd_bump('shorturl_blacklisted');
-        $this->setBlacklisted(true);
-        $this->setBlacklistSource('shorten.safe_browsing');
-        return $this;
-      }
+    }
+
+    if ($safe_url === false) {
+      statsd_bump('shorturl_blacklisted_safebrowsing');
+      statsd_bump('shorturl_blacklisted');
+      $this->setBlacklisted(true);
+      $this->setBlacklistSource('shorten.safe_browsing');
     }
 
     return $this;
