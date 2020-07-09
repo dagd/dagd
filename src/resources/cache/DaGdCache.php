@@ -29,6 +29,25 @@ abstract class DaGdCache {
   abstract public function isEnabled();
 
   /**
+   * Try to get a value from the cache. If it exists and is within the TTL,
+   * return it. Otherwise, call $cb->run() to get a new value to store in the
+   * cache.
+   *
+   * The default implementation does this manually with contains/get/set. Caches
+   * which have this functionality built in (such as APCu's apcu_entry) should
+   * override it and use that instead.
+   */
+  public function getOrStore($key, DaGdCacheMissCallback $cb, $ttl = 0) {
+    if ($this->contains($key)) {
+      return $this->get($key);
+    }
+
+    $res = $cb->run($key);
+    $this->set($key, $res, $ttl);
+    return $res;
+  }
+
+  /**
    * Set a key=value pair in the cache, with an optional TTL.
    */
   public function set($key, $value, $ttl = 0) {

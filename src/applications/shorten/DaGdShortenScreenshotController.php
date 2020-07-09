@@ -3,16 +3,11 @@
 final class DaGdShortenScreenshotController extends DaGdController {
   private function getScreenshot($long_url) {
     $key = 'screenshot_'.hash('sha256', $long_url);
-    if ($res = $this->cache()->get($key)) {
-      return $res;
-    } else {
-      $ss_getter = new DaGdShortURLScreenshotGetter($long_url);
-      $full_base64 = $ss_getter->getScreenshot();
-      $base64 = explode(',', $full_base64, 2)[1];
 
-      // Cache for 6 hours
-      return $this->cache()->set($key, $base64, 60 * 60 * 6);
-    }
+    // This implements DaGdCacheMissCallback, we can pass it directly to
+    // get_or_store.
+    $ss_getter = new DaGdShortURLScreenshotGetter($long_url);
+    return $this->cache()->getOrStore($key, $ss_getter, 60 * 60 * 6);
   }
 
   public function finalize() {

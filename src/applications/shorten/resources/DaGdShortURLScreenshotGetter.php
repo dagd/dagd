@@ -7,7 +7,7 @@
  * We could also abstract this out and potentially set up some kind of AWS
  * Lambda endpoint or similar to do screenshots.
  */
-final class DaGdShortURLScreenshotGetter {
+final class DaGdShortURLScreenshotGetter implements DaGdCacheMissCallback {
   private $long_url;
 
   public function __construct($long_url) {
@@ -47,5 +47,10 @@ final class DaGdShortURLScreenshotGetter {
     $audits = $json_response['lighthouseResult']['audits'];
     $ss = $audits['final-screenshot']['details']['data'];
     return $ss;
+  }
+
+  public function run($key) {
+    $ss = $this->getScreenshot();
+    return explode(',', $ss, 2)[1];
   }
 }

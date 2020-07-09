@@ -22,6 +22,14 @@ final class DaGdAPCuCache extends DaGdCache {
     return $this->is_enabled;
   }
 
+  public function getOrStore($key, DaGdCacheMissCallback $cb, $ttl = 0) {
+    if (function_exists('apcu_entry')) {
+      // apcu_entry only exists in APCu 5.1+
+      return apcu_entry($key, array($cb, 'run'), $ttl);
+    }
+    return parent::getOrStore($key, $cb, $ttl);
+  }
+
   public function set($key, $value, $ttl = 0) {
     parent::set($key, $value, $ttl);
 
