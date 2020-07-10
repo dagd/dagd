@@ -119,11 +119,12 @@ class Blacklist {
 
     $safe_url = null;
 
+    $want_cache = DaGdConfig::get('shorten.safe_browsing_cache');
     // Allows this function to be used even if setCache() is never called.
-    if ($this->getCache()) {
+    if ($this->getCache() && $want_cache) {
       $gsb = new DaGdGoogleSafeBrowsing($this->url);
       $key = 'gsb_'.hash('sha256', $this->url);
-      $minutes = 30;
+      $minutes = DaGdConfig::get('shorten.safe_browsing_cache_expiry');
       $safe_url = $this->getCache()->getOrStore($key, $gsb, 60 * $minutes);
     } else {
       $safe_url = query_safe_browsing($this->url);

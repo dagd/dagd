@@ -297,6 +297,12 @@ class DaGdConfig {
     // API key from Google Console.
     'shorten.safe_browsing_api_key' => '',
 
+    // Should Safe Browsing requests be cached?
+    'shorten.safe_browsing_cache' => true,
+
+    // If so, for how long? (in seconds, default: 30 minutes)
+    'shorten.safe_browsing_cache_expiry' => 1800,
+
     // Should stats pages show screenshots when possible?
     'shorten.stats_screenshots' => true,
 
