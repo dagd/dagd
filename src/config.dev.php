@@ -225,6 +225,24 @@ class DaGdConfig {
       '172.19.0.1',
     ),
 
+    // How should caching work?
+    // Current built-in options are 'DaGdAPCuCache' and 'DaGdMemcacheCache'.
+    // Can also be set to a falsey value to disable caching entirely.
+    'cache.backend' => 'DaGdAPCuCache',
+
+    // How to connect to memcache, if selected above.
+    // Entries are assoc. arrays containing 'host' and 'port' keys and may later
+    // be expanded with options such as persistence, timeout, and weight.
+    'cache.memcache_servers' => array(
+      array(
+        'host' => '127.0.0.1',
+        'port' => 11211,
+      ),
+    ),
+
+    // Should memcache use zlib and compress data?
+    'cache.memcache_zlib' => true,
+
     // Regexes we blacklist on.
     'shorten.longurl_blacklist' => array(),
 
