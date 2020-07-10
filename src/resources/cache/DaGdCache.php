@@ -62,7 +62,7 @@ abstract class DaGdCache {
   /**
    * Get a value from the cache if it exists, otherwise return the default.
    */
-  public function get($key, $default = null) {
+  public function get($key, $default = false) {
     statsd_bump('cache_get');
   }
 

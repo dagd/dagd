@@ -31,10 +31,8 @@ final class DaGdAPCuCache extends DaGdCache {
   }
 
   public function set($key, $value, $ttl = 0) {
-    parent::set($key, $value, $ttl);
-
     if ($this->isEnabled()) {
-      statsd_bump('cache_set');
+      parent::set($key, $value, $ttl);
       apcu_store($key, $value, $ttl);
     }
     return $value;
@@ -47,10 +45,9 @@ final class DaGdAPCuCache extends DaGdCache {
     return false;
   }
 
-  public function get($key, $default = null) {
-    parent::get($key, $default);
-
+  public function get($key, $default = false) {
     if (!$this->isEnabled()) {
+      parent::get($key, $default);
       return $default;
     }
 
