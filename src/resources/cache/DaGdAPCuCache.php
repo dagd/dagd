@@ -66,4 +66,24 @@ final class DaGdAPCuCache extends DaGdCache {
     }
     return $res;
   }
+
+  public function flush() {
+    parent::flush();
+
+    if (!$this->isEnabled()) {
+      return false;
+    }
+
+    return apcu_clear_cache();
+  }
+
+  public function delete($key) {
+    parent::delete($key);
+
+    if (!$this->isEnabled()) {
+      return false;
+    }
+
+    return apcu_delete($key);
+  }
 }

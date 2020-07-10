@@ -65,4 +65,18 @@ abstract class DaGdCache {
   public function get($key, $default = null) {
     statsd_bump('cache_get');
   }
+
+  /**
+   * Clear the cache.
+   */
+  public function flush() {
+    statsd_bump('cache_flush');
+  }
+
+  /**
+   * Delete or invalidate an entry from the cache.
+   */
+  public function delete($key) {
+    statsd_bump('cache_delete');
+  }
 }
