@@ -129,7 +129,7 @@ class Cowsay {
     $last_idx = count($lines) - 1;
     $longest = max(array_map('strlen', $lines));
     $borders = $this->getBorders();
-    $out = [];
+    $out = array();
 
     $out[] = array(' '.str_repeat('_', $longest + 2));
     // Are we multiline or not?
