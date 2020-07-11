@@ -25,6 +25,11 @@ final class DaGdMemcacheCache extends DaGdCache {
     return 'memcache';
   }
 
+  private function defaultFlags() {
+    $zlib = DaGdConfig::get('cache.memcache_zlib');
+    return $zlib ? MEMCACHE_COMPRESSED : 0;
+  }
+
   public function isEnabled() {
     if (!$this->checked_enabled) {
       $has_extension = extension_loaded('memcache');
@@ -55,17 +60,20 @@ final class DaGdMemcacheCache extends DaGdCache {
     if ($this->isEnabled()) {
       parent::set($key, $value, $ttl);
 
-      $zlib = DaGdConfig::get('cache.memcache_zlib') ? MEMCACHE_COMPRESSED : 0;
-      $this->memcache->set($key, $value, $zlib, $ttl);
+      $this->memcache->set($key, $value, $this->defaultFlags(), $ttl);
     }
     return $value;
   }
 
   public function contains($key) {
-    if ($this->isEnabled()) {
-      return $this->memcache->get($key) === false;
+    if (!$this->isEnabled()) {
+      return false;
     }
-    return false;
+
+    $flags = $this->defaultFlags();
+    $orig_flags = $flags;
+    $res = $this->memcache->get($key, $flags);
+    return $flags !== $orig_flags;
   }
 
   public function get($key, $default = false) {
@@ -75,13 +83,16 @@ final class DaGdMemcacheCache extends DaGdCache {
 
     parent::get($key, $default);
 
-    $zlib = DaGdConfig::get('cache.memcache_zlib') ? MEMCACHE_COMPRESSED : 0;
-    $res = $this->memcache->get($key, $zlib);
+    $flags = $this->defaultFlags();
+    $orig_flags = $flags;
+    $res = $this->memcache->get($key, $flags);
 
-    if ($res === false) {
+    if ($flags === $orig_flags) {
+      statsd_bump('cache_miss');
       return $default;
     }
 
+    statsd_bump('cache_hit');
     return $res;
   }
 

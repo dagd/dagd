@@ -56,11 +56,12 @@ final class DaGdAPCuCache extends DaGdCache {
     // Try to be nice. If we get back false, see if it's a "false" that was
     // stored in the cache, or if it means we missed.
     if (!$res) {
-      if ($this->contains($key)) {
-        return $res;
+      if (!$this->contains($key)) {
+        statsd_bump('cache_miss');
+        return $default;
       }
-      return $default;
     }
+    statsd_bump('cache_hit');
     return $res;
   }
 
