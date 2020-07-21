@@ -1,5 +1,4 @@
 <?php
-require_once dirname(__FILE__).'/resources/dagd_whois.php';
 
 final class DaGdWhoisController extends DaGdBaseClass {
   public function getHelp() {

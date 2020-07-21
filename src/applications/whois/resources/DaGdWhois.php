@@ -1,8 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/../../../resources/global_resources.php';
-
-class DaGdWhois {
+final class DaGdWhois {
   private $domain;
   private $query = '';
   private $whois_server;

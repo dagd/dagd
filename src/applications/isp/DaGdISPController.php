@@ -1,8 +1,7 @@
 <?php
-require_once dirname(__FILE__).'/../whois/resources/dagd_whois.php';
 
-final class DaGdISPController extends DaGdBaseClass {
-  public function getHelp() {
+final class DaGdISPController extends DaGdController {
+  public static function getHelp() {
     return array(
       'title' => 'isp',
       'summary' => 'Return the name of your ISP, or that of the given IP.',
@@ -16,25 +15,15 @@ final class DaGdISPController extends DaGdBaseClass {
       ));
   }
 
-  public function configure() {
-    return $this
-      ->setWrapHtml(true);
-  }
-
-  public function render() {
-    if (count($this->route_matches) > 1) {
-      $query = $this->route_matches[1];
-    } else {
-      $query = client_ip();
-    }
-
+  public function execute(DaGdResponse $response) {
+    $query = $this->getRequest()->getRouteComponent(1, client_ip());
     $whois_client = new DaGdWhois($query);
     $response = $whois_client->performQuery();
     if (preg_match(
-          // NOTE: Later matches will win
-          '/(?:CustName|descr|Org\-?Name|OrgTechName|Organization|contact:Name|owner)(?:;I|): ?(.+)/i',
-          $response,
-          $org_matches)) {
+      // NOTE: Later matches will win
+      '/(?:CustName|descr|Org\-?Name|OrgTechName|Organization|contact:Name|owner)(?:;I|): ?(.+)/i',
+      $response,
+      $org_matches)) {
       return trim($org_matches[1]);
     }
     return 'ISP could not be found.';
