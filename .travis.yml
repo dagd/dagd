@@ -21,6 +21,13 @@ branches:
 
 notifications:
   webhooks:
-    if: type != cron
-    urls:
-      - https://sl.da.gd/travisci?channel=%23dagd
+    - if: type != cron
+      urls:
+        - https://sl.da.gd/travisci?channel=%23dagd
+    - if: type == cron
+      on_success: change
+      on_failure: change
+      on_error: change
+      on_cancel: never
+      urls:
+        - https://sl.da.gd/travisci?channel=%23dagd
