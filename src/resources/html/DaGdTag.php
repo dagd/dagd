@@ -35,18 +35,18 @@ final class DaGdTag {
       return $body->renderSafe();
     }
 
-    if ($this->cdata) {
-      // This branch is for CDATA tags (style and script) which don't get
-      // escaped.
-      return $body;
-    }
-
     if (is_array($body)) {
       $out = '';
       foreach ($body as $tag) {
         $out .= $this->renderPotentialInnerTag($tag);
       }
       return $out;
+    }
+
+    if ($this->cdata) {
+      // This branch is for CDATA tags (style and script) which don't get
+      // escaped.
+      return $body;
     }
 
     return htmlspecialchars($body, ENT_HTML5, 'UTF-8');
