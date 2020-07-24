@@ -30,9 +30,9 @@ class DaGdCowsay {
       throw new Exception('Cow name must only include 0-9, a-z, A-Z, -');
     }
     if ($custom_cow) {
-      $cow = file_get_contents(dirname(__FILE__).'/cows/dagd/'.$cow.'.cow');
+      $cow = file_get_contents(dirname(__FILE__).'/dagd/'.$cow.'.cow');
     } else {
-      $cow = file_get_contents(dirname(__FILE__).'/cows/'.$cow.'.cow');
+      $cow = file_get_contents(dirname(__FILE__).'/'.$cow.'.cow');
     }
     $this->cow = $cow;
     return $this;
