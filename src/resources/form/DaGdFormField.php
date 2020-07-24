@@ -12,6 +12,8 @@ abstract class DaGdFormField {
     $this->name = $name;
   }
 
+  abstract public function toTag();
+
   public function isValid() {
     return true;
   }
