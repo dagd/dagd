@@ -133,7 +133,7 @@ abstract class DaGdController {
   }
 
   public function renderCow($response) {
-    $cs = new Cowsay();
+    $cs = new DaGdCowsay();
     if ($cow = $this->getRequest()->getParamOrDefault('cow')) {
       $cs->setCow($cow);
     }

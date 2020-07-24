@@ -208,7 +208,7 @@ abstract class DaGdBaseClass {
   }
 
   public function renderCowsay() {
-    $cs = new Cowsay();
+    $cs = new DaGdCowsay();
     $cs->setMessage($this->renderCLI());
     return $cs->render();
   }

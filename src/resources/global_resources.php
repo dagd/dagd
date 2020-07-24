@@ -31,8 +31,6 @@ function __dagd_autoload($cls) {
 
 spl_autoload_register('__dagd_autoload', $throw = true);
 
-include_once(dirname(__FILE__).'/tag.php');
-include_once(dirname(__FILE__).'/cowsay.php');
 include_once(dirname(__FILE__).'/statsd.php');
 
 $display_errors = DaGdConfig::get('general.display_errors');
@@ -333,4 +331,13 @@ function class_repr($obj) {
     }
   }
   return $cls;
+}
+
+function tag(
+  $name,
+  $body = null,
+  array $attributes = array(),
+  $cdata = false) {
+
+  return id(new DaGdTag($name, $body, $attributes, $cdata));
 }

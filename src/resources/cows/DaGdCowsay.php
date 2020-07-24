@@ -3,7 +3,7 @@
 const COWSAY_SAY = 1;
 const COWSAY_THINK = 2;
 
-class Cowsay {
+class DaGdCowsay {
   protected $cow = '';
   protected $eyes = 'oo';
   protected $thoughts = '\\';

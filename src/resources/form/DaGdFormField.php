@@ -1,7 +1,7 @@
 <?php
 
-// TODO: This almost feels like it should extend Tag if it were non-final.
-// It could feasibly be used as an argument/reason to make Tag non-final.
+// TODO: This almost feels like it should extend DaGdTag if it were non-final.
+// It could feasibly be used as an argument/reason to make DaGdTag non-final.
 abstract class DaGdFormField {
   private $name;
   private $attributes = array();

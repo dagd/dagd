@@ -11,11 +11,11 @@ final class DaGdHTMLResponse extends DaGdResponse {
 
   public function getBody() {
     $body = parent::getBody();
-    if (!($body instanceof Tag)) {
+    if (!($body instanceof DaGdTag)) {
       $cls = class_repr($body);
       throw new Exception(
         'Attempt to render DaGdHTMLResponse but body was not an instance of '.
-        'Tag. Got a '.$cls.' instead.');
+        'DaGdTag. Got a '.$cls.' instead.');
     }
     $body = "<!doctype html>\n".$body->renderSafe();
     return $body;

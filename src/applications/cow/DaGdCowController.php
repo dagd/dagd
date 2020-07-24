@@ -46,7 +46,7 @@ final class DaGdCowController extends DaGdController {
       return 'What do you want your cow to say? (Hint: Pass ?text=)';
     }
 
-    $cs = new Cowsay();
+    $cs = new DaGdCowsay();
     $cs->setMessage($text);
 
     if ($cow) {

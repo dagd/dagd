@@ -38,7 +38,7 @@ final class DaGdStatusController extends DaGdController {
     $response->setMessage($text);
 
     if ((int)$code == 418) {
-      $cs = new Cowsay();
+      $cs = new DaGdCowsay();
       $cs->setCow('dagd/teapot');
       $cs->setThoughts('/');
       $cs->setMessage("418 I'm a badly drawn teapot");

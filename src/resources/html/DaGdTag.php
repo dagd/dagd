@@ -3,7 +3,7 @@
 const TAG_ATTR_BARE = 1;
 
 // Needs setters/getters if we make this non-final.
-final class Tag {
+final class DaGdTag {
   protected $name;
   protected $body;
   protected $attributes = array();
@@ -21,9 +21,9 @@ final class Tag {
     $this->cdata = $cdata;
   }
 
-  public function addTag(Tag $tag) {
+  public function addTag(DaGdTag $tag) {
     if (!is_array($this->body)) {
-      throw new Exception('Attempt to add Tag to non-array parent');
+      throw new Exception('Attempt to add DaGdTag to non-array parent');
     }
     $this->body[] = $tag;
     return $this;
@@ -31,7 +31,7 @@ final class Tag {
 
   protected function renderPotentialInnerTag($body) {
     // This should let us compose tags that have already been constructed.
-    if ($body instanceof Tag) {
+    if ($body instanceof DaGdTag) {
       return $body->renderSafe();
     }
 
@@ -88,13 +88,4 @@ final class Tag {
     $tag .= '</'.$this->name.'>';
     return $tag;
   }
-}
-
-function tag(
-  $name,
-  $body = null,
-  array $attributes = array(),
-  $cdata = false) {
-
-  return id(new Tag($name, $body, $attributes, $cdata));
 }
