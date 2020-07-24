@@ -1,7 +1,7 @@
 <?php
 
-final class DaGdWhoisController extends DaGdBaseClass {
-  public function getHelp() {
+final class DaGdWhoisController extends DaGdController {
+  public static function getHelp() {
     return array(
       'title' => 'whois',
       'summary' => 'Whois a given domain or IP address.',
@@ -16,14 +16,10 @@ final class DaGdWhoisController extends DaGdBaseClass {
       ));
   }
 
-  public function configure() {
-    return $this
-      ->setWrapHtml(true);
-  }
-
-  public function render() {
-    $query = $this->route_matches[1];
-    $trace = request_or_default('trace', false, true, true);
+  public function execute(DaGdResponse $response) {
+    $request = $this->getRequest();
+    $query = $request->getRouteComponent(1);
+    $trace = $request->param('trace', false, true, true);
     $whois_client = new DaGdWhois($query, $trace);
     return $whois_client->performQuery();
   }
