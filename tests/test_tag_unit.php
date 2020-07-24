@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(dirname(__FILE__)).'/src/resources/tag.php';
-
 final class DaGdTagUnitTest extends DaGdTest {
   private $tag;
   private $expected_output;
