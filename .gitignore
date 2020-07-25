@@ -8,3 +8,8 @@ config.stage.php
 sql/current_schema
 .ready-for-ci
 container/.lock
+
+# Prevent any ULS stuff from ever getting committed
+*.zip
+*.dat
+counts

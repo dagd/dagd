@@ -1,0 +1,93 @@
+#!/usr/bin/env php
+<?php
+
+// Activate the autoloader
+require_once dirname(dirname(dirname(__FILE__))).
+  '/src/resources/global_resources.php';
+
+final class HamImportWeeklyCLI extends DaGdCLIProgram {
+  private function wantsDownload() {
+    if (!function_exists('ftp_connect')) {
+      echo $this->error(
+        'ftp_connect() does not exist. Your PHP was not compiled with FTP '.
+        'support, or it was disabled in php.ini.');
+      exit(1);
+    }
+
+    $remote_path = '/pub/uls/complete/l_amat.zip';
+    $remote_dirname = dirname($remote_path);
+    $remote_filename = basename($remote_path);
+
+    $handler = ftp_connect('wirelessftp.fcc.gov');
+    $exit = 0;
+    if (!$handler) {
+      echo $this->error('Failed to connect to FTP server.');
+      $exit = 1;
+      return false;
+    }
+
+    try {
+      if (!ftp_login($handler, 'anonymous', '')) {
+        echo $this->error('Failed to authenticate anonymously to FTP server.');
+        $exit = 1;
+        return false;
+      }
+
+      if (!ftp_chdir($handler, $remote_dirname)) {
+        echo $this->error('Failed to chdir to '.$remote_dirname);
+        $exit = 1;
+        return false;
+      }
+
+      // Set passive mode
+      ftp_pasv($handler, true);
+
+      echo $this->info('Attempting download of '.$remote_path);
+      if (ftp_get($handler, 'l_amat.zip', $remote_filename, FTP_BINARY)) {
+        echo $this->ok('File saved to l_amat.zip');
+        return true;
+      } else {
+        echo $this->error(
+          'Failed to download '.$remote_filename.' from FTP server.');
+        $exit = 1;
+        return false;
+      }
+    } finally {
+      ftp_close($handler);
+      exit($exit);
+    }
+  }
+
+  public function run() {
+    parent::run();
+
+    if ($this->param('--download')->getGiven()) {
+      $this->wantsDownload();
+    }
+  }
+}
+
+$cli = new HamImportWeeklyCLI();
+$cli->setName('ham/import-weekly');
+$cli->setDescription('Import latest weekly snapshot from ULS');
+//$cli->addParameter(
+//  id(new DaGdCLIFlag)
+//    ->setName('--yes')
+//    ->setShortname('-y')
+//    ->setDescription('Never ask for confirmation, assume yes'));
+$cli->addParameter(
+  id(new DaGdCLIArgument)
+    ->setName('--file')
+    ->setShortname('-f')
+    ->setDescription('Path to ULS dump directory'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--download')
+    ->setShortname('-d')
+    ->setDescription('Download the latest ULS weekly dump'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--help')
+    ->setShortname('-h')
+    ->setDescription('Show program help'));
+$cli->execute($argv);
