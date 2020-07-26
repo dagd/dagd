@@ -283,8 +283,8 @@ EOD;
         'id' => 'url',
         'size' => '35',
         'placeholder' => 'https://example.com/long-url-here',
-        'autofocus' => TAG_ATTR_BARE,
-        'required' => TAG_ATTR_BARE,
+        'autofocus' => DaGdTag::TAG_ATTR_BARE,
+        'required' => DaGdTag::TAG_ATTR_BARE,
         'class' => 'textinput',
       )
     );

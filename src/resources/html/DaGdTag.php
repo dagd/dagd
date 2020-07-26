@@ -1,7 +1,5 @@
 <?php
 
-const TAG_ATTR_BARE = 1;
-
 // Needs setters/getters if we make this non-final.
 final class DaGdTag {
   protected $name;
@@ -9,6 +7,8 @@ final class DaGdTag {
   protected $attributes = array();
   protected $cdata;
   protected $render_output = '';
+
+  const TAG_ATTR_BARE = 1;
 
   public function __construct(
     $name,
@@ -56,7 +56,7 @@ final class DaGdTag {
     $attrs = array();
     foreach ($this->attributes as $attr => $val) {
       $attr_str = $attr;
-      if ($val !== TAG_ATTR_BARE) {
+      if ($val !== self::TAG_ATTR_BARE) {
         if (!is_string($val)) {
           throw new Exception('Attribute value not string: '.class_repr($val));
         }
