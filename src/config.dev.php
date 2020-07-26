@@ -143,8 +143,8 @@ class DaGdConfig {
       '/notify(?:/|/(.+)|)$' => array(
         'controller' => 'DaGdComingSoonController',
       ),
-      '/ham(?:/|/(.+)|)$' => array(
-        'controller' => 'DaGdComingSoonController',
+      '/ham/(?P<callsign>.+)/?$' => array(
+        'controller' => 'DaGdHamController',
       ),
       '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdShortenController',
