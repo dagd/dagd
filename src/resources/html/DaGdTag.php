@@ -35,6 +35,12 @@ final class DaGdTag {
       return $body->renderSafe();
     }
 
+    // If we're ever given an object that implements this, just do the right
+    // thing.
+    if ($body instanceof DaGdToTagInterface) {
+      return $body->toTag()->renderSafe();
+    }
+
     if (is_array($body)) {
       $out = '';
       foreach ($body as $tag) {

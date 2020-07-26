@@ -2,7 +2,7 @@
 
 // TODO: This almost feels like it should extend DaGdTag if it were non-final.
 // It could feasibly be used as an argument/reason to make DaGdTag non-final.
-abstract class DaGdFormField {
+abstract class DaGdFormField implements DaGdToTagInterface {
   private $name;
   private $attributes = array();
   private $errors = array();

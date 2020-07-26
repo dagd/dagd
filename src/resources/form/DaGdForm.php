@@ -25,7 +25,7 @@
  * Creating various kinds of form fields entails subclassing DaGdFormField. Such
  * subclasses can implement isValid() to decide what constitutes valid data.
  */
-class DaGdForm {
+class DaGdForm implements DaGdToTagInterface {
   private $action;
   private $method = 'POST';
   private $classes = array();
@@ -162,7 +162,7 @@ class DaGdForm {
       if (in_array($field->getName(), $field_names)) {
         throw new Exception('Form field names must be unique');
       }
-      $field_tags[] = $field->toTag();
+      $field_tags[] = $field;
     }
 
     $form = tag(
