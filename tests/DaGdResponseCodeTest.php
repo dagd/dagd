@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(__FILE__).'/base.php';
-
 final class DaGdResponseCodeTest extends DaGdTest {
   private $expected_code;
 

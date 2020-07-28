@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(__FILE__).'/base.php';
-
 final class DaGdResponseRegexTest extends DaGdTest {
   private $regex;
   private $invert;

@@ -4,19 +4,9 @@
 // Activate the autoloader
 require_once(dirname(dirname(__FILE__)).'/src/resources/global_resources.php');
 
-// TODO: Throw all this junk in the autoloader path.
-require_once dirname(__FILE__).'/runner.php';
-require_once dirname(__FILE__).'/test_content_type.php';
-require_once dirname(__FILE__).'/test_header_regex.php';
-require_once dirname(__FILE__).'/test_exact_match.php';
-require_once dirname(__FILE__).'/test_regex.php';
-require_once dirname(__FILE__).'/test_response_code.php';
-require_once dirname(__FILE__).'/test_response_regex.php';
-require_once dirname(__FILE__).'/test_session_regex.php';
-require_once dirname(__FILE__).'/test_tag_unit.php';
-require_once dirname(__FILE__).'/DaGdUnitTest.php';
-require_once dirname(__FILE__).'/DaGdUnitTestCallback.php';
-require_once dirname(__FILE__).'/unit/DaGdUnitTestAssertThrows.php';
+// Throw a bunch of junk in the autoload path
+DaGdConfig::$config['general.autoload_search'][] = dirname(__FILE__);
+DaGdConfig::$config['general.autoload_search'][] = dirname(__FILE__).'/unit';
 
 final class TestCLI extends DaGdCLIProgram {
   public function run() {

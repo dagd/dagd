@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(__FILE__).'/base.php';
-
 final class DaGdExactMatchTest extends DaGdTest {
   private $match;
   private $invert;

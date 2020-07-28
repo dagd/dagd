@@ -1,8 +1,5 @@
 <?php
 
-require_once dirname(__FILE__).'/base.php';
-require_once dirname(dirname(__FILE__)).'/src/resources/global_resources.php';
-
 final class DaGdSessionRegexTest extends DaGdTest {
   private $regex;
   private $invert;

@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(__FILE__).'/base.php';
-
 abstract class DaGdUnitTest extends DaGdTest {
   public function __construct() {
     $this->path = 'unit';
