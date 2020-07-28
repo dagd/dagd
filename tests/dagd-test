@@ -14,6 +14,9 @@ require_once dirname(__FILE__).'/test_response_code.php';
 require_once dirname(__FILE__).'/test_response_regex.php';
 require_once dirname(__FILE__).'/test_session_regex.php';
 require_once dirname(__FILE__).'/test_tag_unit.php';
+require_once dirname(__FILE__).'/DaGdUnitTest.php';
+require_once dirname(__FILE__).'/DaGdUnitTestCallback.php';
+require_once dirname(__FILE__).'/unit/DaGdUnitTestAssertThrows.php';
 
 final class TestCLI extends DaGdCLIProgram {
   public function run() {
@@ -644,6 +647,10 @@ EOD;
           'bold and italic</i></b></p>'))
       ->addGroup('unit')
       ->addGroup('tag'));
+
+    $runner->arm(
+      id(new DaGdUnitTestAssertThrows())
+      ->addGroup('unit'));
 
     $groups = $this->param('--groups');
     if ($groups->getGiven()) {
