@@ -23,11 +23,23 @@ input[type=text] { border: 1px solid #ccc; }
 .darkmode .sitename { color: #39a; }
 .appname { color: #888; }
 .darkmode #bar { border-color: #555; }
+.flex-1 { flex: 1; }
+.ml5 { margin-left: 5px; }
+.mr5 { margin-right: 5px; }
+.mt10 { margin-top: 10px; }
+.mb10 { margin-bottom: 10px; }
 body.darkmode { background-color: #333; color: #ddd; }
 body.lightmode { background-color: #f6f5f4; }
 body.darkmode a, body.darkmode a:active, body.darkmode a:visited { color: #ccc; }
 body, .sitename { margin: 0; padding: 0; }
 #app { font-family: "Proxima Nova", overpass, Ubuntu, sans-serif; clear: both; box-sizing: border-box; }
+.card {
+  box-shadow: 1px 1px 2px #555;
+}
+.card .card-title, .card .card-body, .card .card-footer { padding: 10px; }
+body.lightmode .card { background-color: #fff; }
+.card .card-title { background-color: #9C89B8; color: #422040; }
+body.darkmode .card { background-color: #888; }
 EOD;
     return array_merge(parent::getStyle(), array($style));
   }
