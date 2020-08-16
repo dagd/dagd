@@ -116,23 +116,6 @@ debug('Pass-off', 'Passing off to controller.');
 $instance = new ReflectionClass($controller);
 $instance = $instance->newInstance();
 
-$write_dbh = new mysqli(
-  DaGdConfig::get('mysql.host'),
-  DaGdConfig::get('mysql.user'),
-  DaGdConfig::get('mysql.password'),
-  DaGdConfig::get('mysql.database'));
-
-$read_dbh = $write_dbh;
-$readonly_host = DaGdConfig::get('readonly_mysql.host');
-
-if (!empty($readonly_host)) {
-  $read_dbh = new mysqli(
-    DaGdConfig::get('readonly_mysql.host'),
-    DaGdConfig::get('readonly_mysql.user'),
-    DaGdConfig::get('readonly_mysql.password'),
-    DaGdConfig::get('readonly_mysql.database'));
-}
-
 debug('Response from Controller', '');
 
 $response = '';
@@ -144,6 +127,33 @@ $request = id(new DaGdRequest())
   ->setRequest($_REQUEST)
   ->setServer($_SERVER)
   ->setRouteMatches($route_matches);
+
+$write_dbh = null;
+
+if ($debug) {
+  $write_dbh = new DaGdMySQLiDebug(
+    DaGdConfig::get('mysql.host'),
+    DaGdConfig::get('mysql.user'),
+    DaGdConfig::get('mysql.password'),
+    DaGdConfig::get('mysql.database'));
+} else {
+  $write_dbh = new mysqli(
+    DaGdConfig::get('mysql.host'),
+    DaGdConfig::get('mysql.user'),
+    DaGdConfig::get('mysql.password'),
+    DaGdConfig::get('mysql.database'));
+}
+
+$read_dbh = $write_dbh;
+$readonly_host = DaGdConfig::get('readonly_mysql.host');
+
+if (!empty($readonly_host)) {
+  $read_dbh = new mysqli(
+    DaGdConfig::get('readonly_mysql.host'),
+    DaGdConfig::get('readonly_mysql.user'),
+    DaGdConfig::get('readonly_mysql.password'),
+    DaGdConfig::get('readonly_mysql.database'));
+}
 
 // Temporary conditional, handle migration to DaGdController
 if ($instance instanceof DaGdController) {

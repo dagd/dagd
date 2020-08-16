@@ -161,9 +161,18 @@ abstract class DaGdController {
       $help = $help->toOldHelp();
     }
 
+    $debug = DaGdConfig::get('general.debug');
+    $debug_body = null;
+    if ($debug && $this->getWriteDB() instanceof DaGdMySQLiDebug) {
+      // Once DaGdCard exists, we can make this way prettier.
+      // For now, we just hack something together.
+      $debug_body = var_export($this->getWriteDB()->getQueries());
+    }
+
     return id(new DaGdChromedAppTemplate())
       ->setStyle($this->getStyle())
       ->setTitle(idx($help, 'title', 'Welcome!'))
+      ->setDebugBody($debug_body)
       ->setDarkmode($this->getDarkmode());
   }
 

@@ -5,6 +5,7 @@ abstract class DaGdTemplate {
   private $style = array();
   private $stylesheets = array();
   private $javascripts = array();
+  private $debug_body;
   private $body;
   private $escape = true;
   private $darkmode = false;
@@ -107,6 +108,15 @@ abstract class DaGdTemplate {
     return $out;
   }
 
+  public function setDebugBody($debug_body) {
+    $this->debug_body = $debug_body;
+    return $this;
+  }
+
+  public function getDebugBody() {
+    return $this->debug_body;
+  }
+
   public function setBody($body) {
     $this->body = $body;
     return $this;
@@ -117,9 +127,11 @@ abstract class DaGdTemplate {
   }
 
   public function getBodyTag() {
+    $debug = DaGdConfig::get('general.debug');
     return tag(
       'body',
       array(
+        $debug ? $this->getDebugBody() : null,
         $this->getBody(),
         $this->javascriptsToTags(),
       ),
