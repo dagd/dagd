@@ -220,6 +220,7 @@ abstract class DaGdController {
           $request_card,
           $this->getDebugCards(),
         ))
+      ->addClass('ow-bw')
       ->addClass('flex-1');
 
     return $debug_body;

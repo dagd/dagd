@@ -28,6 +28,7 @@ input[type=text] { border: 1px solid #ccc; }
 .mr5 { margin-right: 5px; }
 .mt10 { margin-top: 10px; }
 .mb10 { margin-bottom: 10px; }
+.ow-bw { overflow-wrap: break-word; }
 body.darkmode { background-color: #333; color: #ddd; }
 body.lightmode { background-color: #f6f5f4; }
 body.darkmode a, body.darkmode a:active, body.darkmode a:visited { color: #ccc; }
