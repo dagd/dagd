@@ -19,8 +19,12 @@ final class DaGdWhoisController extends DaGdController {
   public function execute(DaGdResponse $response) {
     $request = $this->getRequest();
     $query = $request->getRouteComponent(1);
-    $trace = $request->param('trace', false, true, true);
-    $whois_client = new DaGdWhois($query, $trace);
-    return $whois_client->performQuery();
+    $whois_client = new DaGdWhois($query);
+    $result = $whois_client->performQuery();
+    $this->addDebugCard(
+      id(new DaGdCard())
+        ->setTitle('whois referral trace')
+        ->setBody(tag('pre', $result['trace'])));
+    return $result['data'];
   }
 }

@@ -22,7 +22,7 @@ final class DaGdISPController extends DaGdController {
     if (preg_match(
       // NOTE: Later matches will win
       '/(?:CustName|descr|Org\-?Name|OrgTechName|Organization|contact:Name|owner)(?:;I|): ?(.+)/i',
-      $response,
+      $response['data'],
       $org_matches)) {
       return trim($org_matches[1]);
     }

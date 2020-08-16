@@ -6,7 +6,6 @@ final class DaGdWhois {
   private $whois_server;
   private $whois_port = 43;
   private $skip_detail = false;
-  private $trace = false;
   private $trace_path = array();
   // Used in the hardcode map where we never want to treat a server as
   // transient.
@@ -15,9 +14,8 @@ final class DaGdWhois {
   // we're redirected to. In that case, we return this result.
   private $first_query_result = '';
 
-  public function __construct($domain, $trace = false) {
+  public function __construct($domain) {
     $this->domain = $domain;
-    $this->trace = $trace;
   }
 
   /*
@@ -245,9 +243,9 @@ final class DaGdWhois {
     } else {
       $res = $this->fetchWhoisDetails();
     }
-    if ($this->trace) {
-      $res = var_export($this->trace_path, TRUE);
-    }
-    return $res;
+    return array(
+      'data' => $res,
+      'trace' => print_r($this->trace_path, true),
+    );
   }
 }
