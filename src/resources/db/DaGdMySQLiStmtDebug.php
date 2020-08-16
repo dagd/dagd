@@ -13,6 +13,10 @@ class DaGdMySQLiStmtDebug extends mysqli_stmt {
     parent::__construct($mysqli, $query);
   }
 
+  public function getQuery() {
+    return $this->query;
+  }
+
   public function getMilliseconds() {
     return $this->milliseconds;
   }

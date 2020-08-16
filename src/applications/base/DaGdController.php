@@ -10,6 +10,7 @@ abstract class DaGdController {
   private $read_db;
   private $write_db;
   private $cache;
+  private $debug_cards = array();
 
   public function setRequest($request) {
     $this->request = $request;
@@ -50,6 +51,20 @@ abstract class DaGdController {
   // Another getter for the cache, just with a nicer name.
   public function cache() {
     return $this->cache;
+  }
+
+  public function setDebugCards($debug_cards) {
+    $this->debug_cards = $debug_cards;
+    return $this;
+  }
+
+  public function addDebugCard($debug_card) {
+    $this->debug_cards[] = $debug_card;
+    return $this;
+  }
+
+  public function getDebugCards() {
+    return $this->debug_cards;
   }
 
   public function getStyle() {
@@ -155,6 +170,62 @@ abstract class DaGdController {
     return $response->setBody($template);
   }
 
+  private function getDebugBody() {
+    $query_cards = array();
+
+    if ($this->getWriteDB() instanceof DaGdMySQLiDebug) {
+      $queries = $this->getWriteDB()->getQueries();
+      foreach ($queries as $idx => $query) {
+        $human_idx = $idx + 1;
+        $title = tag(
+          'small',
+          'Query '.$human_idx.' ('.$query->getMilliseconds().' ms)');
+
+        $query_cards[] = id(new DaGdCard())
+          ->setTitle($title)
+          ->setBody(
+            tag(
+              'pre',
+              $query->getQuery(),
+              array(
+                'style' => 'white-space: pre-wrap;',
+              )
+            ));
+      }
+    }
+
+
+    $request_card = id(new DaGdCard())
+      ->setTitle(tag('small', 'Request Details'))
+      ->setBody(
+        tag(
+          'pre',
+          print_r($this->getRequest(), true),
+          array(
+            'style' => 'white-space: pre-wrap;',
+          )
+        ));
+
+    $debug_body = id(new DaGdCard())
+      ->setTitle(
+        tag(
+          'div',
+          'dagd debugger',
+          array(
+            'style' => 'text-align: center;',
+          )))
+      ->setBody(
+        array(
+          $query_cards,
+          $request_card,
+          $this->getDebugCards(),
+        ))
+      ->addClass('flex-1');
+
+    return $debug_body;
+  }
+
+
   public function getBaseTemplate() {
     $help = $this->getHelp();
     if ($help instanceof DaGdHelp) {
@@ -163,10 +234,8 @@ abstract class DaGdController {
 
     $debug = DaGdConfig::get('general.debug');
     $debug_body = null;
-    if ($debug && $this->getWriteDB() instanceof DaGdMySQLiDebug) {
-      // Once DaGdCard exists, we can make this way prettier.
-      // For now, we just hack something together.
-      $debug_body = var_export($this->getWriteDB()->getQueries());
+    if ($debug) {
+      $debug_body = $this->getDebugBody();
     }
 
     return id(new DaGdChromedAppTemplate())

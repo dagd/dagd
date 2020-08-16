@@ -51,7 +51,6 @@ foreach ($routes as $route => $metadata) {
         $metadata,
         $requested_path);
       $new_location .= build_given_querystring();
-      debug('New Location', $new_location);
       header('Location: '.$new_location);
       return;
     } else {
@@ -107,17 +106,8 @@ if (!$route_matches) {
   $controller = $metadata_match['controller'];
 }
 
-debug('REQUEST variables', print_r($_REQUEST, true));
-debug('Route matches', print_r($route_matches, true));
-debug('Controller', $controller);
-debug('Metadata', print_r($metadata_match, true));
-debug('Pass-off', 'Passing off to controller.');
-
 $instance = new ReflectionClass($controller);
 $instance = $instance->newInstance();
-
-debug('Response from Controller', '');
-
 $response = '';
 
 // Thread this through even for old controllers, so they can beta some of the
