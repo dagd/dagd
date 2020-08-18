@@ -7,7 +7,7 @@ final class DaGdUnitTestAssertThrows_basic extends DaGdUnitTestCallback {
 }
 
 final class DaGdUnitTestAssertThrows extends DaGdUnitTest {
-  public function run() {
+  public function runUnits() {
     $this->path = 'DaGdUnitTestAssertThrows';
     $this->assertThrows('Exception', new DaGdUnitTestAssertThrows_basic());
   }

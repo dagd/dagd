@@ -149,4 +149,30 @@ abstract class DaGdTest {
       }
     }
   }
+
+  public static function getWorstResult(array $results) {
+    if (empty($results)) {
+      throw new Exception('results must not be empty');
+    }
+
+    $worst = $results[0];
+
+    foreach ($results as $result) {
+      // If we are at a FAILURE or we have seen a FAILURE (in the initial value
+      // above), then return FAILURE outright.
+      if ($worst === FAILURE || $result === FAILURE) {
+        return FAILURE;
+      }
+
+      // Otherwise, if the worst we've seen is a SUCCESS, then update to the
+      // current result (either SUCCESS or TOLERATED_FAILURE).
+      //
+      // $worst will never be FAILURE here because of the above if, and if it is
+      // TOLERATED_FAILURE, we want to keep that.
+      if ($worst === SUCCESS) {
+        $worst = $result;
+      }
+    }
+    return $worst;
+  }
 }
