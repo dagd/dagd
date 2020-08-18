@@ -113,4 +113,9 @@ final class DaGdSession {
     $this->data[$key] = $value;
     return $this;
   }
+
+  public function remove($key) {
+    unset($this->data[$key]);
+    return $this;
+  }
 }
