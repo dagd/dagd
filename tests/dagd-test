@@ -172,6 +172,16 @@ final class TestCLI extends DaGdCLIProgram {
     $runner->arm(
       id(new DaGdRegexTest('/up/http://google.com/404', '@^404$@'))
         ->addGroup('up'));
+    $runner->arm(
+      id(new DaGdRegexTest('/up/?url=google.com', '@^200$@'))
+        ->addGroup('up'));
+    $runner->arm(
+      id(new DaGdRegexTest('/up?url=https://encrypted.google.com/', '@^200$@'))
+        ->addGroup('up'));
+    $runner->arm(
+      id(new DaGdRegexTest('/up/?url=http://google.com/404', '@^404$@'))
+        ->addGroup('up'));
+
 
     /************ /et/xxxxxxx ************/
     $runner->arm(

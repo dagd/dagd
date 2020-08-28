@@ -26,12 +26,31 @@ final class DaGdIsItUpController extends DaGdController {
             'sslverify' => '1',
           )
         ),
+        array(
+          'arguments' => null,
+          'request' => array(
+            'url' => 'http://ebay.com',
+          ),
+          'summary' => 'Get the HTTP response code for http://ebay.com',
+        ),
       ),
     );
   }
 
   public function execute(DaGdResponse $response) {
-    $url = $this->getRequest()->getRouteMatches()[1];
+    $route_matches = $this->getRequest()->getRouteMatches();
+    $url = '';
+
+    if (count($route_matches) > 1) {
+      $url = $this->getRequest()->getRouteMatches()[1];
+    } else {
+      $url = $this->getRequest()->param('url', '');
+    }
+
+    if ($url === '') {
+      return $this->error(404)->finalize();
+    }
+
     $verbose = $this->getRequest()->param('verbose', false, true, true);
     $sslverify = $this->getRequest()->param('sslverify', false, true, true);
     $redirects = $this->getRequest()->param('redirect', true, true, true);
