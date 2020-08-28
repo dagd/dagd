@@ -419,7 +419,13 @@ final class TestCLI extends DaGdCLIProgram {
     $runner->arm(
       id(new DaGdResponseCodeTest('/fbook', 302))
         ->addGroup('shorten'));
+    $runner->arm(
+      id(new DaGdResponseCodeTest('/fbook?url=foo', 302))
+        ->addGroup('shorten'));
 
+    $runner->arm(
+      id(new DaGdHeaderRegexTest('/fbook?url=foo', 'Location', '@\?url=foo$@'))
+        ->addGroup('shorten'));
     $runner->arm(
       id(new DaGdHeaderRegexTest('/g', 'Location', '@^http://google.com$@'))
         ->addGroup('shorten'));

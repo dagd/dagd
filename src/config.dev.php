@@ -146,7 +146,7 @@ class DaGdConfig {
       '/ham(?:/|/(.+)|)$' => array(
         'controller' => 'DaGdComingSoonController',
       ),
-      '/(?:(?:shorten|s|)(?:/|$))?([^/]+)?/?(.*)?$' => array(
+      '/(?:(?:shorten|s|)(?:/|$))?(?P<shorturl>[^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdShortenController',
         'methods' => array('GET', 'HEAD', 'POST'),
       ),

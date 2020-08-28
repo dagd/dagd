@@ -126,7 +126,11 @@ EOD;
   }
 
   public function renderText(DaGdTextResponse $response) {
-    if (strlen($this->getRequest()->param('url', '')) > 0) {
+    $shorturl = $this->getRequest()->getRouteComponent('shorturl');
+    $url = $this->getRequest()->param('url', '');
+
+    // Allow /s?url=... to work, but all other /<foo>?url= should ignore url.
+    if (strlen($url) > 0 && ($shorturl == 's' || !$shorturl)) {
       return $this->storeShortUrl($response);
     }
 
@@ -137,7 +141,11 @@ EOD;
   }
 
   public function render(DaGdHTMLResponse $response) {
-    if (strlen($this->getRequest()->param('url', '')) > 0) {
+    $shorturl = $this->getRequest()->getRouteComponent('shorturl');
+    $url = $this->getRequest()->param('url', '');
+
+    // Allow /s?url=... to work, but all other /<foo>?url= should ignore url.
+    if (strlen($url) > 0 && ($shorturl == 's' || !$shorturl)) {
       return $this->storeShortUrl($response);
     }
 
