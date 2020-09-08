@@ -459,6 +459,10 @@ final class TestCLI extends DaGdCLIProgram {
       id(new DaGdResponseCodeTest('/stats/g', 200))
       ->addGroup('stats'));
 
+    $runner->arm(
+      id(new DaGdResponseCodeTest('/stats/doesnotexist', 404))
+      ->addGroup('stats'));
+
     //$runner->arm(
     //  id(
     //    new DaGdRegexTest(
