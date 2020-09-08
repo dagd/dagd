@@ -27,7 +27,13 @@ EOD;
   }
 
   public function execute(DaGdResponse $response) {
-    return 'coming soon';
+    $shorturl = $this->getRequest()->getRouteComponent(1);
+    $query = new DaGdShortURLQuery($this);
+    if ($query->fromShort($shorturl)) {
+      return 'text-based stats endpoint coming soon';
+    } else {
+      return $this->error(404)->execute($response);
+    }
   }
 
   public function render(DaGdHTMLResponse $response) {
@@ -39,7 +45,7 @@ EOD;
     $accesses = $query->dailyAccess($shorturl, 60);
 
     if (count($accesses) == 0) {
-      return $this->error(404)->finalize($response);
+      return $this->error(404)->finalize();
     }
 
     $dates = array();
