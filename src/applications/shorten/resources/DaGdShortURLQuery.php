@@ -212,12 +212,13 @@ final class DaGdShortURLQuery {
   /**
    * Grab daily access counts for a given short URL. Returns an array where
    * keys are dates of the format yyyy-mm-dd, and values are the number of
-   * accesses. Returns null if the query failed or the short URL does not exist.
+   * accesses. The array is empty if the query failed or the short URL does
+   * not exist.
    *
    * The column shorturl_access.shorturl_id is a FK to shorturls and
    * automatically indexed, so this query should be pretty fast.
    *
-   * @return array described above | null
+   * @return array described above
    */
   public function dailyAccess($shorturl, $days) {
     $out = array();
@@ -239,7 +240,11 @@ final class DaGdShortURLQuery {
     $query->bind_result($date, $count);
 
     // Special-case the first fetch so we can use it to prepare $out.
-    $query->fetch();
+    if (!$query->fetch()) {
+      // There is no work to do, bail out early
+      return array();
+    }
+
     $now_date = date('Y-m-d');
     $iter_date = date('Y-m-d', strtotime($date));
     $first_date = $iter_date;

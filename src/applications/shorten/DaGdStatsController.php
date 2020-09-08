@@ -37,6 +37,11 @@ EOD;
 
     // Daily access graph
     $accesses = $query->dailyAccess($shorturl, 60);
+
+    if (count($accesses) == 0) {
+      return $this->error(404)->finalize($response);
+    }
+
     $dates = array();
     $counts = array();
     foreach ($accesses as $date => $count) {
