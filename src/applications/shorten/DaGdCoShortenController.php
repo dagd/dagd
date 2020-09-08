@@ -20,7 +20,7 @@ class DaGdCoShortenController extends DaGdController {
     $surl = $query->fromShort($shorturl);
 
     if ($surl === null) {
-      return $this->error(404)->finalize($response);
+      return $this->error(404)->execute();
     }
 
     $text = $surl->getLongUrl();

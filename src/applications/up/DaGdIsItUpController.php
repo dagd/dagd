@@ -48,7 +48,7 @@ final class DaGdIsItUpController extends DaGdController {
     }
 
     if ($url === '') {
-      return $this->error(404)->finalize();
+      return $this->error(404)->execute();
     }
 
     $verbose = $this->getRequest()->param('verbose', false, true, true);
