@@ -134,12 +134,12 @@ final class TestCLI extends DaGdCLIProgram {
           '/w/donuts.co',
           '@Registrant Organization: Donuts Inc.@'))
         ->addGroup('whois'));
-    $runner->arm(
-      id(
-        new DaGdRegexTest(
-          '/w/usi.edu',
-          '@University of Southern Indiana@'))
-        ->addGroup('whois'));
+    //$runner->arm(
+    //  id(
+    //    new DaGdRegexTest(
+    //      '/w/usi.edu',
+    //      '@University of Southern Indiana@'))
+    //    ->addGroup('whois'));
     $runner->arm(
       id(
         new DaGdRegexTest(
