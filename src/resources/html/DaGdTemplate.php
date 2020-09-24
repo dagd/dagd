@@ -195,12 +195,19 @@ abstract class DaGdTemplate {
     );
   }
 
-  public function getHtmlTag($preamble = true) {
+  public function getHtmlTag($preamble = true, $lang = null) {
+    if ($lang === null) {
+      $lang = DaGdConfig::get('general.default_language_code');
+    }
+
     return tag(
       'html',
       array(
         $this->getHeadTag(),
         $this->getBodyTag(),
+      ),
+      array(
+        'lang' => $lang,
       )
     );
   }

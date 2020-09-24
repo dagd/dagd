@@ -15,6 +15,10 @@ class DaGdConfig {
     // The timezone to use for dealing with date manipulations
     'general.timezone' => 'UTC',
 
+    // This is currently used in DaGdTemplate for the 'lang' attribute to the
+    // html tag.
+    'general.default_language_code' => 'en',
+
     // These are the "Accept:" headers we return html for.
     // Any of these can match anywhere in the Accept header.
     // These are imploded by "|", so all |'s should be escaped.
