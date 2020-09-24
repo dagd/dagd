@@ -84,16 +84,11 @@ EOD;
     );
 
     foreach ($help->getPaths() as $path) {
-      $get_args_tbl = null;
+      $get_args_tbl = array();
 
       if ($path->getGetArgs()) {
-        $arg_trs = array(
-          tag(
-            'div',
-            'GET parameters',
-            array(
-              'class' => 'b',
-            )));
+        $get_args_tbl[] = tag('h5', 'GET parameters');
+        $arg_trs = array();
         foreach ($path->getGetArgs() as $arg => $desc) {
           $arg_trs[] = tag(
             'tr',
@@ -104,7 +99,7 @@ EOD;
           );
         }
 
-        $get_args_tbl = tag('table', $arg_trs);
+        $get_args_tbl[] = tag('table', $arg_trs);
       }
 
       $paths[] = tag(
