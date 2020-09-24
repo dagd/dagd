@@ -10,18 +10,18 @@ final class DaGdCowController extends DaGdController {
           ->setPath('cow')
           ->setMethods(array('GET'))
           ->addGetArg('cow', 'the cow to render')
-          ->addGetArg('text', 'the text to render (mind url encoding)')
+          ->addGetArg('say', 'the text to render (mind url encoding)')
           ->addGetArg('eyes', 'substitution for eyes')
           ->addGetArg('tongue', 'substitution for tongue')
           ->addGetArg('thoughts', 'substitution for line to text bubble')
           ->addExample(
             id(new DaGdHelpExample())
-              ->addGetArg('text', 'moo')
+              ->addGetArg('say', 'moo')
               ->setCommentary('Generate a cow that says moo'))
           ->addExample(
             id(new DaGdHelpExample())
               ->addGetArg('cow', 'moose')
-              ->addGetArg('text', 'moo')
+              ->addGetArg('say', 'moo')
               ->addGetArg('eyes', '@@')
               ->addGetArg('thoughts', '^')
               ->addGetArg('tongue', '~')
@@ -36,10 +36,16 @@ final class DaGdCowController extends DaGdController {
 
   public function execute(DaGdResponse $response) {
     $cow = $this->getRequest()->getParamOrDefault('cow');
-    $text = $this->getRequest()->getParamOrDefault('text');
     $eyes = $this->getRequest()->getParamOrDefault('eyes');
     $thoughts = $this->getRequest()->getParamOrDefault('thoughts');
     $tongue = $this->getRequest()->getParamOrDefault('tongue');
+
+    // Look for ?say, so that ?text=0/1 works. Otherwise use ?text for backwards
+    // compatibility.
+    $text = $this->getRequest()->getParamOrDefault('say');
+    if ($text === null) {
+      $text = $this->getRequest()->getParamOrDefault('text');
+    }
 
     if (!$text) {
       $response->setCode(400);

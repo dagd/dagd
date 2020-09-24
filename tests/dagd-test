@@ -563,6 +563,44 @@ EOD;
             $expected))
         ->addGroup('cow'));
 
+    $runner
+      ->arm(
+        id(
+          new DaGdExactMatchTest(
+            '/cow?say=I%20am%20moo,%20hear%20me%20roar&cow=moose&eyes=AA&tongue=<>',
+            $expected))
+        ->addGroup('cow'));
+
+    $runner->arm(
+      id(new DaGdContentTypeTest('/cow?text=1&say=hi', 'text/plain'))
+        ->addGroup('cow')
+        ->setAccept('text/html'));
+
+    $runner->arm(
+      id(new DaGdContentTypeTest('/cow?text=0&say=hi', 'text/html'))
+        ->addGroup('cow')
+        ->setAccept('text/html'));
+
+    $runner->arm(
+      id(new DaGdContentTypeTest('/cow?text=0&say=hi', 'text/html'))
+        ->addGroup('cow')
+        ->setAccept('text/plain'));
+
+    $runner->arm(
+      id(new DaGdContentTypeTest('/cow?text=foo', 'text/plain'))
+        ->addGroup('cow')
+        ->setAccept('text/plain'));
+
+    $runner->arm(
+      id(new DaGdContentTypeTest('/cow?text=foo', 'text/plain'))
+        ->addGroup('cow')
+        ->setAccept('text/html'));
+
+    $runner->arm(
+      id(new DaGdContentTypeTest('/cow?say=foo', 'text/html'))
+        ->addGroup('cow')
+        ->setAccept('text/html'));
+
     /************ Tag unit tests ************/
     $runner->arm(
       id(
