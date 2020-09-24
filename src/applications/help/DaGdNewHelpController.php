@@ -39,6 +39,12 @@ EOD;
   }
 
   private function helpHtml($ctrl) {
+    if (!is_subclass_of($ctrl, 'DaGdController')) {
+      // Curtail warnings caused by trying to statically call getHelp
+      // when old-style controllers didn't expose it as a static method.
+      return null;
+    }
+
     $help = call_user_func(array($ctrl, 'getHelp'));
 
     // We only support the new help system here.
