@@ -15,8 +15,6 @@ class DaGdChromedAppTemplate extends DaGdAppTemplate {
 }
 .constraint { width: 85%; margin: 0 auto; max-width: 1080px; }
 #bar a, #bar a:active, #bar a:visited { color: #ccc; }
-table { border-spacing: 0 30px; border-collapse: separate; }
-td { padding: 10px 0; }
 input[type=text] { border: 1px solid #ccc; }
 .sitename { color: #333; float: left; font-weight: 500; }
 .lightmode .sitename { color: #3a9; }
