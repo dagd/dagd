@@ -82,8 +82,12 @@ EOD;
 
       if ($path->getGetArgs()) {
         $arg_trs = array(
-          tag('h5', 'GET parameters'),
-        );
+          tag(
+            'div',
+            'GET parameters',
+            array(
+              'class' => 'b',
+            )));
         foreach ($path->getGetArgs() as $arg => $desc) {
           $arg_trs[] = tag(
             'tr',
