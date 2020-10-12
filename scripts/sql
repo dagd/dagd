@@ -144,11 +144,22 @@ final class SQLCLI extends DaGdCLIProgram {
   public function run() {
     parent::run();
 
-    $this->dbh = new mysqli(
-      DaGdConfig::get('mysql.host'),
-      DaGdConfig::get('mysql.user'),
-      DaGdConfig::get('mysql.password'),
-      DaGdConfig::get('mysql.database'));
+
+    $user = $this->param('--user')->getValue();
+    $host = $this->param('--host')->getValue();
+    $database = $this->param('--database')->getValue();
+
+    // Handle password separately, don't allow it to be given as an arg.
+    // We can't easily hide input (without shelling out to stty), but this is
+    // still better than leaking it via ps.
+    $password = DaGdConfig::get('mysql.password');
+    $pw_param = $this->param('--password');
+    if ($pw_param->getGiven()) {
+      $password = $this->prompt(
+        'Database Password ('.$this->bold('WILL').' echo): ');
+    }
+
+    $this->dbh = new mysqli($host, $user, $password, $database);
 
     if (!$this->dbh) {
       echo $this->error('Could not open database handler. Check config file.');
@@ -242,6 +253,32 @@ $cli->addParameter(
     ->setDescription(
       'Path to directory containing "sql" subdirectory with ordered *.sql '.
       'files'));
+
+// db connection parameters
+$cli->addParameter(
+  id(new DaGdCLIArgument)
+    ->setName('--user')
+    ->setShortname('-u')
+    ->setDescription('The MySQL/MariaDB username to connect as')
+    ->setDefault(DaGdConfig::get('mysql.user')));
+$cli->addParameter(
+  id(new DaGdCLIArgument)
+    ->setName('--host')
+    ->setShortname('-H')
+    ->setDescription('The MySQL/MariaDB host to connect to')
+    ->setDefault(DaGdConfig::get('mysql.host')));
+$cli->addParameter(
+  id(new DaGdCLIArgument)
+    ->setName('--database')
+    ->setShortname('-d')
+    ->setDescription('The MySQL/MariaDB database to manipulate')
+    ->setDefault(DaGdConfig::get('mysql.database')));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--password')
+    ->setShortname('-p')
+    ->setDescription('Prompt for MySQL/MariaDB password'));
+
 $cli->addParameter(
   id(new DaGdCLIFlag)
     ->setName('--help')

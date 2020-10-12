@@ -77,4 +77,23 @@ abstract class DaGdCLI {
   public function important($str, $colors = true) {
     return $this->status($str, $this->cyan('IMPORTANT'), 'IMPORTANT');
   }
+
+  public function isTTY($throw = false) {
+    $is_tty = function_exists('posix_isatty') && posix_isatty(STDIN);
+
+    if (!$is_tty && $throw) {
+      throw new DaGdNotTTYCLIException();
+    }
+
+    return $is_tty;
+  }
+
+  public function prompt($prompt) {
+    // Ensure TTY, throw if not.
+    $this->isTTY(true);
+
+    echo $prompt;
+    $response = fgets(STDIN);
+    return trim($response);
+  }
 }
