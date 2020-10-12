@@ -210,10 +210,12 @@ final class TestCLI extends DaGdCLIProgram {
     /************ /break/ ************/
     $runner->arm(
       id(new DaGdResponseCodeTest('/break', 500))
-        ->addGroup('break'));
+        ->addGroup('break')
+        ->addGroup('noprod'));
     $runner->arm(
       id(new DaGdRegexTest('/break', '@500 - internal server error@'))
-        ->addGroup('break'));
+        ->addGroup('break')
+        ->addGroup('noprod'));
 
     /************ /c/store/xxxxxxx/xxxxxxx ************/
     $runner->arm(
@@ -453,11 +455,13 @@ final class TestCLI extends DaGdCLIProgram {
         new DaGdRegexTest(
           '/s?url=https://some.spam.url&shorturl=spam',
           '@Blacklisted long URL@'))
-        ->addGroup('shorten'));
+        ->addGroup('shorten')
+        ->addGroup('noprod'));
 
     $runner->arm(
       id(new DaGdResponseCodeTest('/s?url=https://some.spam.url', 400))
-        ->addGroup('shorten'));
+        ->addGroup('shorten')
+        ->addGroup('noprod'));
 
     /************ /stats/ ************/
     $runner->arm(
@@ -715,6 +719,11 @@ EOD;
       $runner->setGroupsFilter(explode(',', $groups->getValue()));
     }
 
+    $exclude = $this->param('--exclude-groups');
+    if ($exclude->getGiven()) {
+      $runner->setGroupsExcludeFilter(explode(',', $exclude->getValue()));
+    }
+
     // If we're given the flag to skip preparatory tests, then don't run them.
     $runner->setRunPreparatory(!$this->param('--skip-preparatory')->getGiven());
 
@@ -742,6 +751,12 @@ $testcli->addParameter(
     ->setDescription(
       'A comma-separated list of test groups to limit to. Defaults to '.
       'everything.'));
+$testcli->addParameter(
+  id(new DaGdCLIArgument)
+    ->setName('--exclude-groups')
+    ->setShortname('-x')
+    ->setDescription(
+      'A comma-separated list of test groups to exclude. Overrides --groups.'));
 $testcli->addParameter(
   id(new DaGdCLIArgument)
     ->setName('--url')

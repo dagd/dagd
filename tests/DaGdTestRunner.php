@@ -10,6 +10,7 @@ class DaGdTestRunner {
   private $return_code = 0;
   private $base_url = '';
   private $groups_filter = array();
+  private $groups_exclude_filter = array();
   private $run_preparatory = true;
 
   private $passes = 0;
@@ -35,6 +36,16 @@ class DaGdTestRunner {
 
   public function addGroupFilter($group) {
     $this->groups_filter[] = $group;
+    return $this;
+  }
+
+  public function setGroupsExcludeFilter(array $groups) {
+    $this->groups_exclude_filter = $groups;
+    return $this;
+  }
+
+  public function addGroupExcludeFilter($group) {
+    $this->groups_exclude_filter[] = $group;
     return $this;
   }
 
@@ -105,10 +116,25 @@ class DaGdTestRunner {
         $rc = $test->run();
         $this->handleRC($rc);
       } else {
-        if (empty($this->groups_filter)) {
+        if (empty($this->groups_filter) &&
+            empty($this->groups_exclude_filter)) {
           $remaining_tests[] = $test;
         } else {
           $test_groups = $test->getGroups();
+
+          // First, see if we have an excluded group
+          $skip = false;
+          foreach ($test_groups as $group) {
+            if (in_array($group, $this->groups_exclude_filter)) {
+              $skip = true;
+            }
+          }
+
+          if ($skip) {
+            continue;
+          }
+
+          // Now, iterate again and mark the test as wanted if it is.
           foreach ($test_groups as $group) {
             if (in_array($group, $this->groups_filter)) {
               $remaining_tests[] = $test;
