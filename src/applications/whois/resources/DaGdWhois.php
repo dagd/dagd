@@ -243,6 +243,7 @@ final class DaGdWhois {
     } else {
       $res = $this->fetchWhoisDetails();
     }
+    $res = str_replace("\0", '', $res);
     return array(
       'data' => $res,
       'trace' => print_r($this->trace_path, true),
