@@ -98,10 +98,12 @@ final class SQLCLI extends DaGdCLIProgram {
       $current_schema = (int)$contents;
       return $current_schema + 1;
     } else {
-      echo $this->error(
-        'Neither the db_schema database table nor the current_schema text '.
-        'file was found. Could not determine schema state. Aborting.');
-      exit(1);
+      // If the table doesn't exist, and there's no current_schema file, then
+      // assume we are applying the schema for the first time. Historically, we
+      // would error here, but the only time that really makes sense is if
+      // someone is migrating to the new sql tool from the old one and did
+      // something odd. Assuming a fresh slate makes more sense here.
+      return 1;
     }
   }
 
