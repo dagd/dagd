@@ -23,7 +23,7 @@ abstract class DaGdTemplate {
     return tag('title', $this->getTitle());
   }
 
-  public function setStyle($style) {
+  public function setStyle(array $style) {
     $this->style = $style;
     return $this;
   }
