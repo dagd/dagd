@@ -68,16 +68,7 @@ abstract class DaGdController {
   }
 
   public function getStyle() {
-    // The actual cookie is set in the legacy DaGdBaseClass for now, but we
-    // have to handle it here if set, so we can show apps in dark mode.
-    $darkmode = '';
-    if ($this->getRequest()->getSession()->get('darkmode') === 'true') {
-      statsd_bump('dagd_dark_mode_active');
-    }
-
-    return array(
-      $darkmode,
-    );
+    return array();
   }
 
   public function getDarkmode() {
@@ -88,7 +79,12 @@ abstract class DaGdController {
       $session->set('darkmode', $change_dm ? 'true' : 'false');
     }
 
-    return $session->get('darkmode', 'false') === 'true';
+    $wants_darkmode = $session->get('darkmode', 'false');
+    if ($wants_darkmode === 'true') {
+      statsd_bump('dagd_dark_mode_active');
+      return true;
+    }
+    return false;
   }
 
   public static function getHelp() {
