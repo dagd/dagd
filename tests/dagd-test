@@ -187,11 +187,25 @@ final class TestCLI extends DaGdCLIProgram {
       id(new DaGdRegexTest('/up/?url=http://google.com/404', '@^404$@'))
         ->addGroup('up'));
 
-
-    /************ /et/xxxxxxx ************/
+    /************ hardcoded redirects ************/
     $runner->arm(
       id(new DaGdResponseCodeTest('/et/750009720', 302))
         ->addGroup('et'));
+    $runner->arm(
+      id(new DaGdResponseCodeTest('/rhbz/1883609', 302))
+        ->addGroup('rhbz'));
+    $runner->arm(
+      id(new DaGdHeaderRegexTest(
+        '/rhbz/1883609',
+	'Location',
+	'@^https://bugzilla\.redhat\.com/show_bug\.cgi\?id=1883609$@'))
+      ->addGroup('rhbz'));
+    $runner->arm(
+      id(new DaGdHeaderRegexTest(
+        '/rhbz/1883609/',
+	'Location',
+	'@^https://bugzilla\.redhat\.com/show_bug\.cgi\?id=1883609$@'))
+      ->addGroup('rhbz'));
 
     /************ /host/xxxxxxx ************/
     $runner->arm(

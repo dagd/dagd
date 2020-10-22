@@ -167,6 +167,7 @@ class DaGdConfig {
     // These are just full-out redirects.
     'general.redirect_map' => array(
       '/et/(\d+)/?$' => 'http://www.etsy.com/listing/$1',
+      '/rhbz/(\d+)/?$' => 'https://bugzilla.redhat.com/show_bug.cgi?id=$1',
     ),
 
     // These are route-level error controllers. Apps can use them if they want,
