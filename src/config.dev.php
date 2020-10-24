@@ -368,6 +368,9 @@ class DaGdConfig {
       'whois.apnic.net' => array(
         'asn_query' => 'AS',
       ),
+      'whois.ripe.net' => array(
+        'asn_query' => 'AS',
+      ),
     ),
 
     // General TLD-based whois server lookup. The string "TLD" will be replaced
