@@ -13,6 +13,9 @@ final class DaGdWhois {
   // Keep the transient result around in case we can't connect to the server
   // we're redirected to. In that case, we return this result.
   private $first_query_result = '';
+  // What kind of lookup are we performing? By default a domain lookup.
+  // Other options are: 'ip', and 'asn'
+  private $lookup_type = 'domain';
 
   public function __construct($domain) {
     $this->domain = $domain;
@@ -85,9 +88,11 @@ final class DaGdWhois {
     if (filter_var($this->domain, FILTER_VALIDATE_IP)) {
       // An IP query
       $default = DaGdConfig::get('whois.transient_server');
+      $this->lookup_type = 'ip';
     } else if (preg_match('/^AS\d+$/i', $this->domain)) {
       // An AS Number query
       $default = DaGdConfig::get('whois.asn_transient_server');
+      $this->lookup_type = 'asn';
       // And strip off the 'AS', but this breaks some servers...
       $this->domain = substr($this->domain, 2);
     }
@@ -230,7 +235,17 @@ final class DaGdWhois {
     if (($errno != 0) || ($errno == 0 && $sock === false)) {
       return $this->first_query_result;
     }
-    fwrite($sock, $this->domain."\r\n");
+
+    $configs = DaGdConfig::get('whois.redirect_servers');
+    $config = idx($configs, $this->whois_server);
+    $query = '';
+
+    if ($config) {
+      $key = $this->lookup_type.'_query';
+      $query = idx($config, $key, '');
+    }
+
+    fwrite($sock, $query.$this->domain."\r\n");
     $response = '';
     while (!feof($sock)) {
       $response .= utf8_encode(fgets($sock));

@@ -362,6 +362,14 @@ class DaGdConfig {
       'query' => 'a +',
     ),
 
+    // Control what happens after we get redirected.
+    // This is keyed on the hostname of the server we get referred to.
+    'whois.redirect_servers' => array(
+      'whois.apnic.net' => array(
+        'asn_query' => 'AS',
+      ),
+    ),
+
     // General TLD-based whois server lookup. The string "TLD" will be replaced
     // with the tld.
     'whois.generic_tld_servers' => array(
