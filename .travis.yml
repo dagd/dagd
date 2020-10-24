@@ -15,10 +15,6 @@ script:
   - while [[ ! -f .ready-for-ci ]]; do echo 'waiting for docker-compose to spin up'; sleep 1; done
   - ./tests/dagd-test -u http://localhost:8080
 
-branches:
-  only:
-    - master
-
 notifications:
   webhooks:
     - if: type != cron
