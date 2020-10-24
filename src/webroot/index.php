@@ -1,9 +1,10 @@
 <?php
 
+$start = microtime(true);
+
 // Resources that help us do cool things.
 require_once dirname(dirname(__FILE__)).'/resources/global_resources.php';
 
-$start = microtime(true);
 statsd_bump('framework_entry');
 
 // This mechanism is now deprecated in favor of autoloading.
