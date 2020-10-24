@@ -348,11 +348,18 @@ class DaGdConfig {
     'shorten.random_charset' =>
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
 
-    // The default transient whois server.
+    // The default transient whois server. This is used for IPs.
     'whois.transient_server' => array(
       'server' => 'whois.arin.net',
       'port' => 43,
       'query' => 'n +',
+    ),
+
+    // Default used for AS lookups
+    'whois.asn_transient_server' => array(
+      'server' => 'whois.arin.net',
+      'port' => 43,
+      'query' => 'a +',
     ),
 
     // General TLD-based whois server lookup. The string "TLD" will be replaced

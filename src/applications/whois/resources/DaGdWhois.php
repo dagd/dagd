@@ -78,11 +78,24 @@ final class DaGdWhois {
     }
 
     $transient_sock = null;
-    if (filter_var($this->domain, FILTER_VALIDATE_IP)) {
-      $default = DaGdConfig::get('whois.transient_server');
+    $default = null;
 
-      $default_server = $default['server'];
-      $default_port = $default['port'];
+    // See if we're querying by IP or ASN. If we are, pull out the default
+    // transient server to use.
+    if (filter_var($this->domain, FILTER_VALIDATE_IP)) {
+      // An IP query
+      $default = DaGdConfig::get('whois.transient_server');
+    } else if (preg_match('/^AS\d+$/i', $this->domain)) {
+      // An AS Number query
+      $default = DaGdConfig::get('whois.asn_transient_server');
+      // And strip off the 'AS', but this breaks some servers...
+      $this->domain = substr($this->domain, 2);
+    }
+
+    if ($default) {
+      // If we land here, we are doing an IP or ASN query
+      $default_server = idx($default, 'server');
+      $default_port = idx($default, 'port', 43);
 
       if (strpos($default_server, ':') !== false) {
         list($default_server, $default_port) = explode(':', $default_server, 2);
@@ -96,7 +109,7 @@ final class DaGdWhois {
       }
       fwrite($transient_sock, $default['query'].' '.$this->domain."\r\n");
     } else {
-      // A domain query (as opposed to an IP query)
+      // A domain query
       $errno = 0;
       $errstr = '';
       if (!empty($this->whois_server)) {
