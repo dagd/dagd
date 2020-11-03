@@ -119,13 +119,7 @@ final class TestCLI extends DaGdCLIProgram {
           '@Hurricane Electric@'))
         ->addGroup('whois'));
     $runner->arm(
-      id(
-        new DaGdRegexTest(
-          '/w/trees.network',
-          '@Registrar WHOIS Server: whois.1api.net@'))
-        ->addGroup('whois'));
-    $runner->arm(
-      id(new DaGdRegexTest('/w/trees.network','@1API GmbH@'))
+      id(new DaGdRegexTest('/w/trees.network','@NC@'))
         ->addGroup('whois'));
     $runner->arm(
       id(
