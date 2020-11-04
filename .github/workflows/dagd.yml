@@ -1,0 +1,29 @@
+---
+name: dagd-test
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: 0 12 * * *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Start docker-compose
+        run: pushd container && docker-compose -d && popd
+
+      - name: Wait for database initialization
+        run: |
+          while [[ ! -f .ready-for-ci ]]; do
+            echo 'waiting for docker-compose to spin up'
+            sleep 1
+          done
+
+      - name: Run dagd-test
+        env:
+          DaGdConfigFile: ../container/config.container.php
+        run: ./tests/dagd-test -u http://localhost:8080
