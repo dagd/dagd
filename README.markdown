@@ -1,7 +1,7 @@
 What is da.gd?
 ==============
 
-[![Build Status](https://secure.travis-ci.org/dagd/dagd.png?branch=master)](http://travis-ci.org/dagd/dagd)
+![dagd-test](https://github.com/dagd/dagd/workflows/dagd-test/badge.svg?branch=master)
 
 da.gd is both a URL shortener and a collection of quick-info tools written in PHP. It allows you to use `curl` (or any http client) to quickly retrieve various kinds of information such as your IP, useragent, whois for a given domain or IP, DNS lookups, etc., from an easy-to-remember url.
 
