@@ -29,25 +29,3 @@ jobs:
         env:
           DaGdConfigFile: ../container/config.container.php
         run: ./tests/dagd-test -u http://localhost:8080
-
-  notify:
-    if: ${{ always() }}
-    needs: build
-    runs-on: ubuntu-latest
-    timeout-minutes: 1
-    steps:
-    # If we get a non-cron success, report it
-    # If we ever get anything other than success, report it
-    - if:
-        (needs.build.result == 'success' &&
-          github.event_name != 'schedule') ||
-        needs.build.result != 'success'
-      name: Notify
-      uses: joelwmale/webhook-action@master
-      with:
-        body: '{"channel": "#dagd", "username": "${{ github.repository }}",
-          "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-          "text": "dagd-test
-          status: ${{ needs.build.result }}"}'
-        headers: '{"repository": "${{ github.repository }}"}'
-        url: https://sl.da.gd/slackjack
