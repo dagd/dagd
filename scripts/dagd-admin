@@ -1,0 +1,207 @@
+#!/usr/bin/env php
+<?php
+
+// Activate the autoloader
+require_once dirname(dirname(__FILE__)).'/src/resources/global_resources.php';
+
+final class DaGdAdminCLI extends DaGdCLIProgram {
+  private $dbh;
+
+  private function runQuery($query) {
+    $start = microtime(true);
+    $res = $query->execute();
+    $end = microtime(true);
+    $diff = $end - $start;
+
+    if ($res) {
+      if ($this->dbh->affected_rows > 0) {
+        echo $this->ok('Updated in '.$diff.'s');
+        return true;
+      } else {
+        echo $this->info('No entries were changed.');
+        return true;
+      }
+    } else {
+      $db_error = '';
+      if (strlen($this->dbh->error)) {
+        $db_error = ': '.$this->dbh->error;
+      }
+      echo $this->error('Failed to update'.$db_error);
+      exit(1);
+    }
+  }
+
+  private function repoint($shorturl, $longurl) {
+    $longurl_hash = hash('sha256', $longurl);
+
+    $query = $this->dbh->prepare(
+      'UPDATE shorturls SET longurl=?, longurl_hash=? WHERE shorturl=?');
+
+    $query->bind_param(
+      'sss',
+      $longurl,
+      $longurl_hash,
+      $shorturl);
+
+    $res = $this->runQuery($query);
+  }
+
+  private function enable($shorturl) {
+    $query = $this->dbh->prepare(
+      'UPDATE shorturls SET enabled=1 WHERE shorturl=?');
+
+    $query->bind_param('s', $shorturl);
+
+    return $this->runQuery($query);
+  }
+
+  private function disable($shorturl) {
+    $query = $this->dbh->prepare(
+      'UPDATE shorturls SET enabled=0 WHERE shorturl=?');
+
+    $query->bind_param('s', $shorturl);
+
+    return $this->runQuery($query);
+  }
+
+  // TODO: Refactor some of this to use DaGdShortURLQuery instead of
+  // duplicating everything.
+  private function urlStatus($shorturl) {
+    $id = null;
+    $longurl = null;
+    $enabled = null;
+
+    $query = $this->dbh->prepare(
+      'SELECT id, longurl, enabled FROM shorturls WHERE shorturl=?');
+    $query->bind_param('s', $shorturl);
+    $start = microtime(true);
+    $query->execute();
+    $end = microtime(true);
+    $query->bind_result($id, $longurl, $enabled);
+    $query->fetch();
+    $query->close();
+
+    if (!empty($id) && !empty($longurl) && $enabled !== null) {
+      $state = $enabled ? $this->green('enabled') : $this->red('disabled');
+      echo 'ID: '.$id."\n";
+      echo 'Short URL: '.$shorturl."\n";
+      echo 'State: '.$state."\n";
+      echo 'Long URL: '.$longurl."\n";
+      exit(0);
+    } else {
+      $db_error = '';
+      if (strlen($this->dbh->error)) {
+        $db_error = ': '.$this->dbh->error;
+      }
+      echo $this->error('Could not find status for shorturl'.$db_error);
+      exit(1);
+    }
+  }
+
+  public function run() {
+    parent::run();
+
+    $this->dbh = new mysqli(
+      DaGdConfig::get('mysql.host'),
+      DaGdConfig::get('mysql.user'),
+      DaGdConfig::get('mysql.password'),
+      DaGdConfig::get('mysql.database'));
+
+    $help = $this->param('--help');
+    $repoint = $this->param('--repoint');
+    $disable = $this->param('--disable');
+    $enable = $this->param('--enable');
+    $status = $this->param('--status');
+    $shorturl = $this->param('--shorturl');
+
+    // These are mutually exclusive actions
+    $actions = array(
+      $repoint,
+      $disable,
+      $enable,
+      $status,
+    );
+
+    // Default to help, but if we're given a shorturl, default to status.
+    $action = $help;
+    if ($shorturl->getGiven()) {
+      $action = $status;
+    }
+
+    foreach ($actions as $possible_action) {
+      if ($possible_action->getGiven()) {
+        $action = $possible_action;
+        break;
+      }
+    }
+
+    if ($action == $help) {
+      $this->showUsage();
+      exit(0);
+    }
+
+    if ($action == $status && !$status->getGiven()) {
+      echo $this->info('No action specified, defaulting to --status.');
+    }
+
+    if (!$shorturl->getGiven()) {
+      echo $this->error('No shorturl given, must be specified with --shorturl');
+      exit(1);
+    }
+
+    switch ($action->getName()) {
+    case '--repoint':
+      $this->repoint($shorturl->getValue(), $action->getValue());
+      break;
+    case '--enable':
+      $this->enable($shorturl->getValue());
+      break;
+    case '--disable':
+      $this->disable($shorturl->getValue());
+      break;
+    case '--status':
+      $this->urlStatus($shorturl->getValue());
+      break;
+    default:
+      echo $this->error('This action has not been defined.');
+      exit(1);
+    }
+  }
+}
+
+$cli = new DaGdAdminCLI();
+$cli->setName('dagd-admin');
+$cli->setDescription('manipulate short URL entries');
+$cli->addParameter(
+  id(new DaGdCLIArgument)
+    ->setName('--shorturl')
+    ->setShortname('-s')
+    ->setDescription('The short URL to manipulate'));
+$cli->addParameter(
+  id(new DaGdCLIArgument)
+    ->setName('--repoint')
+    ->setShortname('-r')
+    ->setDescription(
+      'The new destination for the shorturl given with --shorturl'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--enable')
+    ->setShortname('-e')
+    ->setDescription('Enable the shorturl given with --shorturl'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--disable')
+    ->setShortname('-d')
+    ->setDescription('Disable the shorturl given with --shorturl'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--status')
+    ->setShortname('-S')
+    ->setDescription(
+      'Display information about the shorturl given with --shorturl'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--help')
+    ->setShortname('-h')
+    ->setDescription('Show program help'));
+$cli->execute($argv);

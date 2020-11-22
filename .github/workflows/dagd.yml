@@ -29,3 +29,19 @@ jobs:
         env:
           DaGdConfigFile: ../container/config.container.php
         run: ./tests/dagd-test -u http://localhost:8080
+
+      # We should extend dagd-test to cover CLI stuff, but for now we test
+      # dagd-admin separately as part of CI.
+      - name: Run dagd-admin tests
+        env:
+          DaGdConfigFile: ../container/config.container.php
+        run: |
+          docker exec -it container_app_1 ./scripts/dagd-admin  -s g | grep State | grep enabled
+          docker exec -it container_app_1 ./scripts/dagd-admin  -s g | grep "defaulting to \-\-status"
+          docker exec -it container_app_1 ./scripts/dagd-admin  -s g -d | grep "Updated in"
+          docker exec -it container_app_1 ./scripts/dagd-admin  -s g | grep State | grep disabled
+          docker exec -it container_app_1 ./scripts/dagd-admin  -s g -e | grep "Updated in"
+          docker exec -it container_app_1 ./scripts/dagd-admin  -s g | grep State | grep enabled
+          docker exec -it container_app_1 ./scripts/dagd-admin  -s g -r https://wikipedia.org/ | grep "Updated in"
+          docker exec -it container_app_1 ./scripts/dagd-admin  -s g -S | grep wikipedia
+          docker exec -it container_app_1 ./scripts/dagd-admin  -s g -r https://google.com/ | grep "Updated in"
