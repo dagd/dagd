@@ -417,7 +417,7 @@ class DaGdConfig {
       ),
       'de' => array(
         'server' => 'whois.denic.de',
-        'query' => '-T dn,ace',
+        'query' => '-T dn,ace ',
       ),
       'me' => array(
         // It appears whois.nic.me will handle its own responses without any
