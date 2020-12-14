@@ -415,6 +415,11 @@ class DaGdConfig {
         'server' => 'edu.whois-servers.net',
         'query' => '',
       ),
+      'eu' => array(
+        // Same as edu above.
+        'server' => 'eu.whois-servers.net',
+        'query' => '',
+      ),
       'de' => array(
         'server' => 'whois.denic.de',
         'query' => '-T dn,ace ',
