@@ -81,12 +81,30 @@ final class DaGdAdminCLI extends DaGdCLIProgram {
     $query->fetch();
     $query->close();
 
+    $ctrl = id(new DaGdCLIFakeController())
+      ->setWriteDB($this->dbh)
+      ->setReadDB($this->dbh);
+    $query = new DaGdShortURLQuery($ctrl);
+
+    // Which set of days do we care about for listing accesses?
+    $day_ranges = array(1, 7, 30, 365);
+
+    $accesses = 'Recent Accesses:';
+
+    foreach ($day_ranges as $days) {
+      $accesses_sum = array_sum($query->dailyAccess($shorturl, $days));
+      $accesses .= ' '.$days.'d: '.$accesses_sum.',';
+    }
+
+    $accesses = rtrim($accesses, ',');
+
     if (!empty($id) && !empty($longurl) && $enabled !== null) {
       $state = $enabled ? $this->green('enabled') : $this->red('disabled');
       echo 'ID: '.$id."\n";
       echo 'Short URL: '.$shorturl."\n";
       echo 'State: '.$state."\n";
       echo 'Long URL: '.$longurl."\n";
+      echo $accesses."\n";
       exit(0);
     } else {
       $db_error = '';
