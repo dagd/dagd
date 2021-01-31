@@ -36,6 +36,14 @@ abstract class DaGdResponse {
     return $this;
   }
 
+  public function removeHeader($key) {
+    // If we set the header to null, getHeaders() will remove it before
+    // returning headers, even if it was defined earlier in the hierarchy (e.g.
+    // general.extra_headers in config). Setting to null is our way of saying
+    // "no really, do not send this header."
+    $this->headers[$key] = null;
+  }
+
   public function setBody($body) {
     $this->body = $body;
     return $this;
@@ -129,10 +137,24 @@ abstract class DaGdResponse {
     return $message;
   }
 
+  /**
+   * Headers to send along with each response. There is a hierarchy at play:
+   *
+   * 1. Any headers that we want to dynamically generate in all responses such
+   *    as Content-Length get added.
+   * 2. Next, any headers in general.extra_headers get applied. These must be
+   *    static. They act as config-level "defaults" that controllers and
+   *    subclasses of DaGdResponse can override.
+   * 3. Next any controller or subclass-overridden variables get added.
+   */
   public function getHeaders() {
-    $headers = array();
+    // Default headers
+    $headers = array(
+      'Content-Length' => strlen($this->getBody()),
+    );
 
-    // These unfortunately are "k: v" strings
+    // Static headers that come from config. These unfortunately are "k: v"
+    // strings.
     $global_headers = DaGdConfig::get('general.extra_headers');
     foreach ($global_headers as $header) {
       $header_sp = explode(':', $header, 2);
@@ -144,7 +166,17 @@ abstract class DaGdResponse {
       $headers[$key] = $value;
     }
 
-    $headers = array_merge($headers, $this->headers);
+    // Subclasses and controllers can override those.
+    foreach ($this->headers as $k => $v) {
+      if ($v === null) {
+        // If explicitly set to null, make sure we don't send the header.
+        unset($headers[$k]);
+        continue;
+      }
+
+      $headers[$k] = $v;
+    }
+
     return $headers;
   }
 

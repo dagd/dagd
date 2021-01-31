@@ -180,11 +180,11 @@ class DaGdConfig {
       '405' => 'DaGd405Controller',
     ),
 
-    // These are extra headers that get applied globally
+    // These are extra headers that get applied globally. They can be overridden
+    // by subclasses of DaGdResponse.
     'general.extra_headers' => array(
       'Cache-Control: no-cache',
       'Access-Control-Allow-Origin: *', // CORS
-      'Expires: -1',
     ),
 
     // These are allowed file extensions for serving static assets.

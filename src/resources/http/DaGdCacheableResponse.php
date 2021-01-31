@@ -22,24 +22,21 @@ abstract class DaGdCacheableResponse extends DaGdResponse {
   }
 
   public function getHeaders() {
-    $headers = array();
-
     if ($this->cacheable) {
-      $headers['Cache-Control'] = implode(
-        ', ',
-        array(
-          'public',
-          'max-age='.$this->cache_duration,
-          'immutable',
-        )
-      );
+      $this->addHeader(
+        'Cache-Control',
+        implode(
+          ', ',
+          array(
+            'public',
+            'max-age='.$this->cache_duration,
+            'immutable',
+          )
+        ));
     } else {
-      $headers['Cache-Control'] = 'no-cache';
-      $headers['Expires'] = '-1';
+      $this->addHeader('Cache-Control', 'no-cache');
     }
 
-    // Explicitly do NOT merge headers with the superclass, because we want to
-    // control our own caching.
-    return $headers;
+    return parent::getHeaders();
   }
 }

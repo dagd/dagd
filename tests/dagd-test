@@ -43,6 +43,15 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('shorten')
         ->setAccept('text/html'));
 
+    $runner->arm(
+      id(
+        new DaGdHeaderRegexTest(
+          '/',
+          'Content-Length',
+          '@^0$@',
+          true))
+        ->addGroup('shorten'));
+
     /*********** routing by method ***********/
     // TODO: Needs "same-route, different-request-method, different-controller"
     // tests added (which will require test-specification applications and
@@ -417,6 +426,14 @@ final class TestCLI extends DaGdCLIProgram {
     $runner->arm(
       id(
         new DaGdRegexTest(
+          '/s?url=https://youtube.com/&shorturl=yt',
+          '@/yt@'))
+        ->setPreparatory(true)
+        ->addGroup('shorten'));
+
+    $runner->arm(
+      id(
+        new DaGdRegexTest(
           '/s?url=http://example.com/&shorturl=example',
           '@/example@'))
         ->setAccept('text/plain')
@@ -492,6 +509,25 @@ final class TestCLI extends DaGdCLIProgram {
       id(new DaGdResponseCodeTest('/stats/doesnotexist', 404))
       ->setAccept('text/html')
       ->addGroup('stats'));
+
+    /************ /screenshot/xxxxxxx ************/
+    $runner->arm(
+      id(new DaGdResponseCodeTest('/screenshot/doesnotexist', 404))
+      ->addGroup('screenshot'));
+
+    $runner->arm(
+      id(new DaGdContentTypeTest('/screenshot/yt', 'image/jpeg'))
+        ->addGroup('screenshot')
+        ->setAccept('image/jpeg'));
+
+    $runner->arm(
+      id(
+        new DaGdHeaderRegexTest(
+          '/screenshot/yt',
+          'Content-Length',
+          '@^0$@',
+          true))
+        ->addGroup('screenshot'));
 
     //$runner->arm(
     //  id(

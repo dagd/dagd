@@ -21,7 +21,7 @@ final class DaGdHeaderRegexTest extends DaGdTest {
     $headers = $this->getHeaders();
 
     if (!isset($headers[$this->header_key])) {
-      return $this->test(false, 'header must exist');
+      return $this->test(false, 'header '.$this->header_key.' must exist');
     }
 
     $value = $headers[$this->header_key];
