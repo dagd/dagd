@@ -15,6 +15,11 @@ final class DaGdShortenScreenshotController extends DaGdController {
 
     $query = new DaGdShortURLQuery($this);
     $surl = $query->fromShort($short_url);
+
+    if ($surl === null) {
+      return $this->error(404)->finalize();
+    }
+
     $long_url = $surl->getLongUrl();
 
     $base64 = $this->getScreenshot($long_url);
