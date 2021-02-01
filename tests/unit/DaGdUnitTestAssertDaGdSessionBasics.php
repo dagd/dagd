@@ -30,6 +30,6 @@ final class DaGdUnitTestAssertDaGdSessionBasics extends DaGdUnitTest {
 
     $this->assertTrue(
       $new_session->get('foo', 'does not exist') === 'does not exist',
-      'set-get returns expected');
+      'get with default returns expected');
   }
 }
