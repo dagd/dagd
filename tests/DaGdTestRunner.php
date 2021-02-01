@@ -123,15 +123,10 @@ class DaGdTestRunner {
           $test_groups = $test->getGroups();
 
           // First, see if we have an excluded group
-          $skip = false;
           foreach ($test_groups as $group) {
             if (in_array($group, $this->groups_exclude_filter)) {
-              $skip = true;
+              continue;
             }
-          }
-
-          if ($skip) {
-            continue;
           }
 
           // Now, iterate again and mark the test as wanted if it is.
@@ -160,12 +155,8 @@ class DaGdTestRunner {
           exit(1);
         }
         if ($pid === 0) {
-          $exit = SUCCESS;
           $rc = $remaining_tests[$this->last_started]->run();
-          if ($rc != SUCCESS) {
-            $exit = $rc;
-          }
-          exit($exit);
+          exit($rc);
         } else {
           $this->pids[] = $pid;
         }
