@@ -27,7 +27,7 @@ jobs:
           GOOGLE_INSIGHTS_API: ${{ secrets.GOOGLE_INSIGHTS_API }}
         run: |
           pushd container
-          sed -i 's/build: ci-dockerfiles.*/build: ci-dockerfiles\/${{ matrix.dockerfile }}/' docker-compose.yml
+          sed -i 's/build: ci-dockerfiles.*/build: ci-dockerfiles\/${{ matrix.dockerfile }}/' docker-compose.yaml
           docker-compose up -d
           popd
 
