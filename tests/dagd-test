@@ -50,7 +50,8 @@ final class TestCLI extends DaGdCLIProgram {
           'Content-Length',
           '@^0$@',
           true))
-        ->addGroup('shorten'));
+        ->addGroup('shorten')
+        ->setAccept('text/html'));
 
     /*********** routing by method ***********/
     // TODO: Needs "same-route, different-request-method, different-controller"
