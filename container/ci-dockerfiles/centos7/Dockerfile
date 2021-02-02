@@ -14,7 +14,7 @@ RUN yum install -y \
         php-pecl-apcu \
         php-pecl-zendopcache \
         git \
-	nc \
+        nc \
         && yum clean all
 
 ENV DaGdConfigFile ../container/config.container.php

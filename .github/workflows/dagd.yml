@@ -10,13 +10,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    continue-on-error: ${{ matrix.soft_fail }}
     strategy:
       fail-fast: false
+      matrix:
+        include:
+          - dockerfile: rhel8
+            soft_fail: true
+          - dockerfile: centos7
+            soft_fail: false
     steps:
       - uses: actions/checkout@v2
 
       - name: Start docker-compose
-        run: pushd container && docker-compose up -d && popd
+        env:
+          GOOGLE_INSIGHTS_API: ${{ secrets.GOOGLE_INSIGHTS_API }}
+        run: |
+          pushd container
+          sed -i 's/build: ci-dockerfiles.*/build: ci-dockerfiles\/${{ matrix.dockerfile }}/' docker-compose.yml
+          docker-compose up -d
+          popd
 
       - name: Wait for database initialization
         run: |
@@ -35,6 +48,7 @@ jobs:
       - name: Run dagd-admin tests
         env:
           DaGdConfigFile: ../container/config.container.php
+          GOOGLE_INSIGHTS_API: ${{ secrets.GOOGLE_INSIGHTS_API }}
         run: |
           docker exec container_app_1 ./scripts/dagd-admin  -s g | grep State | grep enabled
           docker exec container_app_1 ./scripts/dagd-admin  -s g | grep Accesses: | grep 7d

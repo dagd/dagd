@@ -44,7 +44,13 @@ echo 0 > sql/current_schema
 cp -v container/dagd-httpd.conf /etc/httpd/conf.d/
 
 # We load mpm_prefork in our config.
-rm /etc/httpd/conf.modules.d/00-mpm.conf
+#rm /etc/httpd/conf.modules.d/00-mpm.conf
+
+# On RHEL8, where we default to php-fpm, start it up.
+if [[ -f /usr/sbin/php-fpm ]]; then
+  mkdir /run/php-fpm/
+  php-fpm
+fi
 
 # Immediately before we start, touch a file to tell CI that we are
 # ready to start working.

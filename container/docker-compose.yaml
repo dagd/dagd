@@ -1,13 +1,19 @@
 version: '3'
 services:
   app:
-    build: .
+    build: ci-dockerfiles/centos7
     ports:
       - "8080:80"
     depends_on:
       - db
     volumes:
       - ..:/srv/dagd:Z
+    # Some DNS servers fail querying DNS_ALL, so hardcode some that don't.
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    environment:
+      - GOOGLE_INSIGHTS_API
   db:
     image: mariadb:latest
     restart: always

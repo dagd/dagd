@@ -427,8 +427,8 @@ final class TestCLI extends DaGdCLIProgram {
     $runner->arm(
       id(
         new DaGdRegexTest(
-          '/s?url=https://youtube.com/&shorturl=yt',
-          '@/yt@'))
+          '/s?url=https://www.clevelandmetroparks.com/zoo&shorturl=cz',
+          '@/cz@'))
         ->setPreparatory(true)
         ->addGroup('shorten'));
 
@@ -517,14 +517,14 @@ final class TestCLI extends DaGdCLIProgram {
       ->addGroup('screenshot'));
 
     $runner->arm(
-      id(new DaGdContentTypeTest('/screenshot/yt', 'image/jpeg'))
+      id(new DaGdContentTypeTest('/screenshot/cz', 'image/jpeg'))
         ->addGroup('screenshot')
         ->setAccept('image/jpeg'));
 
     $runner->arm(
       id(
         new DaGdHeaderRegexTest(
-          '/screenshot/yt',
+          '/screenshot/cz',
           'Content-Length',
           '@^0$@',
           true))
