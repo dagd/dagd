@@ -49,8 +49,10 @@ fi
 
 # docker-compose DNS breaks on ubi8 in the following case:
 #   dns_get_record('google.com', DNS_ALL);
-# so avoid using it
-echo "nameserver 8.8.8.8" > /etc/resolv.conf
+# so add a fallback. We still need it for db access though.
+# The net result here is a slowdown on /dns/ endpoints, but at least tests
+# will pass.
+echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 echo "nameserver 8.8.4.4" >> /etc/resolv.conf
 
 # Immediately before we start, touch a file to tell CI that we are
