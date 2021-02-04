@@ -37,20 +37,21 @@ done
 
 set -e
 
-#rm -vf ./sql/current_schema
-#./sql/patcher.php --yes
 echo 0 > sql/current_schema
 ./scripts/sql -a .
 cp -v container/dagd-httpd.conf /etc/httpd/conf.d/
-
-# We load mpm_prefork in our config.
-#rm /etc/httpd/conf.modules.d/00-mpm.conf
 
 # On RHEL8, where we default to php-fpm, start it up.
 if [[ -f /usr/sbin/php-fpm ]]; then
   mkdir /run/php-fpm/
   php-fpm
 fi
+
+# docker-compose DNS breaks on ubi8 in the following case:
+#   dns_get_record('google.com', DNS_ALL);
+# so avoid using it
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+echo "nameserver 8.8.4.4" >> /etc/resolv.conf
 
 # Immediately before we start, touch a file to tell CI that we are
 # ready to start working.
