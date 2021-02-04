@@ -6,6 +6,7 @@ abstract class DaGdTest {
   protected $path;
   protected $response;
   protected $headers;
+  protected $body;
   protected $tolerate_failure;
   protected $accept = '*/*';
   protected $method = 'GET';
@@ -72,6 +73,11 @@ abstract class DaGdTest {
     return $this->runner;
   }
 
+  // TODO: Either abstract these out somehow, or just let DaGdTest extend
+  // DaGdCLI and use those functions for formatting. For abstracting, we could
+  // create a DaGdTestResultCallback. We'd have to thread the instance through
+  // the test runner and have it set it on the test. But it would let us easily
+  // create other test output formats.
   protected function fail($text, $output = '') {
     if ($this->tolerate_failure) {
       echo chr(27)."[1;33m".'*** (tolerable failure) '.$text.' ***'.chr(27)."[0m"."\n";
@@ -81,13 +87,22 @@ abstract class DaGdTest {
     if ($output != '') {
       echo '    Output was: '.chr(27)."[1;35m".$output.chr(27)."[0m"."\n";
     }
+    if ($this->body && preg_match('@500@', $this->response)) {
+      echo '    Framework output: '.chr(27)."[1;30m"."\n";
+      $lines = explode("\n", $this->body);
+      foreach ($lines as $line) {
+        echo '      '.$line."\n";
+      }
+      echo chr(27)."[0m";
+    }
   }
 
+  // TODO: see note above fail(). Same applies here.
   protected function pass($text) {
     echo chr(27)."[1;32m".'*** '.$text.' ***'.chr(27)."[0m"."\n";
   }
 
-  protected function retrieve($ignore_errors = false) {
+  protected function retrieve($ignore_errors = true) {
     $context = stream_context_create(
       array(
         'http' => array(
@@ -117,6 +132,8 @@ abstract class DaGdTest {
     if ($this->original_user_agent) {
       ini_set('user_agent', $this->original_user_agent);
     }
+
+    $this->body = $obtain;
     return $obtain;
   }
 
@@ -134,6 +151,14 @@ abstract class DaGdTest {
         'Call retrieve() before calling getResponse()!');
     }
     return $this->response;
+  }
+
+  protected function getBody() {
+    if (!$this->body) {
+      throw new Exception(
+        'Call retrieve() before calling getBody()!');
+    }
+    return $this->body;
   }
 
   protected function test($condition, $summary, $output = '') {
