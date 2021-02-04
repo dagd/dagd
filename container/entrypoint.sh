@@ -43,7 +43,9 @@ cp -v container/dagd-httpd.conf /etc/httpd/conf.d/
 
 # On RHEL8, where we default to php-fpm, start it up.
 if [[ -f /usr/sbin/php-fpm ]]; then
-  mkdir /run/php-fpm/
+  if [[ ! -d /run/php-fpm ]]; then
+    mkdir /run/php-fpm/
+  fi
   php-fpm
 fi
 
