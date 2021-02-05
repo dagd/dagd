@@ -15,6 +15,9 @@ final class TestCLI extends DaGdCLIProgram {
     $runner = new DaGdTestRunner();
     $runner->setBaseUrl($this->param('--url')->getValue());
 
+    $cb = new DaGdTestResultCLICallback($this);
+    $runner->setResultsCallback($cb);
+
     $runner->arm(
       id(new DaGdContentTypeTest('/', 'text/plain'))
         ->addGroup('shorten')

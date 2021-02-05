@@ -13,12 +13,17 @@ abstract class DaGdTest {
   private $original_user_agent;
   private $preparatory = false;
   private $groups = array('default');
+  private $results_callback;
 
   abstract public function run();
 
   public function setTolerateFailure($tolerate_failure) {
     $this->tolerate_failure = $tolerate_failure;
     return $this;
+  }
+
+  public function getTolerateFailure() {
+    return $this->tolerate_failure;
   }
 
   public function setPreparatory($is_preparatory) {
@@ -42,6 +47,16 @@ abstract class DaGdTest {
   public function addGroup($group) {
     $this->groups[] = $group;
     return $this;
+  }
+
+  public function setResultsCallback($results_callback) {
+    $results_callback->setTest($this);
+    $this->results_callback = $results_callback;
+    return $this;
+  }
+
+  public function getResultsCallback() {
+    return $this->results_callback;
   }
 
   public function setUserAgent($user_agent) {
@@ -71,35 +86,6 @@ abstract class DaGdTest {
 
   public function getRunner() {
     return $this->runner;
-  }
-
-  // TODO: Either abstract these out somehow, or just let DaGdTest extend
-  // DaGdCLI and use those functions for formatting. For abstracting, we could
-  // create a DaGdTestResultCallback. We'd have to thread the instance through
-  // the test runner and have it set it on the test. But it would let us easily
-  // create other test output formats.
-  protected function fail($text, $output = '') {
-    if ($this->tolerate_failure) {
-      echo chr(27)."[1;33m".'*** (tolerable failure) '.$text.' ***'.chr(27)."[0m"."\n";
-    } else {
-      echo chr(27)."[1;31m".'*** '.$text.' ***'.chr(27)."[0m"."\n";
-    }
-    if ($output != '') {
-      echo '    Output was: '.chr(27)."[1;35m".$output.chr(27)."[0m"."\n";
-    }
-    if ($this->body && preg_match('@500@', $this->response)) {
-      echo '    Framework output: '.chr(27)."[1;30m"."\n";
-      $lines = explode("\n", $this->body);
-      foreach ($lines as $line) {
-        echo '      '.$line."\n";
-      }
-      echo chr(27)."[0m";
-    }
-  }
-
-  // TODO: see note above fail(). Same applies here.
-  protected function pass($text) {
-    echo chr(27)."[1;32m".'*** '.$text.' ***'.chr(27)."[0m"."\n";
   }
 
   protected function retrieve($ignore_errors = true) {
@@ -137,36 +123,26 @@ abstract class DaGdTest {
     return $obtain;
   }
 
-  protected function getHeaders() {
-    if (!$this->headers) {
-      throw new Exception(
-        'Call retrieve() before calling getHeaders()!');
-    }
+  public function getHeaders() {
     return $this->headers;
   }
 
-  protected function getResponse() {
-    if (!$this->response) {
-      throw new Exception(
-        'Call retrieve() before calling getResponse()!');
-    }
+  public function getResponse() {
     return $this->response;
   }
 
-  protected function getBody() {
-    if (!$this->body) {
-      throw new Exception(
-        'Call retrieve() before calling getBody()!');
-    }
+  public function getBody() {
     return $this->body;
   }
 
   protected function test($condition, $summary, $output = '') {
     if ($condition) {
-      $this->pass('Test PASSED ['.$this->path.']: '.$summary);
+      $this->getResultsCallback()->pass(
+        'Test PASSED ['.$this->path.']: '.$summary);
       return SUCCESS;
     } else {
-      $this->fail('Test FAILED ['.$this->path.']: '.$summary, $output);
+      $this->getResultsCallback()->fail(
+        'Test FAILED ['.$this->path.']: '.$summary, $output);
       if ($this->tolerate_failure) {
         return TOLERATED_FAILURE;
       } else {

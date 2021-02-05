@@ -12,6 +12,7 @@ class DaGdTestRunner {
   private $groups_filter = array();
   private $groups_exclude_filter = array();
   private $run_preparatory = true;
+  private $results_callback;
 
   private $passes = 0;
   private $tolerated_failures = 0;
@@ -87,6 +88,15 @@ class DaGdTestRunner {
     return $this->run_preparatory;
   }
 
+  public function setResultsCallback($results_callback) {
+    $this->results_callback = $results_callback;
+    return $this;
+  }
+
+  public function getResultsCallback() {
+    return $this->results_callback;
+  }
+
   private function handleRC($rc) {
     switch ($rc) {
     case SUCCESS:
@@ -112,6 +122,10 @@ class DaGdTestRunner {
       // This is mainly so we can access test-global configuration such as the
       // base URL.
       $test->setRunner($this);
+
+      // Also set the test's callback, so it knows how to output results.
+      $test->setResultsCallback($this->getResultsCallback());
+
       if ($test->getPreparatory() && $this->getRunPreparatory()) {
         $rc = $test->run();
         $this->handleRC($rc);
