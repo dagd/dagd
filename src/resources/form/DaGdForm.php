@@ -163,6 +163,7 @@ class DaGdForm implements DaGdToTagInterface {
         throw new Exception('Form field names must be unique');
       }
       $field_tags[] = $field;
+      $field_names[] = $field->getName();
     }
 
     $form = tag(
