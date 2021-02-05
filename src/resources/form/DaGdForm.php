@@ -95,9 +95,18 @@ class DaGdForm implements DaGdToTagInterface {
     return $this;
   }
 
-  public function addField(DaGdFormField $field) {
-    $this->fields[] = $field;
+  public function addField(DaGdFormField $field, $throw_on_duplicate = true) {
+    if ($throw_on_duplicate) {
+      if (array_key_exists($field->getName(), $this->fields)) {
+        throw Exception('Field names must be unique: '.$field->getName());
+      }
+    }
+    $this->fields[$field->getName()] = $field;
     return $this;
+  }
+
+  public function getField($name) {
+    return idx($this->fields, $name);
   }
 
   public function getFields() {
@@ -157,13 +166,8 @@ class DaGdForm implements DaGdToTagInterface {
     }
 
     $field_tags = array();
-    $field_names = array();
-    foreach ($this->getFields() as $field) {
-      if (in_array($field->getName(), $field_names)) {
-        throw new Exception('Form field names must be unique');
-      }
+    foreach ($this->getFields() as $name => $field) {
       $field_tags[] = $field;
-      $field_names[] = $field->getName();
     }
 
     $form = tag(
