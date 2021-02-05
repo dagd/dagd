@@ -98,7 +98,7 @@ class DaGdForm implements DaGdToTagInterface {
   public function addField(DaGdFormField $field, $throw_on_duplicate = true) {
     if ($throw_on_duplicate) {
       if (array_key_exists($field->getName(), $this->fields)) {
-        throw Exception('Field names must be unique: '.$field->getName());
+        throw new Exception('Field names must be unique: '.$field->getName());
       }
     }
     $this->fields[$field->getName()] = $field;
