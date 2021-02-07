@@ -9,6 +9,7 @@ abstract class DaGdTemplate {
   private $body;
   private $escape = true;
   private $darkmode = false;
+  private $alerts = array();
 
   public function setTitle($title) {
     $this->title = $title;
@@ -160,6 +161,20 @@ abstract class DaGdTemplate {
 
   public function getDarkmode() {
     return $this->darkmode;
+  }
+
+  public function setAlerts($alerts) {
+    $this->alerts = $alerts;
+    return $this;
+  }
+
+  public function addAlert($alert) {
+    $this->alerts[] = $alert;
+    return $this;
+  }
+
+  public function getAlerts() {
+    return $this->alerts;
   }
 
   public function getHeadTag() {

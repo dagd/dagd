@@ -11,6 +11,7 @@ abstract class DaGdController {
   private $write_db;
   private $cache;
   private $debug_cards = array();
+  private $alerts = array();
 
   public function setRequest($request) {
     $this->request = $request;
@@ -65,6 +66,20 @@ abstract class DaGdController {
 
   public function getDebugCards() {
     return $this->debug_cards;
+  }
+
+  public function setAlerts($alerts) {
+    $this->alerts = $alerts;
+    return $this;
+  }
+
+  public function addAlert($alert) {
+    $this->alerts[] = $alert;
+    return $this;
+  }
+
+  public function getAlerts() {
+    return $this->alerts;
   }
 
   public function getStyle() {
@@ -239,7 +254,8 @@ abstract class DaGdController {
       ->setStyle($this->getStyle())
       ->setTitle(idx($help, 'title', 'Welcome!'))
       ->setDebugBody($debug_body)
-      ->setDarkmode($this->getDarkmode());
+      ->setDarkmode($this->getDarkmode())
+      ->setAlerts($this->getAlerts());
   }
 
   // TODO: Probably add some instanceof checks here

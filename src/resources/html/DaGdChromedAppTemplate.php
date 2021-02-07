@@ -40,6 +40,17 @@ body, .sitename { margin: 0; padding: 0; }
 body.lightmode .card { background-color: #fff; }
 .card .card-title { background-color: #9C89B8; color: #422040; }
 body.darkmode .card { background-color: #888; }
+.alert { width: 100%; padding: 1px 10px; margin: 5px 0; box-sizing: border-box; border-radius: 3px; }
+.lightmode .alert-warning { background-color: #ffd27f; }
+.darkmode .alert-warning { background-color: #aaa27f; }
+.lightmode .alert-success { background-color: #88d27f; }
+.darkmode .alert-success { background-color: #77a27f; }
+.lightmode .alert-failure { background-color: #ff828f; }
+.darkmode .alert-failure { background-color: #a7727f; }
+.lightmode .alert-fatal { background-color: #ff4344; }
+.darkmode .alert-fatal { background-color: #a7323f; }
+.lightmode .alert-info { background-color: #88d2ff; }
+.darkmode .alert-info { background-color: #628aaf; }
 EOD;
     return array_merge(parent::getStyle(), array($style));
   }
@@ -112,7 +123,10 @@ EOD;
 
     $constrainted_body = tag(
       'div',
-      parent::getBody(),
+      array(
+        $this->getalerts(),
+        parent::getBody(),
+      ),
       array(
         'id' => 'app',
         'class' => 'constraint',
