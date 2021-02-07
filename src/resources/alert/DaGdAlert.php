@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * NOTE: Instances of this class get serialized and stored in the session.
+ */
 class DaGdAlert implements DaGdToTagInterface {
   const SUCCESS = 0;
   const INFO = 1;

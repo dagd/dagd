@@ -11,7 +11,6 @@ abstract class DaGdController {
   private $write_db;
   private $cache;
   private $debug_cards = array();
-  private $alerts = array();
 
   public function setRequest($request) {
     $this->request = $request;
@@ -69,17 +68,24 @@ abstract class DaGdController {
   }
 
   public function setAlerts($alerts) {
-    $this->alerts = $alerts;
+    $session = $this->getRequest()->getSession();
+    $session->set('dagd-alerts', $alerts);
     return $this;
   }
 
   public function addAlert($alert) {
-    $this->alerts[] = $alert;
+    $session = $this->getRequest()->getSession();
+    $alerts = $session->get('dagd-alerts', array());
+    $alerts[] = $alert;
+    $session->set('dagd-alerts', $alerts);
     return $this;
   }
 
-  public function getAlerts() {
-    return $this->alerts;
+  public function getAlerts($clear_alerts = false) {
+    $session = $this->getRequest()->getSession();
+    $alerts = $session->get('dagd-alerts', array());
+    $session->set('dagd-alerts', array());
+    return $alerts;
   }
 
   public function getStyle() {
@@ -205,7 +211,6 @@ abstract class DaGdController {
       }
     }
 
-
     $request_card = id(new DaGdCard())
       ->setTitle(tag('small', 'Request Details'))
       ->setBody(
@@ -255,7 +260,7 @@ abstract class DaGdController {
       ->setTitle(idx($help, 'title', 'Welcome!'))
       ->setDebugBody($debug_body)
       ->setDarkmode($this->getDarkmode())
-      ->setAlerts($this->getAlerts());
+      ->setAlerts($this->getAlerts(true));
   }
 
   // TODO: Probably add some instanceof checks here
