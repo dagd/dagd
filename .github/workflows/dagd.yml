@@ -60,3 +60,9 @@ jobs:
           docker exec container_app_1 ./scripts/dagd-admin  -s g -r https://wikipedia.org/ | grep "Updated in"
           docker exec container_app_1 ./scripts/dagd-admin  -s g -S | grep wikipedia
           docker exec container_app_1 ./scripts/dagd-admin  -s g -r https://google.com/ | grep "Updated in"
+
+      - name: Check production site SSL expiry (within 5 days)
+        run: |
+          echo |
+          openssl s_client -connect da.gd:443 |
+          openssl x509 -checkend $((60*60*24*5)) -noout
