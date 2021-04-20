@@ -87,7 +87,7 @@ class DaGdConfig {
       '/ec/(?P<username>.+)/?$' => array(
         'controller' => 'DaGdEditCountController',
       ),
-      '/up/?(.+)?/?$' => array(
+      '/up/(.+)/?$' => array(
         'controller' => 'DaGdIsItUpController',
       ),
       '/host/(.+)/?$' => array(
@@ -120,7 +120,7 @@ class DaGdConfig {
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => array(
         'controller' => 'DaGdImageController',
       ),
-      '/isp/?(.+)?/?$' => array(
+      '/isp(?:/?$|/([^/]+)/?$)' => array(
         'controller' => 'DaGdISPController',
       ),
       '/leftpad/([0-9]+)/(.+)/(.+)/?$' => array(
