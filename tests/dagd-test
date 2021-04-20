@@ -115,7 +115,7 @@ final class TestCLI extends DaGdCLIProgram {
 
     /* // Ensure that whois is functioning. */
     $runner->arm(
-      id(new DaGdRegexTest('/w/google.com', '@ns1.google.com@'))
+      id(new DaGdRegexTest('/w/google.com', '@ns1.google.com@i'))
         ->addGroup('whois'));
     //$runner->arm(
     //  id(new DaGdRegexTest('/w/da.gd', '@bill.ns.cloudflare.com@i')));
