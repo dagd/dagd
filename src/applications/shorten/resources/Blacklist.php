@@ -1,6 +1,5 @@
 <?php
 
-require_once dirname(__FILE__).'/dnsbl.php';
 require_once dirname(__FILE__).'/safe_browsing.php';
 
 // A class for grouping together blacklist logic.
@@ -94,12 +93,27 @@ class Blacklist {
 
     if (count($dnsbl_servers) !== 0) {
       $host = parse_url($this->url, PHP_URL_HOST);
-      if ($host !== false && !query_dnsbl($host)) {
-        statsd_bump('shorturl_blacklisted_dnsbl');
-        statsd_bump('shorturl_blacklisted');
-        $this->setBlacklisted(true);
-        $this->setBlacklistSource('shorten.dnsbl');
-        return $this;
+
+      if ($host !== false) {
+        $dnsbl = new DaGdDNSBLLookup($host);
+        $safe_url = null;
+        $want_cache = DaGdConfig::get('shorten.dnsbl_cache');
+
+        if ($want_cache && $cache = $this->getCache()) {
+          $key = 'dnsbl_'.hash('sha256', $this->url);
+          $seconds = DaGdConfig::get('shorten.dnsbl_cache_expiry');
+          $safe_url = $cache->getOrStore($key, $dnsbl, 60 * $seconds);
+        } else {
+          $safe_url = $dnsbl->run();
+        }
+
+        if ($safe_url === false) {
+          statsd_bump('shorturl_blacklisted_dnsbl');
+          statsd_bump('shorturl_blacklisted');
+          $this->setBlacklisted(true);
+          $this->setBlacklistSource('shorten.dnsbl');
+          return $this;
+        }
       }
     }
 
@@ -124,8 +138,8 @@ class Blacklist {
     if ($this->getCache() && $want_cache) {
       $gsb = new DaGdGoogleSafeBrowsing($this->url);
       $key = 'gsb_'.hash('sha256', $this->url);
-      $minutes = DaGdConfig::get('shorten.safe_browsing_cache_expiry');
-      $safe_url = $this->getCache()->getOrStore($key, $gsb, 60 * $minutes);
+      $seconds = DaGdConfig::get('shorten.safe_browsing_cache_expiry');
+      $safe_url = $this->getCache()->getOrStore($key, $gsb, 60 * $seconds);
     } else {
       $safe_url = query_safe_browsing($this->url);
     }

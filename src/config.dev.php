@@ -288,6 +288,12 @@ class DaGdConfig {
       '.multi.surbl.org',
     ),
 
+    // Should dnsbl queries be cached?
+    'shorten.dnsbl_cache' => true,
+
+    // If so, for how long? (in seconds, default: 30 minutes)
+    'shorten.dnsbl_cache_expiry' => 1800,
+
     // Should we send URLs to Google Safe Browsing? This check will take place
     // both on URL storing and on URL access.
     'shorten.safe_browsing' => false,
