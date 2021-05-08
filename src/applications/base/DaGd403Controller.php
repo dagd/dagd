@@ -16,10 +16,13 @@ final class DaGd403Controller extends DaGdErrorController {
       'There is something really cool here, but you cannot see it.',
     );
 
+    $default = $responses[array_rand($responses)];
+    $message = $this->getMessage($default);
+
     $text = tag(
       'div',
       array(
-        tag('h1', $responses[array_rand($responses)]),
+        tag('h1', $message),
         tag('h2', '403.'),
         tag('h3', 'Forbidden.'),
       ),

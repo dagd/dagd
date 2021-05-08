@@ -42,10 +42,13 @@ final class DaGd500Controller extends DaGdErrorController {
       );
     }
 
+    $default = $responses[array_rand($responses)];
+    $message = $this->getMessage($default);
+
     $text = tag(
       'div',
       array(
-        tag('h1', $responses[array_rand($responses)]),
+        tag('h1', $message),
         tag('h2', '500.'),
         tag('h3', 'Internal server error.'),
         $exception_tag,
@@ -81,6 +84,6 @@ final class DaGd500Controller extends DaGdErrorController {
       $trace = "\n".$this->exception->getMessage();
       $trace .= "\n".$this->exception->getTraceAsString();
     }
-    return '500 - internal server error'.$trace;
+    return $this->getMessage('500 - internal server error').$trace;
   }
 }

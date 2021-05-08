@@ -16,10 +16,13 @@ final class DaGd404Controller extends DaGdErrorController {
       'The clouds got a little too dark to locate that page.',
     );
 
+    $default = $responses[array_rand($responses)];
+    $message = $this->getMessage($default);
+
     $text = tag(
       'div',
       array(
-        tag('h1', $responses[array_rand($responses)]),
+        tag('h1', $message),
         tag('h2', '404.'),
         tag('h3', 'Page not found.'),
       ),
@@ -47,6 +50,6 @@ final class DaGd404Controller extends DaGdErrorController {
 
   public function execute(DaGdResponse $response) {
     $this->setup($response);
-    return '404 - route not found';
+    return $this->getMessage('404 - route not found');
   }
 }
