@@ -44,6 +44,9 @@ class DaGdShortenController extends DaGdController {
 .darkmode #app input.textinput, .darkmode #app #shorturl_label {
   background-color: #666;
 }
+.lightmode #app input#shorturl, .lightmode #app input#url {
+  background-color: #fff;
+}
 #app input#url {
   border-radius: 3px;
   border: 2px solid #ddd;
