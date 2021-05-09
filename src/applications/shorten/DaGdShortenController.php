@@ -122,7 +122,23 @@ EOD;
     if ($redir) {
       return $redir;
     }
-    return $this->error(404)->finalize();
+    $phishing_info = tag(
+      'p',
+      array(
+        'This URL might have never existed, or might have been disabled '.
+        'in response to a ',
+        tag(
+          'a',
+          'phishing attack',
+          array(
+            'href' => 'https://en.wikipedia.org/wiki/Phishing',
+          )),
+        '.',
+      ));
+    return $this
+      ->error(404)
+      ->setHtmlMessage($phishing_info)
+      ->finalize();
   }
 
   public function renderText(DaGdTextResponse $response) {
