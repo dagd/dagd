@@ -25,6 +25,7 @@ final class DaGd404Controller extends DaGdErrorController {
         tag('h1', $message),
         tag('h2', '404.'),
         tag('h3', 'Page not found.'),
+        $this->getHtmlMessage(),
       ),
       array(
         'style' => 'text-align: center;',

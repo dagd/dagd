@@ -25,6 +25,7 @@ final class DaGd403Controller extends DaGdErrorController {
         tag('h1', $message),
         tag('h2', '403.'),
         tag('h3', 'Forbidden.'),
+        $this->getHtmlMessage(),
       ),
       array(
         'style' => 'text-align: center;',

@@ -14,6 +14,7 @@ final class DaGd400Controller extends DaGdErrorController {
         tag('h1', $this->getMessage('Oh deer.')),
         tag('h2', '400.'),
         tag('h3', 'Bad request.'),
+        $this->getHtmlMessage(),
       ),
       array(
         'style' => 'text-align: center;',

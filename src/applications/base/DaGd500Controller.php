@@ -51,6 +51,7 @@ final class DaGd500Controller extends DaGdErrorController {
         tag('h1', $message),
         tag('h2', '500.'),
         tag('h3', 'Internal server error.'),
+        $this->getHtmlMessage(),
         $exception_tag,
       ),
       array(
