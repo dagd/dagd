@@ -43,7 +43,7 @@ final class DaGdMemcacheCache extends DaGdCache {
   }
 
   // The memcache lib has no special functionality for get-or-store, but our own
-  // default will call contains() by default. In the cache of memcache, this
+  // default will call contains() by default. In the case of memcache, this
   // would lead to us querying memcache twice, which is silly, so we override
   // it.
   public function getOrStore($key, DaGdCacheMissCallback $cb, $ttl = 0) {
