@@ -459,6 +459,51 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('coshorten'));
 
     $runner->arm(
+      id(new DaGdRegexTest('/coshorten/g/foo', '@http://google.com/foo@'))
+        ->addGroup('shorten')
+        ->addGroup('coshorten'));
+
+    $runner->arm(
+      id(
+        new DaGdRegexTest(
+          '/coshorten/g/foo/bar',
+          '@http://google.com/foo/bar@'))
+        ->addGroup('shorten')
+        ->addGroup('coshorten'));
+
+    $runner->arm(
+      id(
+        new DaGdRegexTest(
+          '/coshorten/g/foo/bar?animal=monkey',
+          '@http://google.com/foo/bar\?animal=monkey@'))
+        ->addGroup('shorten')
+        ->addGroup('coshorten'));
+
+    $runner->arm(
+      id(
+        new DaGdRegexTest(
+          '/g+',
+          '@http://google.com@'))
+        ->addGroup('shorten')
+        ->addGroup('coshorten'));
+
+    $runner->arm(
+      id(
+        new DaGdRegexTest(
+          '/g+/foo',
+          '@http://google.com/foo@'))
+        ->addGroup('shorten')
+        ->addGroup('coshorten'));
+
+    $runner->arm(
+      id(
+        new DaGdRegexTest(
+          '/g+/foo/bar?animal=monkey',
+          '@http://google.com/foo/bar\?animal=monkey@'))
+        ->addGroup('shorten')
+        ->addGroup('coshorten'));
+
+    $runner->arm(
       id(new DaGdResponseCodeTest('/g', 302))
         ->addGroup('shorten'));
     $runner->arm(

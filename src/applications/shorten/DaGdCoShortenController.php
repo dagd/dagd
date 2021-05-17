@@ -14,7 +14,7 @@ class DaGdCoShortenController extends DaGdController {
   }
 
   public function execute(DaGdResponse $response) {
-    $shorturl = $this->getRequest()->getRoutecomponent(1);
+    $shorturl = $this->getRequest()->getRoutecomponent('shorturl');
 
     $query = new DaGdShortURLQuery($this);
     $surl = $query->fromShort($shorturl);
@@ -26,7 +26,7 @@ class DaGdCoShortenController extends DaGdController {
     $text = $surl->getLongUrl();
 
     $qs = build_given_querystring();
-    if ($path = $this->getRequest()->getRouteComponent(2)) {
+    if ($path = $this->getRequest()->getRouteComponent('path')) {
       return $text.'/'.$path.$qs;
     } else {
       return $text.$qs;

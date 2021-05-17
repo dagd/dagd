@@ -129,9 +129,6 @@ class DaGdConfig {
       '/metrics/(.+)/(.+)/?$' => array(
         'controller' => 'DaGdMetricsController',
       ),
-      '/coshorten/([^/]+)?/?(.*)?$' => array(
-        'controller' => 'DaGdCoShortenController',
-      ),
       '/stats/([^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdStatsController',
       ),
@@ -149,6 +146,12 @@ class DaGdConfig {
       ),
       '/ham(?:/|/(.+)|)$' => array(
         'controller' => 'DaGdComingSoonController',
+      ),
+      '/coshorten/(?P<shorturl>[^/]+)?/?(?P<path>.*)?$' => array(
+        'controller' => 'DaGdCoShortenController',
+      ),
+      '^/(?P<shorturl>[^/]+)\+(?:/(?P<path>.*)|$)' => array(
+        'controller' => 'DaGdCoShortenController',
       ),
       '/(?:(?:shorten|s|)(?:/|$))?(?P<shorturl>[^/]+)?/?(.*)?$' => array(
         'controller' => 'DaGdShortenController',
@@ -341,7 +344,8 @@ class DaGdConfig {
     // API key for Google PageSpeed Insights, used for screenshot endpoints.
     'shorten.google_pagespeed_insights_key' => '',
 
-    // Regex to validate custom short URLs against
+    // Regex to validate custom short URLs against.
+    // Never add literal '+' here because it's used for preview mode.
     'shorten.custom_url_regex' => '@^[\d\w-_]+$@i',
 
     // Minimum length random shorturl.
@@ -351,6 +355,7 @@ class DaGdConfig {
     'shorten.random_max_length' => 6,
 
     // Which characters can be in a random shorturl?
+    // Never add literal '+' here because it's used for preview mode.
     'shorten.random_charset' =>
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
 
