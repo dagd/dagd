@@ -217,6 +217,21 @@ EOD;
       return $this->error(403)->finalize();
     }
 
+    // Before we run the blacklist logic on the longurl (expensive), see if the
+    // shorturl is in the shorturl regex blacklist.
+    if ($given_shorturl) {
+      $blacklist_regexes = DaGdConfig::get('shorten.shorturl_blacklist');
+      foreach ($blacklist_regexes as $regex) {
+        if (preg_match('#'.$regex.'#i', $given_shorturl)) {
+          statsd_bump('shorturl_blacklisted');
+          statsd_bump('custom_shorturl_blacklisted');
+          return $this
+            ->error(400)
+            ->finalize();
+        }
+      }
+    }
+
     // Is the long URL whitelisted or blacklisted?
     if (!$query->isWhitelisted($given_longurl)) {
       // It's not whitelisted...

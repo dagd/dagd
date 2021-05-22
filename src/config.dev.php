@@ -254,8 +254,13 @@ class DaGdConfig {
     // Should memcache use zlib and compress data?
     'cache.memcache_zlib' => true,
 
-    // Regexes we blacklist on.
+    // Regexes we blacklist on. These are wrapped in #, so most URL characters
+    // should be safe to use.
     'shorten.longurl_blacklist' => array(),
+
+    // Regexes we blacklist shorturls on. These are NOT wrapped in any delimiter
+    // character, since case matters.
+    'shorten.shorturl_blacklist' => array(),
 
     // Strings we blacklist on. These are attempted before
     // shorten.longurl_blacklist because doing substring searches is
