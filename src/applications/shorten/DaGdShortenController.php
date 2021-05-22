@@ -232,17 +232,6 @@ EOD;
       }
     }
 
-    // Is the long URL whitelisted or blacklisted?
-    if (!$query->isWhitelisted($given_longurl)) {
-      // It's not whitelisted...
-      if ($query->isBlacklisted($given_longurl)) {
-        // ...but it *is* blacklisted.
-        return $this
-          ->error(400, 'Blacklisted long URL.')
-          ->finalize();
-      }
-    }
-
     // Everything is good so far, let's figure out what shorturl to use.
     if ($given_shorturl) {
       // We are given a short URL (as opposed to being asked to generate a
@@ -297,6 +286,17 @@ EOD;
         }
       }
       statsd_bump('shorturl_new_random');
+    }
+
+    // Is the long URL whitelisted or blacklisted?
+    if (!$query->isWhitelisted($given_longurl)) {
+      // It's not whitelisted...
+      if ($query->isBlacklisted($given_longurl)) {
+        // ...but it *is* blacklisted.
+        return $this
+          ->error(400, 'Blacklisted long URL.')
+          ->finalize();
+      }
     }
 
     // TODO: This can throw. We render a "pretty" 500, but maybe we should
