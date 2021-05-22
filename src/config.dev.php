@@ -255,11 +255,11 @@ class DaGdConfig {
     'cache.memcache_zlib' => true,
 
     // Regexes we blacklist on. These are wrapped in #, so most URL characters
-    // should be safe to use.
+    // should be safe to use. They are case-insensitive.
     'shorten.longurl_blacklist' => array(),
 
-    // Regexes we blacklist shorturls on. These are NOT wrapped in any delimiter
-    // character, since case matters.
+    // Regexes we blacklist shorturls on. Like above, these are wrapped in # and
+    // case-insensitive.
     'shorten.shorturl_blacklist' => array(),
 
     // Strings we blacklist on. These are attempted before
