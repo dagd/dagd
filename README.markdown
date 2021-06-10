@@ -15,7 +15,7 @@ interesting ideas have been requested (and implemented). If you have an idea
 for a feature you would like to see, please either (order of preference):
 
 * Fork, Add feature, Send pull request for review/merge.
-* Ask relrod to implement it on irc (freenode) via PM.
+* Ask relrod to implement it on irc (Libera) via PM.
 * File it in the issue tracker.
 
 Because a goal of this project is to have it work for many purposes/situations,
