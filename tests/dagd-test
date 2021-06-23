@@ -454,6 +454,24 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('shorten'));
 
     $runner->arm(
+      id(
+        new DaGdRegexTest(
+          '/s?url=https%3A%2F%2Farchives.nd.edu%2Fcgi-bin%2Fwordz.pl'.
+          '%3Fenglish%3D&shorturl=we&bare_argument=1',
+          '@/we@'))
+        ->setPreparatory(true)
+        ->addGroup('shorten'));
+
+    // Test bare_argument
+    $runner->arm(
+      id(
+        new DaGdRegexTest(
+          '/coshorten/we/river',
+          '@https://archives\.nd\.edu/cgi\-bin/wordz\.pl\?english=river@'))
+        ->addGroup('shorten')
+        ->addGroup('coshorten'));
+
+    $runner->arm(
       id(new DaGdRegexTest('/coshorten/g', '@http://google.com@'))
         ->addGroup('shorten')
         ->addGroup('coshorten'));
@@ -519,6 +537,16 @@ final class TestCLI extends DaGdCLIProgram {
     $runner->arm(
       id(new DaGdHeaderRegexTest('/fbook?url=foo', 'Location', '@\?url=foo$@'))
         ->addGroup('shorten'));
+
+    // bare_argument
+    $runner->arm(
+      id(
+        new DaGdHeaderRegexTest(
+          '/we/river',
+          'Location',
+          '@^https://archives\.nd\.edu/cgi\-bin/wordz\.pl\?english=river$@'))
+        ->addGroup('shorten'));
+
     $runner->arm(
       id(new DaGdHeaderRegexTest('/g', 'Location', '@^http://google.com$@'))
         ->addGroup('shorten'));

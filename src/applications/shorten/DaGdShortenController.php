@@ -104,7 +104,11 @@ EOD;
     $response = new DaGdRedirectResponse();
 
     if ($matches[2]) {
-      $response->setTo($surl->getLongUrl().'/'.$matches[2].$qs);
+      $slash = '/';
+      if ($surl->getBareArgument()) {
+        $slash = '';
+      }
+      $response->setTo($surl->getLongUrl().$slash.$matches[2].$qs);
     } else {
       $response->setTo($surl->getLongUrl().$qs);
     }
@@ -191,6 +195,7 @@ EOD;
     $given_shorturl = $this->getRequest()->param('shorturl', '');
     $given_shorturl = substr($given_shorturl, 0, 10);
     $given_longurl = $this->getRequest()->param('url');
+    $bare_argument = $this->getRequest()->param('bare_argument', false);
     $is_custom_url = strlen($given_shorturl) > 0;
 
     if (!$given_longurl) {
@@ -305,7 +310,8 @@ EOD;
       $this->getRequest()->getClientIP(),
       $given_shorturl,
       $given_longurl,
-      $is_custom_url);
+      $is_custom_url,
+      $bare_argument);
 
     return id(new DaGdShortenStoredController())
       ->setShortUrl($surl)

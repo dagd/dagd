@@ -27,7 +27,11 @@ class DaGdCoShortenController extends DaGdController {
 
     $qs = build_given_querystring();
     if ($path = $this->getRequest()->getRouteComponent('path')) {
-      return $text.'/'.$path.$qs;
+      $slash = '/';
+      if ($surl->getBareArgument()) {
+        $slash = '';
+      }
+      return $text.$slash.$path.$qs;
     } else {
       return $text.$qs;
     }
