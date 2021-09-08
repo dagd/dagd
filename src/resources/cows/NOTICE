@@ -1,4 +1,10 @@
 These .cow files came from the upstream cowsay project and are distributed
 under its license (found in the LICENSE file).
 
+In particular, these files are dual-licensed and we include them here in
+compliance with the Artistic License.
+
 da.gd and its contributors claim no authorship nor copyright over them.
+
+dagd-specific additions are found under the 'dagd' directory in the same file
+as this NOTICE.
