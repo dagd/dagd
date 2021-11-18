@@ -10,6 +10,10 @@ final class DaGdGoogleSafeBrowsing implements DaGdCacheMissCallback {
 
   public function run($key) {
     statsd_bump('shorturl_blacklist_query_safebrowsing');
-    return query_safe_browsing($this->url);
+    $start = microtime(true);
+    $gsb = query_safe_browsing($this->url);
+    $end = microtime(true);
+    statsd_time('gsb_query_time', ($end - $start) * 1000);
+    return $gsb;
   }
 }
