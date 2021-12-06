@@ -211,6 +211,13 @@ EOD;
         ->finalize();
     }
 
+    if (filter_var($given_longurl, FILTER_VALIDATE_URL) === false) {
+      statsd_bump('shorturl_invalid_longurl');
+      return $this
+        ->error(400, 'Long URL is not a valid URL.')
+        ->finalize();
+    }
+
     // Is the user's IP banned?
     if ($query->isBannedIP($this->getRequest()->getClientIP())) {
       statsd_bump('shorturl_author_ip_banned');

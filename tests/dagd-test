@@ -549,6 +549,11 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('shorten')
         ->addGroup('noprod'));
 
+    $runner->arm(
+      id(new DaGdResponseCodeTest('/s?url=https://foo(){bar;}', 400))
+        ->addGroup('shorten')
+        ->addGroup('noprod'));
+
     /************ /stats/ ************/
     $runner->arm(
       id(new DaGdResponseCodeTest('/stats/g', 200))
