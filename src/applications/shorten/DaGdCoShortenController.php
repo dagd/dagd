@@ -17,6 +17,13 @@ class DaGdCoShortenController extends DaGdController {
     $shorturl = $this->getRequest()->getRoutecomponent('shorturl');
 
     $query = new DaGdShortURLQuery($this);
+
+    if ($query->isRouteMapConflict($shorturl)) {
+      // If a routemap change trumped an existing shorturl, don't allow the old
+      // shorturl to be coshortened. Do this before we hit the db.
+      return $this->error(404)->execute($response);
+    }
+
     $surl = $query->fromShort($shorturl);
 
     if ($surl === null) {

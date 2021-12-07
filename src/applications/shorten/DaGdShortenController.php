@@ -80,6 +80,14 @@ EOD;
 
   private function redirect($matches) {
     $query = new DaGdShortURLQuery($this);
+
+    if ($query->isRouteMapConflict($matches[1])) {
+      // If a routemap change trumped an existing shorturl, consider it invalid.
+      // Needed because otherwise it could still be accessed by route aliases
+      // pointing to this controller. Do this before we hit the db.
+      return $null;
+    }
+
     $surl = $query->fromShort($matches[1]);
 
     if (!$surl) {
