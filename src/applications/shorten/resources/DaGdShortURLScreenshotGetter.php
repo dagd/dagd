@@ -22,8 +22,14 @@ final class DaGdShortURLScreenshotGetter implements DaGdCacheMissCallback {
 
     $agent = DaGdConfig::get('general.useragent');
     $timeout = DaGdConfig::get('shorten.safe_browsing_timeout');
-
     $key = DaGdConfig::get('shorten.google_pagespeed_insights_key');
+
+    if (empty($key)) {
+      throw new Exception(
+        'required config option shorten.google_pagespeed_insights_key is '.
+        'empty');
+    }
+
     $url = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?';
     $url .= 'locale=en_US&key='.$key.'&url='.$long_url;
 
