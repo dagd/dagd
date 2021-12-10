@@ -52,12 +52,34 @@ abstract class DaGdCLIProgram extends DaGdCLI {
     return $arguments;
   }
 
+  public function getFreeformParameters() {
+    $arguments = array();
+    foreach ($this->parameters as $param) {
+      if ($param->getKind() == 'freeform_parameter') {
+        $arguments[] = $param;
+      }
+    }
+    return $arguments;
+  }
+
   /**
    * Get a parameter by its long or short name.
    */
   public function param($key) {
     foreach ($this->parameters as $name => $param) {
       if ($param->getName() == $key || $param->getShortname() == $key) {
+        return $param;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Find the first non-given freeform parameter if it exists.
+   */
+  public function next_freeform_param() {
+    foreach ($this->parameters as $name => $param) {
+      if ($param->getKind() == 'freeform_parameter' && !$param->getGiven()) {
         return $param;
       }
     }
@@ -115,21 +137,34 @@ abstract class DaGdCLIProgram extends DaGdCLI {
       } else {
         // See if someone passed a bunch of flags
         $has_valid_flags = false;
-        if ($arg[0] == '-' && $arg[1] != '-') {
-          $flags = str_split($arg);
-          array_shift($flags);
-          foreach ($flags as $flag) {
-            $param = $this->param('-'.$flag);
-            if ($param) {
-              $this->parameters[$param->getName()]->setGiven(true);
-              $has_valid_flags = true;
-            } else {
-              throw new DaGdInvalidParameterCLIException('-'.$flag);
+        if ($arg[0] == '-') {
+          if ($arg[1] != '-') {
+            $flags = str_split($arg);
+            array_shift($flags);
+            foreach ($flags as $flag) {
+              $param = $this->param('-'.$flag);
+              if ($param) {
+                $this->parameters[$param->getName()]->setGiven(true);
+                $has_valid_flags = true;
+              } else {
+                throw new DaGdInvalidParameterCLIException('-'.$flag);
+              }
             }
           }
-        }
-        if (!$has_valid_flags) {
-          throw new DaGdInvalidParameterCLIException($arg);
+          if (!$has_valid_flags) {
+            throw new DaGdInvalidParameterCLIException($arg);
+          }
+        } else {
+          // We got a parameter that didn't map to a param by name and didn't
+          // start with a leading "-". So it must be freeform. Find the next
+          // freeform parameter if it exists, otherwise throw.
+          $param = $this->next_freeform_param();
+          if (!$param) {
+            throw new DaGdInvalidParameterCLIException(
+              'freeform parameter "'.$arg.'"');
+          }
+          $this->parameters[$param->getName()]->setGiven(true);
+          $this->parameters[$param->getName()]->setValue($arg);
         }
       }
     }
@@ -176,6 +211,16 @@ abstract class DaGdCLIProgram extends DaGdCLI {
     $args = $this->getArguments();
     if (count($args) > 0) {
       echo 'Arguments:';
+      echo "\n\n";
+      foreach ($args as $arg) {
+        $this->showParameterUsage($arg);
+      }
+      echo "\n";
+    }
+
+    $args = $this->getFreeformParameters();
+    if (count($args) > 0) {
+      echo 'Freeform Parameters:';
       echo "\n\n";
       foreach ($args as $arg) {
         $this->showParameterUsage($arg);

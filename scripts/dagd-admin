@@ -130,7 +130,7 @@ final class DaGdAdminCLI extends DaGdCLIProgram {
     $disable = $this->param('--disable');
     $enable = $this->param('--enable');
     $status = $this->param('--status');
-    $shorturl = $this->param('--shorturl');
+    $shorturl = $this->param('SHORTURL');
 
     // These are mutually exclusive actions
     $actions = array(
@@ -163,7 +163,8 @@ final class DaGdAdminCLI extends DaGdCLIProgram {
     }
 
     if (!$shorturl->getGiven()) {
-      echo $this->error('No shorturl given, must be specified with --shorturl');
+      echo $this->error(
+        'No shorturl given, must be specified as a freeform parameter');
       exit(1);
     }
 
@@ -191,32 +192,32 @@ $cli = new DaGdAdminCLI();
 $cli->setName('dagd-admin');
 $cli->setDescription('manipulate short URL entries');
 $cli->addParameter(
-  id(new DaGdCLIArgument)
-    ->setName('--shorturl')
-    ->setShortname('-s')
+  id(new DaGdCLIFreeformParameter)
+    ->setName('SHORTURL')
+    ->setRequired(true)
     ->setDescription('The short URL to manipulate'));
 $cli->addParameter(
   id(new DaGdCLIArgument)
     ->setName('--repoint')
     ->setShortname('-r')
     ->setDescription(
-      'The new destination for the shorturl given with --shorturl'));
+      'The new destination for the shorturl given'));
 $cli->addParameter(
   id(new DaGdCLIFlag)
     ->setName('--enable')
     ->setShortname('-e')
-    ->setDescription('Enable the shorturl given with --shorturl'));
+    ->setDescription('Enable the shorturl given'));
 $cli->addParameter(
   id(new DaGdCLIFlag)
     ->setName('--disable')
     ->setShortname('-d')
-    ->setDescription('Disable the shorturl given with --shorturl'));
+    ->setDescription('Disable the shorturl given'));
 $cli->addParameter(
   id(new DaGdCLIFlag)
     ->setName('--status')
     ->setShortname('-S')
     ->setDescription(
-      'Display information about the shorturl given with --shorturl'));
+      'Display information about the shorturl given'));
 $cli->addParameter(
   id(new DaGdCLIFlag)
     ->setName('--help')
