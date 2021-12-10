@@ -50,16 +50,16 @@ jobs:
           DaGdConfigFile: ../container/config.container.php
           GOOGLE_INSIGHTS_API: ${{ secrets.GOOGLE_INSIGHTS_API }}
         run: |
-          docker exec container_app_1 ./scripts/dagd-admin  -s g | grep State | grep enabled
-          docker exec container_app_1 ./scripts/dagd-admin  -s g | grep Accesses: | grep 7d
-          docker exec container_app_1 ./scripts/dagd-admin  -s g | grep "defaulting to \-\-status"
-          docker exec container_app_1 ./scripts/dagd-admin  -s g -d | grep "Updated in"
-          docker exec container_app_1 ./scripts/dagd-admin  -s g | grep State | grep disabled
-          docker exec container_app_1 ./scripts/dagd-admin  -s g -e | grep "Updated in"
-          docker exec container_app_1 ./scripts/dagd-admin  -s g | grep State | grep enabled
-          docker exec container_app_1 ./scripts/dagd-admin  -s g -r https://wikipedia.org/ | grep "Updated in"
-          docker exec container_app_1 ./scripts/dagd-admin  -s g -S | grep wikipedia
-          docker exec container_app_1 ./scripts/dagd-admin  -s g -r https://google.com/ | grep "Updated in"
+          docker exec container_app_1 ./scripts/dagd-admin g | grep State | grep enabled
+          docker exec container_app_1 ./scripts/dagd-admin g | grep Accesses: | grep 7d
+          docker exec container_app_1 ./scripts/dagd-admin g | grep "defaulting to \-\-status"
+          docker exec container_app_1 ./scripts/dagd-admin g -d | grep "Updated in"
+          docker exec container_app_1 ./scripts/dagd-admin g | grep State | grep disabled
+          docker exec container_app_1 ./scripts/dagd-admin g -e | grep "Updated in"
+          docker exec container_app_1 ./scripts/dagd-admin g | grep State | grep enabled
+          docker exec container_app_1 ./scripts/dagd-admin g -r https://wikipedia.org/ | grep "Updated in"
+          docker exec container_app_1 ./scripts/dagd-admin g -S | grep wikipedia
+          docker exec container_app_1 ./scripts/dagd-admin g -r https://google.com/ | grep "Updated in"
 
       - name: Check production site SSL expiry (within 5 days)
         run: |
