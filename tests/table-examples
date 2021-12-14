@@ -1,0 +1,71 @@
+#!/usr/bin/env php
+<?php
+
+// Activate the autoloader
+require_once dirname(dirname(__FILE__)).'/src/resources/global_resources.php';
+
+final class TestTableCLI extends DaGdCLIProgram {
+  public function run() {
+
+    $tables = array(
+      new DaGdCLIMinimumWidthTable(),
+      new DaGdCLIFullWidthTable(),
+      new DaGdCLIWeightedColumnTable(2),
+    );
+
+    foreach ($tables as $tbl) {
+      echo "\n\n==========";
+      echo get_class($tbl);
+      echo "==========\n";
+
+      $tbl->setRowSeparation(true);
+      $tbl->addRow(
+        id(new DaGdCLITableRowHeader($this))
+          ->addCells(
+              array(
+                new DaGdCLITableCell("row 0, col 0 uh oh"),
+                new DaGdCLITableCell("row 0, col 1"),
+                new DaGdCLITableCell("row 0, col two"),
+              )
+          ));
+
+      $tbl->addRow(
+        id(new DaGdCLITableRowNormal($this))
+          ->addCells(
+              array(
+                new DaGdCLITableCell("row 1, col 0 uh oh test"),
+                new DaGdCLITableCell("row 1, col 1"),
+                new DaGdCLITableCell("row 1, col twooo"),
+              )
+          ));
+
+      $tbl->addRow(
+        id(new DaGdCLITableRowNormal($this))
+          ->addCells(
+              array(
+                new DaGdCLITableCell("row 1, col 0 uh oh test"),
+                new DaGdCLITableCell("row 1, col 1"),
+                new DaGdCLITableCell("row 1, col twooo"),
+              )
+          ));
+
+      $tbl->addRow(
+        id(new DaGdCLITableRowNormal($this))
+          ->addCells(
+              array(
+                new DaGdCLITableCell("Oh god what happens now???"),
+                new DaGdCLITableCell("row 2, col 1"),
+                new DaGdCLITableCell("row 2, col twooo"),
+              )
+          ));
+
+      $tbl->render();
+    }
+    exit(0);
+  }
+}
+
+$cli = new TestTableCLI();
+$cli->setName('test-table');
+$cli->setDescription('Test table stuff');
+$cli->execute($argv);

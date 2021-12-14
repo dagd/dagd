@@ -51,6 +51,7 @@ class DaGdConfig {
       'applications/*/error/',
       'applications/*/resources/',
       'cli/',
+      'cli/*/',
     ),
 
     // Control statsd metrics collection.

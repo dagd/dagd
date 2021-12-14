@@ -96,4 +96,15 @@ abstract class DaGdCLI {
     $response = fgets(STDIN);
     return trim($response);
   }
+
+  /**
+   * A wrapper around strlen() which (optionally and by default) strips ANSI
+   * codes from the input before checking its length.
+   */
+  public static function strlen($str, $strip_ansi = true) {
+    if ($strip_ansi) {
+      $str = preg_replace("/\033\[(?:\d*|\d+;\d+)m/", '', $str);
+    }
+    return strlen($str);
+  }
 }
