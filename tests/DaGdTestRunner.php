@@ -114,7 +114,7 @@ class DaGdTestRunner {
   public function run() {
     // Run preparatory tests first. These have to be done in a particular
     // order, so we can't just throw them to the dogs...er, child processes.
-    // We run the prepatory tests even when filters are active. This is to
+    // We run the preparatory tests even when filters are active. This is to
     // avoid having to implement a notion of 'test group dependencies.'
     $remaining_tests = array();
     foreach ($this->tests as $test) {

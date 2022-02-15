@@ -24,7 +24,7 @@ Have some fun with it :)
 
 ## What currently works?
 
-`curl da.gd/help` will give you a list of what is currenly available
+`curl da.gd/help` will give you a list of what is currently available
 on the live site.
 
 ## Getting a dev environment up

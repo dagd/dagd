@@ -272,7 +272,7 @@ abstract class DaGdCLIProgram extends DaGdCLI {
       $this->cleanup();
       exit(1);
     } catch (Exception $ex) {
-      // It's an exception we didn't thow ourselves, so don't bother
+      // It's an exception we didn't throw ourselves, so don't bother
       // pretty-printing it, just clean up and rethrow it.
       $this->cleanup();
       throw $ex;
