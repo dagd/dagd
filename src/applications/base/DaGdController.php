@@ -133,6 +133,10 @@ abstract class DaGdController {
       return id(new DaGd400Controller())
         ->setRequest($this->getRequest())
         ->setMessage($message);
+    case 401:
+      return id(new DaGd401Controller())
+        ->setRequest($this->getRequest())
+        ->setMessage($message);
     case 403:
       return id(new DaGd403Controller())
         ->setRequest($this->getRequest())
