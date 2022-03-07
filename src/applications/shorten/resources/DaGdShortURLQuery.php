@@ -214,6 +214,36 @@ final class DaGdShortURLQuery {
   }
 
   /**
+   * Enables a short URL, given the shorturl.
+   *
+   * Requires UPDATE privileges on the `shorturls` table.
+   *
+   * @return true if changed, false if not.
+   */
+  private function enable($shorturl) {
+    $query = $this->controller->getWriteDB()->prepare(
+      'UPDATE shorturls SET enabled=1 WHERE shorturl=?');
+    $query->bind_param('s', $shorturl);
+    $query->execute();
+    return ($query->rowCount() !== 0);
+  }
+
+  /**
+   * Disables a short URL, given the shorturl.
+   *
+   * Requires UPDATE privileges on the `shorturls` table.
+   *
+   * @return true if changed, false if not.
+   */
+  private function disable($shorturl) {
+    $query = $this->controller->getWriteDB()->prepare(
+      'UPDATE shorturls SET enabled=0 WHERE shorturl=?');
+    $query->bind_param('s', $shorturl);
+    $query->execute();
+    return ($query->rowCount() !== 0);
+  }
+
+  /**
    * Grab daily access counts for a given short URL. Returns an array where
    * keys are dates of the format yyyy-mm-dd, and values are the number of
    * accesses. The array is empty if the query failed or the short URL does
