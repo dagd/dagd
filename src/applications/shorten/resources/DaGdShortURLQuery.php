@@ -220,7 +220,7 @@ final class DaGdShortURLQuery {
    *
    * @return true if changed, false if not.
    */
-  private function enable($shorturl) {
+  public function enable($shorturl) {
     $query = $this->controller->getWriteDB()->prepare(
       'UPDATE shorturls SET enabled=1 WHERE shorturl=?');
     $query->bind_param('s', $shorturl);
@@ -235,7 +235,7 @@ final class DaGdShortURLQuery {
    *
    * @return true if changed, false if not.
    */
-  private function disable($shorturl) {
+  public function disable($shorturl) {
     $query = $this->controller->getWriteDB()->prepare(
       'UPDATE shorturls SET enabled=0 WHERE shorturl=?');
     $query->bind_param('s', $shorturl);
