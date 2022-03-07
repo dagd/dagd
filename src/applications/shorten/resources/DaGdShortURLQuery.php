@@ -225,7 +225,8 @@ final class DaGdShortURLQuery {
       'UPDATE shorturls SET enabled=1 WHERE shorturl=?');
     $query->bind_param('s', $shorturl);
     $query->execute();
-    return ($query->rowCount() !== 0);
+    $affected = $this->controller->getWriteDB()->affected_rows;
+    return ($affected !== 0);
   }
 
   /**
@@ -240,7 +241,8 @@ final class DaGdShortURLQuery {
       'UPDATE shorturls SET enabled=0 WHERE shorturl=?');
     $query->bind_param('s', $shorturl);
     $query->execute();
-    return ($query->rowCount() !== 0);
+    $affected = $this->controller->getWriteDB()->affected_rows;
+    return ($affected !== 0);
   }
 
   /**
