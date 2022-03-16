@@ -17,24 +17,27 @@ final class DaGdShortURLQuery {
    * @return DaGdShortURL or null
    */
   public function fromShort($short_url) {
+    $id = null;
     $long_url = null;
+    $owner_ip = null;
 
     $query = $this
       ->controller
       ->getReadDB()
       ->prepare(
-        'SELECT id, longurl FROM shorturls WHERE shorturl=? AND enabled=1');
+        'SELECT id, longurl, owner_ip FROM shorturls '.
+        'WHERE shorturl=? AND enabled=1');
     $query->bind_param('s', $short_url);
     $start = microtime(true);
     $query->execute();
     $end = microtime(true);
     statsd_time('query_time_getLongURL', ($end - $start) * 1000);
-    $query->bind_result($id, $long_url);
+    $query->bind_result($id, $long_url, $owner_ip);
     $query->fetch();
     $query->close();
 
-    if (!empty($id) && !empty($long_url)) {
-      return new DaGdShortURL($id, $short_url, $long_url);
+    if (!empty($id) && !empty($long_url) && !empty($owner_ip)) {
+      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip);
     }
 
     return null;
@@ -49,25 +52,26 @@ final class DaGdShortURLQuery {
   public function fromLongByHash($long_url) {
     $id = null;
     $short_url = null;
+    $owner_ip = null;
     $longurl_hash = hash('sha256', $long_url);
 
     $query = $this
       ->controller
       ->getReadDB()
       ->prepare(
-        'SELECT id, shorturl FROM shorturls WHERE longurl_hash=? AND '.
-        'enabled=1 AND custom_shorturl=0 ORDER BY id DESC LIMIT 1');
+        'SELECT id, shorturl, owner_ip FROM shorturls WHERE longurl_hash=? '.
+        'AND enabled=1 AND custom_shorturl=0 ORDER BY id DESC LIMIT 1');
     $query->bind_param('s', $longurl_hash);
     $start = microtime(true);
     $query->execute();
     $end = microtime(true);
     statsd_time('query_time_getNonCustomShortURL', ($end - $start) * 1000);
-    $query->bind_result($id, $short_url);
+    $query->bind_result($id, $short_url, $owner_ip);
     $query->fetch();
     $query->close();
 
     if (!empty($id) && !empty($short_url)) {
-      return new DaGdShortURL($id, $short_url, $long_url);
+      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip);
     }
 
     return null;
@@ -206,7 +210,7 @@ final class DaGdShortURLQuery {
 
     if ($res) {
       statsd_bump('shorturl_store');
-      return new DaGdShortURL($id, $short_url, $long_url);
+      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip);
     } else {
       statsd_bump('shorturl_store_fail');
       throw new DaGdShortenStoreException();
