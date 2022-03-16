@@ -250,6 +250,64 @@ final class DaGdShortURLQuery {
   }
 
   /**
+   * Disable all shorturls whose owner_ip is the same as the given shorturl.
+   *
+   * Requires UPDATE privileges on the `shorturls` table.
+   *
+   * @return The number of affected rows.
+   */
+  public function disableIp($shorturl) {
+    $query = $this->controller->getWriteDB()->prepare(
+      'update shorturls set enabled=0 where enabled=1 and owner_ip=('.
+      '  select B.owner_ip from ('.
+      '    select shorturl, owner_ip from shorturls) as B where B.shorturl=?)');
+    $query->bind_param('s', $shorturl);
+    $query->execute();
+    $affected = $this->controller->getWriteDB()->affected_rows;
+    return $affected;
+  }
+
+  /**
+   * Prevent new shorturls if owned by the owner of the given shorturl.
+   *
+   * Requires INSERT privileges on the `blocked_ips` table.
+   *
+   * @return true if the insert was successful, false if not.
+   */
+  public function banIp($shorturl) {
+    $surl = $this->fromShort($shorturl);
+    if (!$surl) {
+      return null;
+    }
+    $owner_ip = $surl->getOwnerIp();
+    $query = $this->controller->getWriteDB()->prepare(
+      'insert into blocked_ips(ip_start, ip_end) '.
+      'values(inet6_aton(?), inet6_aton(?))');
+    $query->bind_param('ss', $owner_ip, $owner_ip);
+    return $query->execute();
+  }
+
+  /**
+   * Allow new shorturls if owned by the owner of the given shorturl.
+   *
+   * Requires DELETE privileges on the `blocked_ips` table.
+   *
+   * @return true if the deletion was successful, false if not.
+   */
+  public function unbanIp($shorturl) {
+    $surl = $this->fromShort($shorturl);
+    if (!$surl) {
+      return null;
+    }
+    $owner_ip = $surl->getOwnerIp();
+    $query = $this->controller->getWriteDB()->prepare(
+      'delete from blocked_ips where '.
+      'ip_start=inet6_aton(?) and ip_end=inet6_aton(?)');
+    $query->bind_param('ss', $owner_ip, $owner_ip);
+    return $query->execute();
+  }
+
+  /**
    * Grab daily access counts for a given short URL. Returns an array where
    * keys are dates of the format yyyy-mm-dd, and values are the number of
    * accesses. The array is empty if the query failed or the short URL does
