@@ -70,7 +70,7 @@ final class DaGdShortURLQuery {
     $query->fetch();
     $query->close();
 
-    if (!empty($id) && !empty($short_url)) {
+    if (!empty($id) && !empty($short_url) && !empty($owner_ip)) {
       return new DaGdShortURL($id, $short_url, $long_url, $owner_ip);
     }
 
