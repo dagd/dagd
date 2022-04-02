@@ -352,7 +352,7 @@ class DaGdConfig {
 
     // Regex to validate custom short URLs against.
     // Never add literal '+' here because it's used for preview mode.
-    'shorten.custom_url_regex' => '@^[\d\w-_]+$@i',
+    'shorten.custom_url_regex' => '@^[\d\w\-_]+$@i',
 
     // Minimum length random shorturl.
     'shorten.random_min_length' => 4,
