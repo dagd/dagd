@@ -512,6 +512,11 @@ final class TestCLI extends DaGdCLIProgram {
     $runner->arm(
       id(new DaGdResponseCodeTest('/fbook', 302))
         ->addGroup('shorten'));
+    // If Authorization is set, we should abort the request.
+    $runner->arm(
+      id(new DaGdResponseCodeTest('/fbook', 403))
+        ->setRequestHeader('Authorization', 'foo')
+        ->addGroup('shorten'));
     $runner->arm(
       id(new DaGdResponseCodeTest('/fbook?url=foo', 302))
         ->addGroup('shorten'));

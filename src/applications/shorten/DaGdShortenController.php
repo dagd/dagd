@@ -152,6 +152,10 @@ EOD;
       ->finalize();
   }
 
+  public function hasAuthorizationHeader() {
+    return $this->getRequest()->getHeader('authorization') !== null;
+  }
+
   public function renderText(DaGdTextResponse $response) {
     $shorturl = $this->getRequest()->getRouteComponent('shorturl');
     $url = $this->getRequest()->param('url', '');
@@ -163,6 +167,14 @@ EOD;
 
     $matches = $this->getRequest()->getRouteMatches();
     if ($matches[1]) {
+      if ($this->hasAuthorizationHeader()) {
+        statsd_bump('shorturl_access_with_authorization');
+        return $this
+          ->error(
+            403,
+            'Short URL access requests cannot contain an Authorization header.')
+          ->finalize();
+      }
       return $this->getRedirectResponse($matches, $response);
     }
   }
@@ -178,6 +190,14 @@ EOD;
 
     $matches = $this->getRequest()->getRouteMatches();
     if ($matches[1]) {
+      if ($this->hasAuthorizationHeader()) {
+        statsd_bump('shorturl_access_with_authorization');
+        return $this
+          ->error(
+            403,
+            'Short URL access requests cannot contain an Authorization header.')
+          ->finalize();
+      }
       return $this->getRedirectResponse($matches, $response);
     }
 

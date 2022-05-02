@@ -14,6 +14,7 @@ abstract class DaGdTest {
   private $preparatory = false;
   private $groups = array('default');
   private $results_callback;
+  private $request_headers = array('accept' => '*/*');
 
   abstract public function run();
 
@@ -59,6 +60,28 @@ abstract class DaGdTest {
     return $this->results_callback;
   }
 
+  public function setRequestHeaders($request_headers) {
+    $this->request_headers = $request_headers;
+    return $this;
+  }
+
+  public function getRequestHeaders() {
+    return $this->request_headers;
+  }
+
+  public function renderRequestHeaders() {
+    $out = '';
+    foreach ($this->getRequestHeaders() as $k => $v) {
+      $out .= strtolower($k).': '.$v."\r\n";
+    }
+    return $out;
+  }
+
+  public function setRequestHeader($key, $value) {
+    $this->request_headers[$key] = $value;
+    return $this;
+  }
+
   public function setUserAgent($user_agent) {
     $this->original_user_agent = ini_get('user_agent');
     ini_set('user_agent', $user_agent);
@@ -66,7 +89,7 @@ abstract class DaGdTest {
   }
 
   public function setAccept($type) {
-    $this->accept = $type;
+    $this->request_headers['Accept'] = $type;
     return $this;
   }
 
@@ -95,9 +118,7 @@ abstract class DaGdTest {
           'method' => $this->method,
           'ignore_errors' => $ignore_errors,
           'follow_location' => false,
-          'header' => array(
-            'Accept: '.$this->accept."\r\n",
-          ),
+          'header' => $this->renderRequestHeaders(),
         ),
       )
     );
