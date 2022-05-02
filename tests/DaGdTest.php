@@ -70,9 +70,9 @@ abstract class DaGdTest {
   }
 
   public function renderRequestHeaders() {
-    $out = '';
+    $out = array();
     foreach ($this->getRequestHeaders() as $k => $v) {
-      $out .= strtolower($k).': '.$v."\r\n";
+      $out[] = strtolower($k).': '.$v;
     }
     return $out;
   }
