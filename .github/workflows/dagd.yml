@@ -38,6 +38,9 @@ jobs:
             sleep 1
           done
 
+      - name: Run php --info
+        run: php --info
+
       - name: Run dagd-test
         env:
           DaGdConfigFile: ../container/config.container.php
