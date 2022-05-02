@@ -574,19 +574,19 @@ final class TestCLI extends DaGdCLIProgram {
       id(new DaGdResponseCodeTest('/screenshot/doesnotexist', 404))
       ->addGroup('screenshot'));
 
-    $runner->arm(
-      id(new DaGdContentTypeTest('/screenshot/sstest', 'image/jpeg'))
-        ->addGroup('screenshot')
-        ->setAccept('image/jpeg'));
+    //$runner->arm(
+    //  id(new DaGdContentTypeTest('/screenshot/sstest', 'image/jpeg'))
+    //    ->addGroup('screenshot')
+    //    ->setAccept('image/jpeg'));
 
-    $runner->arm(
-      id(
-        new DaGdHeaderRegexTest(
-          '/screenshot/sstest',
-          'Content-Length',
-          '@^0$@',
-          true))
-        ->addGroup('screenshot'));
+    //$runner->arm(
+    //  id(
+    //    new DaGdHeaderRegexTest(
+    //      '/screenshot/sstest',
+    //      'Content-Length',
+    //      '@^0$@',
+    //      true))
+    //    ->addGroup('screenshot'));
 
     //$runner->arm(
     //  id(
