@@ -180,6 +180,10 @@ final class TestCLI extends DaGdCLIProgram {
       id(new DaGdRegexTest('/headers', '@X-DaGd-Proxy: @', true))
         ->addGroup('headers'));
     $runner->arm(
+      id(new DaGdRegexTest('/headers', '@Authorization: foobar@'))
+        ->setRequestHeader('Authorization', 'foobar')
+        ->addGroup('headers'));
+    $runner->arm(
       id(new DaGdRegexTest('/headers/google.com', '@Server: gws@'))
         ->addGroup('headers'));
     $runner->arm(
