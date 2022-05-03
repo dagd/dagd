@@ -8,7 +8,6 @@ abstract class DaGdTest {
   protected $headers;
   protected $body;
   protected $tolerate_failure;
-  protected $accept = '*/*';
   protected $method = 'GET';
   private $original_user_agent;
   private $preparatory = false;
