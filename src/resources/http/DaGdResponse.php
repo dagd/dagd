@@ -7,6 +7,7 @@ abstract class DaGdResponse {
   private $body = '';
   private $cookies = array();
   private $request;
+  private $post_response_callbacks = array();
 
   public function setCode($code) {
     $this->code = $code;
@@ -203,6 +204,20 @@ abstract class DaGdResponse {
     return $this->request;
   }
 
+  public function setPostResponseCallbacks($post_response_callbacks) {
+    $this->post_response_callbacks = $post_response_callbacks;
+    return $this;
+  }
+
+  public function addPostResponseCallback($post_response_callback) {
+    $this->post_response_callbacks[] = $post_response_callback;
+    return $this;
+  }
+
+  public function getPostResponseCallbacks() {
+    return $this->post_response_callbacks;
+  }
+
   private function sendHeaders() {
     if ($this->getCode() != 200) {
       header('HTTP/1.1 '.$this->getCode().' '.$this->getMessage());
@@ -230,9 +245,31 @@ abstract class DaGdResponse {
     }
   }
 
+  /**
+   * Render the actual response out to the client using an output buffer.
+   *
+   * Doing things this way should allow for things to continue on after a
+   * response is rendered and a connection closed.
+   */
   public function render() {
+    ob_start();
     $this->sendHeaders();
     $this->sendCookies();
     echo $this->getBody();
+    $length = ob_get_length();
+    header('Connection: close');
+    header('Content-Length: '.$length);
+    ob_end_flush();
+    flush();
+    session_write_close();
+    if (function_exists('fastcgi_finish_request')) {
+      fastcgi_finish_request();
+    }
+  }
+
+  public function postRender() {
+    foreach ($this->getPostResponseCallbacks() as $cb) {
+      $cb->run($this->getRequest(), $this);
+    }
   }
 }

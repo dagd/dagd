@@ -175,6 +175,7 @@ $git_latest_commit = shell_exec(
 if ($response instanceof DaGdResponse) {
   $response->addHeader('X-Git-Commit', $git_latest_commit);
   $response->render();
+  $response->postRender();
 } else {
   // DaGdResponse handles adding these itself, but legacy controllers need them
   // added here before they get rendered.

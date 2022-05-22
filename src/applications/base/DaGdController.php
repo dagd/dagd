@@ -11,6 +11,7 @@ abstract class DaGdController {
   private $write_db;
   private $cache;
   private $debug_cards = array();
+  private $post_response_callbacks = array();
 
   public function setRequest($request) {
     $this->request = $request;
@@ -65,6 +66,20 @@ abstract class DaGdController {
 
   public function getDebugCards() {
     return $this->debug_cards;
+  }
+
+  public function setPostResponseCallbacks($post_response_callbacks) {
+    $this->post_response_callbacks = $post_response_callbacks;
+    return $this;
+  }
+
+  public function addPostResponseCallback($post_response_callback) {
+    $this->post_response_callbacks[] = $post_response_callback;
+    return $this;
+  }
+
+  public function getPostResponseCallbacks() {
+    return $this->post_response_callbacks;
   }
 
   public function setAlerts($alerts) {
@@ -305,6 +320,7 @@ abstract class DaGdController {
   public function finalize() {
     return $this
       ->chooseRenderer()
+      ->setPostResponseCallbacks($this->getPostResponseCallbacks())
       ->setRequest($this->getRequest());
   }
 }
