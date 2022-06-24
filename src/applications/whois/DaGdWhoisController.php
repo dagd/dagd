@@ -18,7 +18,10 @@ final class DaGdWhoisController extends DaGdController {
 
   public function execute(DaGdResponse $response) {
     $request = $this->getRequest();
-    $query = $request->getRouteComponent(1);
+    $query = $request->getRouteComponent('query');
+    if ($query === null) {
+      $query = $request->getClientIP();
+    }
     $whois_client = new DaGdWhois($query);
     $result = $whois_client->performQuery();
     $this->addDebugCard(

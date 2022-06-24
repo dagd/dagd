@@ -82,7 +82,7 @@ class DaGdConfig {
       '/ip/?$' => array(
         'controller' => 'DaGdIPController',
       ),
-      '/w/(.+)/?$' => array(
+      '/w(?:/?$|/(?P<query>.+))' => array(
         'controller' => 'DaGdWhoisController',
       ),
       '/ec/(?P<username>.+)/?$' => array(
