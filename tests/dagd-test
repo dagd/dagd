@@ -117,6 +117,9 @@ final class TestCLI extends DaGdCLIProgram {
     $runner->arm(
       id(new DaGdRegexTest('/w/google.com', '@ns1.google.com@i'))
         ->addGroup('whois'));
+    $runner->arm(
+      id(new DaGdRegexTest('/w/google.com/', '@ns1.google.com@i'))
+        ->addGroup('whois'));
     //$runner->arm(
     //  id(new DaGdRegexTest('/w/da.gd', '@bill.ns.cloudflare.com@i')));
     $runner->arm(
@@ -124,6 +127,12 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('whois'));
     $runner->arm(
       id(new DaGdRegexTest('/w/74.94.18.108', '@OrgAbusePhone@'))
+        ->addGroup('whois'));
+    $runner->arm(
+      id(new DaGdRegexTest('/w', '@ARIN WHOIS@'))
+        ->addGroup('whois'));
+    $runner->arm(
+      id(new DaGdRegexTest('/w/', '@ARIN WHOIS@'))
         ->addGroup('whois'));
     //$runner->arm(
     //  id(
@@ -162,6 +171,12 @@ final class TestCLI extends DaGdCLIProgram {
       id(
         new DaGdRegexTest(
           '/w/AS31976',
+          '@Red Hat@'))
+        ->addGroup('whois'));
+    $runner->arm(
+      id(
+        new DaGdRegexTest(
+          '/w/AS31976/',
           '@Red Hat@'))
         ->addGroup('whois'));
     $runner->arm(
