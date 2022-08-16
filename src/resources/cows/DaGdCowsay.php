@@ -176,6 +176,7 @@ class DaGdCowsay {
         continue;
       }
 
+      $line = preg_replace('/\\\\(.)/', '$1', $line);
       $line = preg_replace('/\$eyes/', $this->getEyes(), $line);
       $line = preg_replace('/\$thoughts/', $this->getThoughts(), $line);
       $line = preg_replace('/\$tongue/', $this->getTongue(), $line);

@@ -665,15 +665,15 @@ final class TestCLI extends DaGdCLIProgram {
         ->setAccept('text/html'));
 
     /************ /cow/ ************/
-    $expected = <<<EOD
+    $expected = <<<'EOD'
  ________________________
 < I am moo, hear me roar >
  ------------------------
   \
-   \   \\\\_\\\\_    _/_/
-    \      \\\\__/
-           (AA)\\\\_______
-           (__)\\\\       )\\\/\\\
+   \   \_\_    _/_/
+    \      \__/
+           (AA)\_______
+           (__)\       )\/\
             <> ||----w |
                ||     ||
 
