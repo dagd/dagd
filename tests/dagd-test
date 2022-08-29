@@ -241,7 +241,7 @@ final class TestCLI extends DaGdCLIProgram {
       id(new DaGdRegexTest('/host/google.com?noipv6', '@:@', true))
         ->addGroup('host'));
     $runner->arm(
-      id(new DaGdRegexTest('/host/4.2.2.2', '@b.resolvers.Level3.net@'))
+      id(new DaGdRegexTest('/host/4.2.2.1', '@a.resolvers.Level3.net@'))
         ->addGroup('host'));
 
     /************ /break/ ************/
