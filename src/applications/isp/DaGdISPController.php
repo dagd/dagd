@@ -26,7 +26,7 @@ final class DaGdISPController extends DaGdController {
   }
 
   public function execute(DaGdResponse $response) {
-    $query = $this->getRequest()->getRouteComponent(1, client_ip());
+    $query = $this->getRequest()->getRouteComponent('ip', client_ip());
     $whois_client = new DaGdWhois($query);
     $response = $whois_client->performQuery();
     if (preg_match(

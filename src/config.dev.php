@@ -121,7 +121,7 @@ class DaGdConfig {
       '/image/([0-9x*]+)(?:\.|/|)(\w+)?/?$' => array(
         'controller' => 'DaGdImageController',
       ),
-      '/isp(?:/?$|/([^/]+)/?$)' => array(
+      '/isp(?:/?$|/(?P<ip>[^/]+)/?$)' => array(
         'controller' => 'DaGdISPController',
       ),
       '/leftpad/([0-9]+)/(.+)/(.+)/?$' => array(
