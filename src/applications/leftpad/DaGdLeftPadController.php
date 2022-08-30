@@ -1,6 +1,6 @@
 <?php
-final class DaGdLeftPadController extends DaGdBaseClass {
-  public function getHelp() {
+final class DaGdLeftPadController extends DaGdController {
+  public static function getHelp() {
     return array(
       'title' => 'leftpad',
       'summary' => 'Left pad a string. As a service.',
@@ -16,15 +16,10 @@ final class DaGdLeftPadController extends DaGdBaseClass {
       ));
   }
 
-  public function configure() {
-    return $this
-      ->setWrapHtml(true);
-  }
-
-  public function render() {
-    $length = (int)$this->route_matches[1];
-    $padchar = $this->route_matches[2];
-    $input = $this->route_matches[3];
+  public function execute(DaGdResponse $response) {
+    $length = (int)$this->getRequest()->getRouteComponent(1);
+    $padchar = $this->getRequest()->getRouteComponent(2);
+    $input = $this->getRequest()->getRouteComponent(3);
     return str_pad($input, $length, $padchar, STR_PAD_LEFT);
   }
 }
