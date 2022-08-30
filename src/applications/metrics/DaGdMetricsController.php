@@ -48,7 +48,7 @@ final class DaGdMetricsController extends DaGdBaseClass {
 
     // Is the client allowed to be here?
     $allowed_ips = DaGdConfig::get('metrics.allowed_ips');
-    $client_ip = client_ip();
+    $client_ip = $request->getClientIP();
     if (!in_array($client_ip, $allowed_ips)) {
       return error403();
     }
