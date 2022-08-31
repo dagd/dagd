@@ -35,3 +35,4 @@ class DaGdSidebar {
 }
 EOD;
   }
+}

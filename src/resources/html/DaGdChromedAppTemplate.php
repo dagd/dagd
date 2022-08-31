@@ -131,8 +131,8 @@ EOD;
         'id' => 'app',
         'class' => 'constraint',
       ),
-      !$this->getEscape() // TODO: Nix this when we can
-    );
+      // TODO: Nix this when we can
+      !$this->getEscape());
 
     return tag(
       'div',

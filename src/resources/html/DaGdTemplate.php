@@ -139,8 +139,8 @@ abstract class DaGdTemplate {
       array(
         'class' => $this->getDarkmode() ? 'darkmode' : 'lightmode',
       ),
-      !$this->getEscape() // Potentially dangerous
-    );
+      // Potentially dangerous
+      !$this->getEscape());
   }
 
   // Only provided for legacy controllers.
