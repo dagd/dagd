@@ -22,8 +22,7 @@ EOD;
 
     return array_merge(
       parent::getStyle(),
-      array($style)
-    );
+      array($style));
   }
 
   public function execute(DaGdResponse $response) {
@@ -141,8 +140,7 @@ EOD;
           'height' => '240',
           'width' => '320',
           'style' => 'float: left;',
-        )
-      );
+        ));
     }
 
     $body = tag(
@@ -152,8 +150,7 @@ EOD;
         $screenshot,
         tag('div', '', array('id' => 'access_graph', 'style' => 'float: right; width: 65%;')),
         tag('script', $demo_graph, array('type' => 'text/javascript'), true),
-      )
-    );
+      ));
 
     $template = $this
       ->getBaseTemplate()

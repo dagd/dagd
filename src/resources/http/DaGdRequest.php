@@ -71,7 +71,6 @@ class DaGdRequest {
     $default = null,
     $allow_empty = false,
     $empty_default = null) {
-
     $raw_request = $this->getRequest();
     if ($allow_empty &&
         array_key_exists($key, $raw_request) &&
@@ -89,7 +88,6 @@ class DaGdRequest {
     $default = null,
     $allow_empty = false,
     $empty_default = null) {
-
     return $this->getParamOrDefault(
       $key,
       $default,

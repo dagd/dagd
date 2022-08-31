@@ -1,6 +1,6 @@
 <?php
 final class DaGdMetricsController extends DaGdController {
-  static public function getHelp() {
+  public static function getHelp() {
     // Private endpoint: Intentionally left out of /help
     return array();
   }
@@ -10,16 +10,16 @@ final class DaGdMetricsController extends DaGdController {
     $table = null;
 
     switch ($action) {
-    case 'access':
-      $column = 'access_dt';
-      $table = 'shorturl_access';
-      break;
-    case 'creation':
-      $column = 'creation_dt';
-      $table = 'shorturls';
-      break;
-    default:
-      return error500();
+      case 'access':
+        $column = 'access_dt';
+        $table = 'shorturl_access';
+        break;
+      case 'creation':
+        $column = 'creation_dt';
+        $table = 'shorturls';
+        break;
+      default:
+        return error500();
     }
 
     $dt = null;
@@ -54,17 +54,18 @@ final class DaGdMetricsController extends DaGdController {
     }
 
     switch ($category) {
-    case 'shorten':
-      switch ($specifier) {
-      case 'last_access_epoch':
-        return $this->shorten_last_action_epoch('access');
-      case 'last_creation_epoch':
-        return $this->shorten_last_action_epoch('creation');
+      case 'shorten':
+        switch ($specifier) {
+          case 'last_access_epoch':
+            return $this->shorten_last_action_epoch('access');
+          case 'last_creation_epoch':
+            return $this->shorten_last_action_epoch('creation');
+          default:
+            return $this->error(404)->execute($response);
+        }
+        // no break
       default:
         return $this->error(404)->execute($response);
-      }
-    default:
-      return $this->error(404)->execute($response);
     }
   }
 }

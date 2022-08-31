@@ -177,8 +177,7 @@ class DaGdForm implements DaGdToTagInterface {
         'action' => $this->getAction(),
         'method' => $this->getMethod(),
         'class' => implode(' ', $this->getClasses()),
-      )
-    );
+      ));
     return $form;
   }
 }

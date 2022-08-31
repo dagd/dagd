@@ -4,7 +4,7 @@ $config_file = getenv('DaGdConfigFile');
 
 if (!$config_file ||
     !@include_once(dirname(dirname(__FILE__))).'/'.$config_file) {
-  throw new Exception("No configuration file could be loaded.");
+  throw new Exception('No configuration file could be loaded.');
 }
 
 $timezone = DaGdConfig::get('general.timezone');
@@ -111,7 +111,6 @@ function is_html_useragent() {
     $html_accept_regex = implode('|', DaGdConfig::get('general.html_accept'));
     return preg_match('#(?:'.$html_accept_regex.')#i', $accept);
   } else {
-
     // Force text useragent response to be on/off...
     $force_text = request_or_default('text');
     if ($force_text != 0 || $force_text == null) {
@@ -204,7 +203,7 @@ function build_given_querystring() {
   $querystring = '';
   foreach ($_GET as $key => $value) {
     if ($key == '__path__') {
-        continue;
+      continue;
     }
     $querystring .= $key;
     if (!empty($value)) {
@@ -227,7 +226,7 @@ function build_given_querystring() {
  * Deprecated: New controllers should use DaGdRequest#getClientIP
  */
 function client_ip() {
-  if (server_or_default('HTTP_X_DAGD_PROXY') == "1" &&
+  if (server_or_default('HTTP_X_DAGD_PROXY') == '1' &&
       $ip = server_or_default('HTTP_X_FORWARDED_FOR')) {
     return $ip;
   } else {
@@ -338,6 +337,5 @@ function tag(
   $body = null,
   array $attributes = array(),
   $cdata = false) {
-
   return id(new DaGdTag($name, $body, $attributes, $cdata));
 }

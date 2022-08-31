@@ -9,7 +9,6 @@ final class DaGdHeaderRegexTest extends DaGdTest {
     $header_key,
     $pattern,
     $invert = false) {
-
     $this->path = $test_path;
     $this->header_key = $header_key;
     $this->regex = $pattern;

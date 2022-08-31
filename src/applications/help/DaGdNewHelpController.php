@@ -57,8 +57,7 @@ EOD;
       'Application: '.$help->getTitle(),
       array(
         'class' => 'apptitle',
-      )
-    );
+      ));
 
     $summary = tag(
       'div',
@@ -68,8 +67,7 @@ EOD;
       ),
       array(
         'class' => 'column helppad',
-      )
-    );
+      ));
 
     // Examples are children of paths, so we handle both here
     // so that we only have to iterate paths once. We also handle the
@@ -95,8 +93,7 @@ EOD;
             array(
               tag('td', tag('code', $arg.': ')),
               tag('td', $desc),
-            )
-          );
+            ));
         }
 
         $get_args_tbl[] = tag('table', $arg_trs);
@@ -107,8 +104,7 @@ EOD;
         array(
           tag('pre', $path->render()),
           $get_args_tbl,
-        )
-      );
+        ));
 
       // Attempt to iterate over examples if we have any
       foreach ($path->getExamples() as $example) {
@@ -122,14 +118,12 @@ EOD;
             $commentary,
             tag(
               'pre',
-              "\$ curl '".$example->render()."'",
+              '$ curl \''.$example->render().'\'',
               array(
                 'class' => 'examplepre',
                 'style' => 'margin-left: 20px;',
-              )
-            ),
-          )
-        );
+              )),
+          ));
       }
 
       // But we might not have any. Make one anyway.
@@ -138,11 +132,10 @@ EOD;
         $url = $baseurl.'/'.$path->getPath();
         $examples[] = tag(
           'pre',
-          "\$ curl '".$url."'",
+          '$ curl \''.$url.'\'',
           array(
             'class' => 'examplepre',
-          )
-        );
+          ));
       }
     }
 
@@ -151,16 +144,14 @@ EOD;
       $paths,
       array(
         'class' => 'column helppad',
-      )
-    );
+      ));
 
     $examples_element = tag(
       'div',
       $examples,
       array(
         'class' => 'helppad topborder',
-      )
-    );
+      ));
 
     // On to warnings
     $warnings = null;
@@ -188,8 +179,7 @@ EOD;
         ),
         array(
           'class' => 'helppad topborder',
-        )
-      );
+        ));
     }
 
     // Compose everything together
@@ -204,8 +194,7 @@ EOD;
       ),
       array(
         'class' => 'apphelp',
-      )
-    );
+      ));
 
     return $block;
   }

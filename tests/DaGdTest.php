@@ -119,8 +119,7 @@ abstract class DaGdTest {
           'follow_location' => false,
           'header' => $this->renderRequestHeaders(),
         ),
-      )
-    );
+      ));
 
     $base_url = $this->getRunner()->getBaseUrl();
     $obtain = @file_get_contents($base_url.$this->path, false, $context);
@@ -162,7 +161,8 @@ abstract class DaGdTest {
       return SUCCESS;
     } else {
       $this->getResultsCallback()->fail(
-        'Test FAILED ['.$this->path.']: '.$summary, $output);
+        'Test FAILED ['.$this->path.']: '.$summary,
+        $output);
       if ($this->tolerate_failure) {
         return TOLERATED_FAILURE;
       } else {

@@ -61,16 +61,14 @@ EOD;
       $this->getDarkmode() ? 'light mode' : 'dark mode',
       array(
         'href' => $this->getDarkmode() ? '?darkmode=0' : '?darkmode=1',
-      )
-    );
+      ));
 
     $links = array(
       tag('a', 'help', array('href' => '/help')),
       tag(
         'a',
         'open source',
-        array('href' => 'https://github.com/dagd/dagd')
-      ),
+        array('href' => 'https://github.com/dagd/dagd')),
       $darkmode_link,
       tag('a', 'donate', array('href' => 'https://www.patreon.com/relrod')),
     );
@@ -85,8 +83,7 @@ EOD;
       tag('span', 'dagd', array('class' => 'sitename')),
       array(
         'href' => '/',
-      )
-    );
+      ));
     $title = $this->getTitle();
     if ($title) {
       $out[] = tag('span', ':'.$title, array('class' => 'appname'));
@@ -102,24 +99,21 @@ EOD;
       $links,
       array(
         'style' => 'float: right; display: inline;',
-      )
-    );
+      ));
 
     $navbar = tag(
       'div',
       array_merge($sitename, array($links_div)),
       array(
         'class' => 'constraint',
-      )
-    );
+      ));
 
     $navbar_container = tag(
       'div',
       $navbar,
       array(
         'id' => 'bar',
-      )
-    );
+      ));
 
     $constrainted_body = tag(
       'div',
@@ -139,12 +133,10 @@ EOD;
       array(
         $navbar_container,
         $constrainted_body,
-      )
-    );
+      ));
   }
 
   public function getBody() {
     return $this->getChrome();
   }
-
 }

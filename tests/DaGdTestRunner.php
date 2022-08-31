@@ -99,15 +99,15 @@ class DaGdTestRunner {
 
   private function handleRC($rc) {
     switch ($rc) {
-    case SUCCESS:
-      $this->passes++;
-      break;
-    case TOLERATED_FAILURE:
-      $this->tolerated_failures++;
-      break;
-    default:
-      $this->return_code = 1;
-      $this->failures++;
+      case SUCCESS:
+        $this->passes++;
+        break;
+      case TOLERATED_FAILURE:
+        $this->tolerated_failures++;
+        break;
+      default:
+        $this->return_code = 1;
+        $this->failures++;
     }
   }
 

@@ -54,8 +54,7 @@ final class DaGdStaticController extends DaGdController {
       array(
         $allowed_path,
         trim($path, '/'),
-      )
-    );
+      ));
 
     // And compare to make sure the wanted starts with the allowed.
     // realpath() will resolve things like '..' and anything else weird and give

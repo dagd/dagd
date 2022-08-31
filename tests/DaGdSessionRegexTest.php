@@ -9,7 +9,6 @@ final class DaGdSessionRegexTest extends DaGdTest {
     $key,
     $pattern,
     $invert = false) {
-
     $this->path = $test_path;
     $this->key = $key;
     $this->regex = $pattern;
@@ -31,8 +30,7 @@ final class DaGdSessionRegexTest extends DaGdTest {
               '&' => '%26',
               '+' => '%2B',
               ';' => '&'
-            )
-          ),
+            )),
           $parsed);
         foreach ($parsed as $ck => $cv) {
           if (strpos($ck, 'DaGdSession_') === 0) {

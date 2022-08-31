@@ -36,6 +36,5 @@ abstract class DaGdCLITableRow {
   abstract public function render(
     array $widths,
     $is_last_row = false,
-    $row_separation = true
-  );
+    $row_separation = true);
 }

@@ -31,8 +31,7 @@ abstract class DaGdCacheableResponse extends DaGdResponse {
             'public',
             'max-age='.$this->cache_duration,
             'immutable',
-          )
-        ));
+          )));
     } else {
       $this->addHeader('Cache-Control', 'no-cache');
     }

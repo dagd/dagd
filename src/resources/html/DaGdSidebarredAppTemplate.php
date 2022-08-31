@@ -30,8 +30,7 @@ EOD;
       array(
         $style,
         $this->getSidebar()->getStyle(),
-      )
-    );
+      ));
   }
 
   protected function getSiteName() {
@@ -41,8 +40,7 @@ EOD;
       tag('span', 'dagd', array('class' => 'sitename')),
       array(
         'href' => '/',
-      )
-    );
+      ));
     $title = $this->getTitle();
     if ($title) {
       $out[] = tag('span', ':'.$title, array('class' => 'appname'));
@@ -57,16 +55,14 @@ EOD;
       array_merge($sitename, array($links_div)),
       array(
         'class' => 'constraint',
-      )
-    );
+      ));
 
     $navbar_container = tag(
       'div',
       $navbar,
       array(
         'id' => 'bar',
-      )
-    );
+      ));
 
     $constrainted_body = tag(
       'div',
@@ -83,12 +79,10 @@ EOD;
       array(
         $navbar_container,
         $constrainted_body,
-      )
-    );
+      ));
   }
 
   public function getBody() {
     return $this->getChrome();
   }
-
 }

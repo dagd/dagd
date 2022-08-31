@@ -22,8 +22,7 @@ class DaGdFormTextareaField extends DaGdFormField {
       array(
         $field,
         $error_ul,
-      )
-    );
+      ));
 
     return $div;
   }

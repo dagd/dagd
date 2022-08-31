@@ -4,8 +4,7 @@ final class DaGdCLITableRowHeader extends DaGdCLITableRow {
   public function render(
     array $widths,
     $is_last_row = false,
-    $row_separation = true
-  ) {
+    $row_separation = true) {
     $row_width = array_sum($widths) + count($widths) + 2;
 
     // Top Border

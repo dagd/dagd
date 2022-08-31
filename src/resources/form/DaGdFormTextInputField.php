@@ -30,16 +30,14 @@ class DaGdFormTextInputField extends DaGdFormField {
         $this->getAttributes(),
         array(
           'type' => 'text',
-        )
-      ));
+        )));
 
     $div = tag(
       'div',
       array(
         $field,
         $error_ul,
-      )
-    );
+      ));
 
     return $div;
   }

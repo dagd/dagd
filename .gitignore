@@ -8,3 +8,7 @@ config.stage.php
 sql/current_schema
 .ready-for-ci
 container/.lock
+composer.lock
+composer.json
+tools
+.php-cs-fixer.cache

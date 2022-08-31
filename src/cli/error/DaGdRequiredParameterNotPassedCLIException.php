@@ -1,8 +1,6 @@
 <?php
 
-final class DaGdRequiredParameterNotPassedCLIException
-  extends DaGdCLIException {
-
+final class DaGdRequiredParameterNotPassedCLIException extends DaGdCLIException {
   private $parameter;
 
   public function __construct($parameter) {

@@ -38,8 +38,7 @@ final class DaGd500Controller extends DaGdErrorController {
         ),
         array(
           'style' => 'text-align: left;',
-        )
-      );
+        ));
     }
 
     $default = $responses[array_rand($responses)];
@@ -56,16 +55,14 @@ final class DaGd500Controller extends DaGdErrorController {
       ),
       array(
         'style' => 'text-align: center;',
-      )
-    );
+      ));
 
     $bigcloud = tag(
       'div',
       '🤒',
       array(
         'style' => 'font-size: 6em; text-align: center; margin-top: 20px;',
-      )
-    );
+      ));
 
     $template = $this
       ->getBaseTemplate()

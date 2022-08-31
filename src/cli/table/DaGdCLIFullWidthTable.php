@@ -10,7 +10,7 @@ final class DaGdCLIFullWidthTable extends DaGdCLITable {
   private $terminal_width;
 
   public function __construct() {
-    $this->terminal_width = (int)exec("tput cols");
+    $this->terminal_width = (int)exec('tput cols');
   }
 
   public function addRow($row) {

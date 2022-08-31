@@ -99,20 +99,20 @@ class DaGdCowsay {
   protected function getBorders() {
     $out = array();
     switch ($this->getAction()) {
-    case COWSAY_SAY:
-      $out['single'] = '<>';
-      $out['first'] = '/\\';
-      $out['intermediate'] = '||';
-      $out['last'] = '\\/';
-      break;
-    case COWSAY_THINK:
-      $out['single'] = '()';
-      $out['first'] = '()';
-      $out['intermediate'] = '()';
-      $out['last'] = '()';
-      break;
-    default:
-      throw new Exception('Invalid cowsay action');
+      case COWSAY_SAY:
+        $out['single'] = '<>';
+        $out['first'] = '/\\';
+        $out['intermediate'] = '||';
+        $out['last'] = '\\/';
+        break;
+      case COWSAY_THINK:
+        $out['single'] = '()';
+        $out['first'] = '()';
+        $out['intermediate'] = '()';
+        $out['last'] = '()';
+        break;
+      default:
+        throw new Exception('Invalid cowsay action');
     }
     return $out;
   }
@@ -143,14 +143,14 @@ class DaGdCowsay {
       foreach ($lines as $idx => $line) {
         $key = '';
         switch ($idx) {
-        case 0:
-          $key = 'first';
-          break;
-        case $last_idx:
-          $key = 'last';
-          break;
-        default:
-          $key = 'intermediate';
+          case 0:
+            $key = 'first';
+            break;
+          case $last_idx:
+            $key = 'last';
+            break;
+          default:
+            $key = 'intermediate';
         }
         $out[] = array(
           $borders[$key][0],

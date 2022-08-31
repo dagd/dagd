@@ -28,9 +28,9 @@ function query_safe_browsing($urls) {
       );
     }
   } else {
-      $payload['threatInfo']['threatEntries'][] = array(
-        'url' => $urls,
-      );
+    $payload['threatInfo']['threatEntries'][] = array(
+      'url' => $urls,
+    );
   }
 
   $url = 'https://safebrowsing.googleapis.com/v4/threatMatches:find?key='.

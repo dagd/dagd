@@ -25,8 +25,7 @@ final class DaGdShortenStoredController extends DaGdController {
       array(
         'href' => $this->getShortUrl()->getShortUrl(),
         'style' => 'color: #888;',
-      )
-    );
+      ));
 
     $h1 = tag('h1', $link, array('style' => 'text-align: center;'));
 

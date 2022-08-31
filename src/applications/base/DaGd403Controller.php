@@ -29,16 +29,14 @@ final class DaGd403Controller extends DaGdErrorController {
       ),
       array(
         'style' => 'text-align: center;',
-      )
-    );
+      ));
 
     $bigcloud = tag(
       'div',
       '🔒',
       array(
         'style' => 'font-size: 6em; text-align: center; margin-top: 20px;',
-      )
-    );
+      ));
 
     $template = $this
       ->getBaseTemplate()

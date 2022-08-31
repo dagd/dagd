@@ -8,7 +8,6 @@ final class DaGdResponseRegexTest extends DaGdTest {
     $test_path,
     $pattern,
     $invert = false) {
-
     $this->path = $test_path;
     $this->regex = $pattern;
     $this->invert = $invert;

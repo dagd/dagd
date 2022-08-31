@@ -88,8 +88,7 @@ abstract class DaGdTemplate {
           'href' => DaGdStaticController::url($stylesheet),
           'rel' => 'stylesheet',
           'type' => 'text/css',
-        )
-      );
+        ));
     }
     return $out;
   }
@@ -103,8 +102,7 @@ abstract class DaGdTemplate {
         array(
           'src' => DaGdStaticController::url($javascript),
           'type' => 'text/javascript',
-        )
-      );
+        ));
     }
     return $out;
   }
@@ -184,8 +182,7 @@ abstract class DaGdTemplate {
         tag(
           'meta',
           null,
-          array('charset' => 'utf-8')
-        ),
+          array('charset' => 'utf-8')),
         tag(
           'meta',
           null,
@@ -193,21 +190,18 @@ abstract class DaGdTemplate {
             'name' => 'keywords',
             'content' =>
             'dagd,da.gd,url,shorten,shortening,open,source,foss',
-          )
-        ),
+          )),
         tag(
           'meta',
           null,
           array(
             'name' => 'description',
             'content' => 'The da.gd URL shortening service',
-          )
-        ),
+          )),
         $this->getTitleTag(),
         $this->stylesheetsToTags(),
         $this->getStyleTag(),
-      )
-    );
+      ));
   }
 
   public function getHtmlTag($preamble = true, $lang = null) {
@@ -223,7 +217,6 @@ abstract class DaGdTemplate {
       ),
       array(
         'lang' => $lang,
-      )
-    );
+      ));
   }
 }

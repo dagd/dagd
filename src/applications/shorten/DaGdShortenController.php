@@ -74,8 +74,7 @@ EOD;
 
     return array_merge(
       parent::getStyle(),
-      array($style)
-    );
+      array($style));
   }
 
   private function redirect($matches) {
@@ -363,8 +362,7 @@ EOD;
         'autofocus' => DaGdTag::TAG_ATTR_BARE,
         'required' => DaGdTag::TAG_ATTR_BARE,
         'class' => 'textinput',
-      )
-    );
+      ));
 
     $shorturl_label = tag(
       'div',
@@ -372,8 +370,7 @@ EOD;
       array(
         'id' => 'shorturl_label',
         'style' => 'font-family: monospace;',
-      )
-    );
+      ));
 
     $shorturl_field = tag(
       'input',
@@ -388,8 +385,7 @@ EOD;
         'pattern' => '[A-Za-z0-9\-_]+',
         'style' => 'flex-grow: 12;',
         'class' => 'textinput',
-      )
-    );
+      ));
 
     $submit = tag(
       'input',
@@ -399,8 +395,7 @@ EOD;
         'value' => 'Shorten URL',
         'style' => 'flex-grow: 1;',
         'class' => 'submit',
-      )
-    );
+      ));
 
     $flex = tag(
       'div',
@@ -412,27 +407,22 @@ EOD;
       array(
         'id' => 'flex',
         'style' => 'display: flex; width: 100%; margin-top: 20px;',
-      )
-    );
+      ));
 
     $footnote = tag(
       'div',
       tag(
         'small',
-        '* leave this blank for a random short URL'
-      )
-    );
+        '* leave this blank for a random short URL'));
 
     $abuse = tag(
       'div',
       tag(
         'small',
-        'report abuse to abuse@da.gd'
-      ),
+        'report abuse to abuse@da.gd'),
       array(
         'style' => 'margin-top: 20px;',
-      )
-    );
+      ));
 
     $form = tag(
       'form',
@@ -444,8 +434,7 @@ EOD;
       array(
         'method' => 'POST',
         'action' => '/',
-      )
-    );
+      ));
 
     $app = tag(
       'div',
@@ -453,8 +442,7 @@ EOD;
         $branding,
         $form,
         $abuse,
-      )
-    );
+      ));
 
     return $app;
   }

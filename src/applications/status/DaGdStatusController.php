@@ -41,7 +41,7 @@ final class DaGdStatusController extends DaGdController {
       $cs = new DaGdCowsay();
       $cs->setCow('dagd/teapot');
       $cs->setThoughts('/');
-      $cs->setMessage("418 I'm a badly drawn teapot");
+      $cs->setMessage('418 I\'m a badly drawn teapot');
       return $cs->render();
     }
     return $response->getMessage();

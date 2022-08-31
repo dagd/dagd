@@ -89,7 +89,6 @@ final class DaGdCommanderController extends DaGdBaseClass {
         error400('Something failed :( ... Try again later.');
         return false;
       }
-
     } elseif (count($this->route_matches) <= 2) {
       $rows = $this->getAllCommands();
       if (end($this->route_matches) == 'json') {

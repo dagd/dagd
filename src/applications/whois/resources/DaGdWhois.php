@@ -174,7 +174,7 @@ final class DaGdWhois {
     $blacklisted_referrals = DaGdConfig::get('whois.referral_blacklist');
 
     // Now we look for a referral server.
-    foreach(preg_split('#((\r?\n)|(\r\n?))#', $whois_info) as $line){
+    foreach (preg_split('#((\r?\n)|(\r\n?))#', $whois_info) as $line) {
       $referral = preg_match(
         '#(?:Whois Server|ReferralServer): (.*)#i',
         $line,
@@ -186,9 +186,9 @@ final class DaGdWhois {
       if (!empty($whois_server) && count($whois_server) > 1) {
         $referred = true;
         $referral_server_name = preg_replace(
-            '#r?whois://#',
-            '',
-            $whois_server[1]);
+          '#r?whois://#',
+          '',
+          $whois_server[1]);
         $referral_server_name = trim($referral_server_name);
 
         if (strpos($referral_server_name, ':') !== false) {

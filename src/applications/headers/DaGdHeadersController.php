@@ -79,7 +79,7 @@ final class DaGdHeadersController extends DaGdController {
         return;
       }
 
-      return implode("", $headers);
+      return implode('', $headers);
     } else {
       // If we didn't get a URL passed, then assume the user is asking for the
       // headers they sent. Send them back.

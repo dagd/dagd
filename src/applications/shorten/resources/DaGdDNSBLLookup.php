@@ -24,8 +24,7 @@ final class DaGdDNSBLLookup implements DaGdCacheMissCallback {
       $resolver = new Net_DNS2_Resolver(
         array(
           'nameservers' => $dnsbl_query_via,
-        )
-      );
+        ));
 
       try {
         $response = $resolver->query($domain.$suffix);

@@ -56,8 +56,7 @@ class DaGdCard implements DaGdToTagInterface {
         tag('strong', $title),
         array(
           'class' => 'card-title',
-        )
-      );
+        ));
     }
 
     $components[] = tag(
@@ -65,8 +64,7 @@ class DaGdCard implements DaGdToTagInterface {
       $this->getBody(),
       array(
         'class' => 'card-body',
-      )
-    );
+      ));
 
     if ($footer = $this->getFooter()) {
       $components[] = tag(
@@ -74,8 +72,7 @@ class DaGdCard implements DaGdToTagInterface {
         $footer,
         array(
           'class' => 'card-footer',
-        )
-      );
+        ));
     }
 
     $card = tag(
@@ -83,8 +80,7 @@ class DaGdCard implements DaGdToTagInterface {
       $components,
       array(
         'class' => implode(' ', $this->getClasses()),
-      )
-    );
+      ));
 
     return $card;
   }

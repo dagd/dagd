@@ -4,8 +4,7 @@ final class DaGdCLITableRowNormal extends DaGdCLITableRow {
   public function render(
     array $widths,
     $is_last_row = false,
-    $row_separation = true
-  ) {
+    $row_separation = true) {
     echo "\xe2\x94\x82 ";
 
     foreach ($this->getCells() as $idx => $cell) {

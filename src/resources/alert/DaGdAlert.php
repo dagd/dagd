@@ -33,11 +33,11 @@ class DaGdAlert implements DaGdToTagInterface {
 
   private function getCategoryClass() {
     switch ($this->getCategory()) {
-    case self::SUCCESS: return 'success';
-    case self::INFO: return 'info';
-    case self::WARNING: return 'warning';
-    case self::FAILURE: return 'failure';
-    case self::FATAL: return 'fatal';
+      case self::SUCCESS: return 'success';
+      case self::INFO: return 'info';
+      case self::WARNING: return 'warning';
+      case self::FAILURE: return 'failure';
+      case self::FATAL: return 'fatal';
     }
   }
 
@@ -47,7 +47,6 @@ class DaGdAlert implements DaGdToTagInterface {
       tag('p', $this->getMessage()),
       array(
         'class' => 'alert alert-'.$this->getCategoryClass(),
-      )
-    );
+      ));
   }
 }

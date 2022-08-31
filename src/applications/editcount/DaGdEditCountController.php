@@ -43,27 +43,27 @@ final class DaGdEditCountController extends DaGdController {
       return;
     }
 
-     $wmprojects = array(
-      "wikipedia",
-      "wiktionary",
-      "wikisource",
-      "wikiversity",
-      "wikibooks",
-      "wikiquote",
-      "wikinews",
-     );
+    $wmprojects = array(
+     'wikipedia',
+     'wiktionary',
+     'wikisource',
+     'wikiversity',
+     'wikibooks',
+     'wikiquote',
+     'wikinews',
+    );
 
     // Default to wikipedia.org.
-   $project = $this->getRequest()->getParamOrDefault('proj', 'wikipedia');
+    $project = $this->getRequest()->getParamOrDefault('proj', 'wikipedia');
     if (!in_array($project, $wmprojects)) {
       $response->setCode(400);
       return '`proj` needs to be a valid Wikimedia project.';
     }
 
-   if (!count(dns_get_record($language.'.'.$project.'.org'))) {
-     $response->setCode(400);
-     return $language.'.'.$project.'.org is not a valid wikipedia subdomain.';
-   }
+    if (!count(dns_get_record($language.'.'.$project.'.org'))) {
+      $response->setCode(400);
+      return $language.'.'.$project.'.org is not a valid wikipedia subdomain.';
+    }
 
     $counts = file_get_contents(
       'https://'.$language.'.'.$project.'.org/w/api.php?action=query&list=users'.

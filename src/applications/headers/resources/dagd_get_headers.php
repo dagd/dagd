@@ -126,5 +126,4 @@ class DaGdHeaderGetter {
     }
     return null;
   }
-
 }

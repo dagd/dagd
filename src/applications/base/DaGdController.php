@@ -129,26 +129,26 @@ abstract class DaGdController {
   public function error($code, $message = null) {
     $controller = null;
     switch ($code) {
-    case 400:
-      return id(new DaGd400Controller())
-        ->setRequest($this->getRequest())
-        ->setMessage($message);
-    case 401:
-      return id(new DaGd401Controller())
-        ->setRequest($this->getRequest())
-        ->setMessage($message);
-    case 403:
-      return id(new DaGd403Controller())
-        ->setRequest($this->getRequest())
-        ->setMessage($message);
-    case 404:
-      return id(new DaGd404Controller())
-        ->setRequest($this->getRequest())
-        ->setMessage($message);
-    case 405:
-      return id(new DaGd405Controller())
-        ->setRequest($this->getRequest())
-        ->setMessage($message);
+      case 400:
+        return id(new DaGd400Controller())
+          ->setRequest($this->getRequest())
+          ->setMessage($message);
+      case 401:
+        return id(new DaGd401Controller())
+          ->setRequest($this->getRequest())
+          ->setMessage($message);
+      case 403:
+        return id(new DaGd403Controller())
+          ->setRequest($this->getRequest())
+          ->setMessage($message);
+      case 404:
+        return id(new DaGd404Controller())
+          ->setRequest($this->getRequest())
+          ->setMessage($message);
+      case 405:
+        return id(new DaGd405Controller())
+          ->setRequest($this->getRequest())
+          ->setMessage($message);
     }
   }
 
@@ -210,8 +210,7 @@ abstract class DaGdController {
               $query->getQuery(),
               array(
                 'style' => 'white-space: pre-wrap;',
-              )
-            ));
+              )));
       }
     }
 
@@ -223,8 +222,7 @@ abstract class DaGdController {
           print_r($this->getRequest(), true),
           array(
             'style' => 'white-space: pre-wrap;',
-          )
-        ));
+          )));
 
     $debug_body = id(new DaGdCard())
       ->setTitle(

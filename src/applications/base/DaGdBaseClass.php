@@ -1,6 +1,5 @@
 <?php
 abstract class DaGdBaseClass {
-
   // Automatically escape stuff to prevent against xss.
   protected $escape = true;
 
