@@ -2,6 +2,7 @@
 name: dagd-test
 on:
   push:
+    branches: [ master ]
   pull_request:
   schedule:
     - cron: 0 12 * * *
