@@ -1,6 +1,6 @@
 <?php
-final class DaGdMetricsController extends DaGdBaseClass {
-  public function getHelp() {
+final class DaGdMetricsController extends DaGdController {
+  static public function getHelp() {
     // Private endpoint: Intentionally left out of /help
     return array();
   }
@@ -42,15 +42,15 @@ final class DaGdMetricsController extends DaGdBaseClass {
     return $dt;
   }
 
-  public function render() {
-    $category = $this->route_matches[1];
-    $specifier = $this->route_matches[2];
+  public function execute(DaGdResponse $response) {
+    $category = $this->getRequest()->getRouteComponent(1);
+    $specifier = $this->getRequest()->getRouteComponent(2);
 
     // Is the client allowed to be here?
     $allowed_ips = DaGdConfig::get('metrics.allowed_ips');
-    $client_ip = client_ip();
+    $client_ip = $this->getRequest()->getClientIP();
     if (!in_array($client_ip, $allowed_ips)) {
-      return error403();
+      return $this->error(403)->execute($response);
     }
 
     switch ($category) {
@@ -61,10 +61,10 @@ final class DaGdMetricsController extends DaGdBaseClass {
       case 'last_creation_epoch':
         return $this->shorten_last_action_epoch('creation');
       default:
-        return error404();
+        return $this->error(404)->execute($response);
       }
     default:
-      return error404();
+      return $this->error(404)->execute($response);
     }
   }
 }
