@@ -10,5 +10,5 @@ sql/current_schema
 container/.lock
 composer.lock
 composer.json
-tools
+tools/php-cs-fixer/
 .php-cs-fixer.cache

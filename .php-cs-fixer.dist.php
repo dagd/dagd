@@ -1,9 +1,15 @@
 <?php
 
+require dirname(__FILE__).'/tools/dagd-php-cs-fixer-fixers/DaGdMethodArgumentSpaceFixer.php';
+
 $config = new PhpCsFixer\Config();
 return $config
   ->setIndent("  ")
   ->setLineEnding("\n")
+  ->registerCustomFixers(
+    array(
+      new DaGdMethodArgumentSpaceFixer(),
+    ))
   ->setRules(
     array(
       '@PSR2' => true,
@@ -24,5 +30,4 @@ return $config
       ),
       'control_structure_braces' => true,
       'no_spaces_inside_parenthesis' => true,
-    )
-  );
+    ));

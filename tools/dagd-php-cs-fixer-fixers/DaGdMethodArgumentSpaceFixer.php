@@ -12,7 +12,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace PhpCsFixer\Fixer\FunctionNotation;
+//namespace PhpCsFixer\Fixer\FunctionNotation;
 
 use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\Fixer\ConfigurableFixerInterface;
@@ -35,8 +35,9 @@ use PhpCsFixer\Tokenizer\Tokens;
  *
  * @author Kuanhung Chen <ericj.tw@gmail.com>
  */
-final class MethodArgumentSpaceFixer extends AbstractFixer implements ConfigurableFixerInterface, WhitespacesAwareFixerInterface
+final class DaGdMethodArgumentSpaceFixer extends AbstractFixer implements ConfigurableFixerInterface, WhitespacesAwareFixerInterface
 {
+    public function getName(): string { return 'DaGd/method_argument_space_fixer'; }
     /**
      * {@inheritdoc}
      */
@@ -325,7 +326,7 @@ SAMPLE
         $wasWhitespaceBeforeEndFunctionAddedAsNewToken = $tokens->ensureWhitespaceAtIndex(
             $tokens[$endFunctionIndex - 1]->isWhitespace() ? $endFunctionIndex - 1 : $endFunctionIndex,
             0,
-            $this->whitespacesConfig->getLineEnding().$existingIndentation
+            ''
         );
 
         if ($wasWhitespaceBeforeEndFunctionAddedAsNewToken) {
