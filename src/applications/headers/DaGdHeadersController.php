@@ -75,8 +75,9 @@ final class DaGdHeadersController extends DaGdController {
         ->requestHeaders();
 
       if (empty($headers)) {
-        error400('Headers could not be retrieved for that domain.');
-        return;
+        return $this
+          ->error(400, 'Headers could not be retrieved for that domain.')
+          ->execute($response);
       }
 
       return implode("", $headers);

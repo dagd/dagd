@@ -19,7 +19,7 @@ final class DaGdMetricsController extends DaGdController {
       $table = 'shorturls';
       break;
     default:
-      return error500();
+      return $this->error(500)->execute($response);
     }
 
     $dt = null;
