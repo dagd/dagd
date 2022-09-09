@@ -1,7 +1,7 @@
 <?php
 
-final class DaGdDNSController extends DaGdBaseClass {
-  public function getHelp() {
+final class DaGdDNSController extends DaGdController {
+  public static function getHelp() {
     return array(
       'title' => 'dns',
       'summary' => 'Fetch and return all DNS records for a given hostname.',
@@ -16,11 +16,6 @@ final class DaGdDNSController extends DaGdBaseClass {
       ));
   }
 
-  public function configure() {
-    return $this
-      ->setWrapHtml(true);
-  }
-
   private $dns;
 
   // TODO: Generalize and move to global_resources.
@@ -32,8 +27,8 @@ final class DaGdDNSController extends DaGdBaseClass {
     }
   }
 
-  public function render() {
-    $hostname = $this->route_matches[1];
+  public function execute(DaGdResponse $response) {
+    $hostname = $this->getRequest()->getRouteComponent(1);
     $this->dns = dns_get_record($hostname, DNS_ALL);
 
     $records = '';
