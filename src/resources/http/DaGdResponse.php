@@ -37,7 +37,7 @@ abstract class DaGdResponse {
   }
 
   public function setContentType($mimetype) {
-    $this->addHeader('Content-type', 'application/json');
+    $this->addHeader('Content-type', $mimetype);
     $this->addHeader('X-Content-Type-Options', 'nosniff');
     return $this;
   }
