@@ -73,9 +73,9 @@ final class DaGdStaticController extends DaGdController {
     }
 
     // If so, we can probably return it.
-    return id(new DaGdFileResponse())
+    return id(new DaGdCacheableResponse())
       ->setRequest($this->getRequest())
       ->setContentType($mimetype)
-      ->setFile($wanted_real);
+      ->setBody(file_get_contents($wanted_real));
   }
 }

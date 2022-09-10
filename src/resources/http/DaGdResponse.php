@@ -36,6 +36,12 @@ abstract class DaGdResponse {
     return $this;
   }
 
+  public function setContentType($mimetype) {
+    $this->addHeader('Content-type', 'application/json');
+    $this->addHeader('X-Content-Type-Options', 'nosniff');
+    return $this;
+  }
+
   public function removeHeader($key) {
     // If we set the header to null, getHeaders() will remove it before
     // returning headers, even if it was defined earlier in the hierarchy (e.g.

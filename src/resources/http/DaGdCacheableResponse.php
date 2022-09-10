@@ -1,6 +1,6 @@
 <?php
 
-abstract class DaGdCacheableResponse extends DaGdResponse {
+final class DaGdCacheableResponse extends DaGdResponse {
   private $cacheable = true;
 
   // This is 60 * 60 * 24 * 30 = one month.

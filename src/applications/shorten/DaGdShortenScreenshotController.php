@@ -25,8 +25,9 @@ final class DaGdShortenScreenshotController extends DaGdController {
     $base64 = $this->getScreenshot($long_url);
 
     // We tell the browser to cache for one hour.
-    return id(new DaGdJPEGResponse())
+    return id(new DaGdCacheableResponse())
       ->setRequest($this->getRequest())
+      ->setContentType('image/jpeg')
       ->setBody(base64_decode($base64))
       ->setCacheDuration(60 * 60);
   }
