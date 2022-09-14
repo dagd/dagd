@@ -21,7 +21,6 @@ function statsd_send($name, $inc=1, $metric='c') {
   } catch (Exception $e) {
     // Rethrow the exception if we are in debug mode.
     $debug = DaGdConfig::get('general.debug');
-    debug('statsd_send', $e->getMessage());
     if ($debug) {
       throw $e;
     }

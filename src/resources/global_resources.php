@@ -1,45 +1,19 @@
 <?php
 
+// If we are to care about backwards compatibility, we are somewhat locked into
+// doing this setup in this file, because scripts can (and do, in /scripts/)
+// include this file for their setup.
+require_once dirname(__FILE__).'/startup/DaGdStartup.php';
+
 $config_file = getenv('DaGdConfigFile');
+// We don't have id() loaded yet.
+$framework = new DaGdStartup();
+$framework
+  ->loadConfig($config_file)
+  ->establishGlobalState()
+  ->establishAutoloader();
 
-if (!$config_file ||
-    !@include_once(dirname(dirname(__FILE__))).'/'.$config_file) {
-  throw new Exception("No configuration file could be loaded.");
-}
-
-$timezone = DaGdConfig::get('general.timezone');
-date_default_timezone_set($timezone);
-
-function __dagd_autoload($cls) {
-  $paths = DaGdConfig::get('general.autoload_search');
-  foreach ($paths as $path) {
-    $path = rtrim($path, '/').'/';
-    $files = array();
-    // Paths are expected to be relative to 'src', or absolute for custom apps
-    if ($path[0] == '/') {
-      $files = glob($path.'/'.$cls.'.php');
-    } else {
-      $src = dirname(dirname(__FILE__));
-      $files = glob($src.'/'.$path.'/'.$cls.'.php');
-    }
-    if (!empty($files)) {
-      include_once $files[0];
-      break;
-    }
-  }
-}
-
-spl_autoload_register('__dagd_autoload', $throw = true);
-
-include_once(dirname(__FILE__).'/statsd.php');
-
-$display_errors = DaGdConfig::get('general.display_errors');
-if ($display_errors) {
-  ini_set('error_reporting', E_ALL);
-  ini_set('display_startup_errors', true);
-  ini_set('display_errors', true);
-}
-
+// TODO: Move this into DaGdStartup, and clean it up.
 function handle_exception($e) {
   // Handle logging the exception early in case anything below fails.
   $log_msg = 'Exception ('.$e->getFile().', line '.$e->getLine().'): ';
@@ -105,11 +79,13 @@ Your friendly da.gd server',
 }
 set_exception_handler('handle_exception');
 
+// TODO: Nix this
 function require_application($name) {
   require_once dirname(__FILE__).'/../applications/'.$name.'/'.$name.'.php';
   return;
 }
 
+// TODO: Roll to DaGdRequest
 function is_html_useragent() {
   if (!isset($_REQUEST['text']) &&
     array_key_exists('HTTP_ACCEPT', $_SERVER)) {
@@ -132,16 +108,12 @@ function is_html_useragent() {
   }
 }
 
+// TODO: Roll this into DaGdController's debug card stuff.
 function debug($title, $text = null) {
-  $debug = DaGdConfig::get('general.debug');
-  if ($debug) {
-    echo '<h5>'.$title.'</h5>';
-    if ($text) {
-      echo '<div style="color: red;"><pre>'.$text.'</pre></div><br />';
-    }
-  }
+  trigger_error('debug() is now a no-op and should not be called.');
 }
 
+// TODO: Remove these error*() functions
 function error404($echo = '404 - route not found', $status_text = 'Not Found') {
   statsd_bump('status,code=404');
   header('HTTP/1.1 404 '.$status_text);
@@ -176,14 +148,8 @@ function error500(
   echo $echo;
 }
 
-function idx(array $array, $key, $default = null) {
-  if (isset($array[$key])) {
-    return $array[$key];
-  } else {
-    return $default;
-  }
-}
-
+// Already replaced by DaGdRequest#getParamOrDefault.
+// TODO: Nix this.
 function request_or_default(
   $key,
   $default = null,
@@ -195,10 +161,13 @@ function request_or_default(
   return idx($_REQUEST, $key, $default);
 }
 
+// Replaced by idx(DaGdRequest->getServer(), $key, $default)
+// TODO: Nix this.
 function server_or_default($key, $default = null) {
   return idx($_SERVER, $key, $default);
 }
 
+// TODO: Move to DaGdRequest.
 /*
  * Takes the given query string, minus __path__ used internally,
  * and makes one that we can use for various things like redirecting.
@@ -227,6 +196,7 @@ function build_given_querystring() {
   }
 }
 
+// TODO: Nix this, already replaced.
 /** Get the IP for a client.
  *  Use the header X-Forwarded-For if it exists.
  *
@@ -241,6 +211,7 @@ function client_ip() {
   }
 }
 
+// TODO: Nix this after new help system is finished.
 /** Get help for a given class. */
 function help($class) {
   $prefix = request_or_default('url_prefix', '/');
@@ -297,24 +268,8 @@ function help($class) {
   return $return;
 }
 
-function id($a) {
-  return $a;
-}
-
-function intersperse($glue, array $pieces) {
-  $len = count($pieces);
-  $out = array();
-  $i = 0;
-  foreach ($pieces as $piece) {
-    $out[] = $piece;
-    if ($i != $len - 1) {
-      $out[] = $glue;
-    }
-    $i++;
-  }
-  return $out;
-}
-
+// TODO: Move to utility, but also make it stop using shorten's config because
+// that's weird.
 function randstr($length) {
   $charset = DaGdConfig::get('shorten.random_charset');
   $result = '';
@@ -324,26 +279,4 @@ function randstr($length) {
   }
 
   return $result;
-}
-
-function class_repr($obj) {
-  $cls = 'non-object';
-  if (is_string($obj)) {
-    $cls = 'string';
-  } else {
-    $get_cls = @get_class($obj);
-    if (is_string($get_cls)) {
-      $cls = $get_cls;
-    }
-  }
-  return $cls;
-}
-
-function tag(
-  $name,
-  $body = null,
-  array $attributes = array(),
-  $cdata = false) {
-
-  return id(new DaGdTag($name, $body, $attributes, $cdata));
 }

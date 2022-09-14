@@ -320,7 +320,6 @@ EOD;
         $max = DaGdConfig::get('shorten.random_max_length');
         $given_shorturl = randstr(rand($min, $max));
         while (!$query->isFreeShortURL($given_shorturl)) {
-          debug('Hash collision', 'Calling randstr again');
           statsd_bump('shorturl_random_hash_collision');
           $given_shorturl = randstr(rand($min, $max));
         }
