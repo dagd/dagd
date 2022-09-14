@@ -161,7 +161,12 @@ EOD;
     $url = $this->getRequest()->param('url', '');
 
     // Allow /s?url=... to work, but all other /<foo>?url= should ignore url.
-    if (strlen($url) > 0 && ($shorturl == 's' || !$shorturl)) {
+    if ($shorturl == 's' || !$shorturl) {
+      if (strlen($url) == 0) {
+        return $this
+          ->error(400, 'Long URL cannot be empty')
+          ->finalize();
+      }
       return $this->storeShortUrl($response);
     }
 
