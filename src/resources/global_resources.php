@@ -41,6 +41,12 @@ if ($display_errors) {
 }
 
 function handle_exception($e) {
+  // Handle logging the exception early in case anything below fails.
+  $log_msg = 'Exception ('.$e->getFile().', line '.$e->getLine().'): ';
+  $log_msg .= $e->getMessage();
+  $log_msg .= "\nTrace follows:\n".$e->getTraceAsString();
+  error_log($log_msg);
+
   $debug = DaGdConfig::get('general.debug');
   $display_errors = DaGdConfig::get('general.display_errors');
   $email = DaGdConfig::get('exceptions.email');
