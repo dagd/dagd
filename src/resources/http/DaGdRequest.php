@@ -54,8 +54,12 @@ class DaGdRequest {
     return $this->route_matches;
   }
 
-  public function getRouteComponent($idx, $default = null) {
-    return idx($this->route_matches, $idx, $default);
+  public function getRouteComponent($idx, $default = null, $urldecode = false) {
+    $val = idx($this->route_matches, $idx, $default);
+    if ($urldecode) {
+      return urldecode($val);
+    }
+    return $val;
   }
 
   public function getSession() {

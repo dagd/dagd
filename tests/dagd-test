@@ -369,6 +369,12 @@ final class TestCLI extends DaGdCLIProgram {
     $runner->arm(
       id(new DaGdResponseRegexTest('/status/321/hi', '@321 hi$@'))
         ->addGroup('status'));
+    $runner->arm(
+      id(new DaGdResponseRegexTest('/status/321/hi%20there', '@321 hi there$@'))
+        ->addGroup('status'));
+    $runner->arm(
+      id(new DaGdResponseRegexTest('/status/321/?message=hi%20there', '@321 hi there$@'))
+        ->addGroup('status'));
 
     /************ /isp/[xxxxxxx] ************/
     $runner->arm(

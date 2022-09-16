@@ -33,7 +33,14 @@ final class DaGdStatusController extends DaGdController {
 
     $text = $this
       ->getRequest()
-      ->getRouteComponent('message', null);
+      ->getParamOrDefault('message');
+
+    if ($text === null) {
+      $text = $this
+        ->getRequest()
+        ->getRouteComponent('message', null, true);
+    }
+
     $response->setCode((int)$code);
     $response->setMessage($text);
 
