@@ -22,6 +22,19 @@ final class DaGdWhois {
   }
 
   /*
+   * Resolve a hostname to an IPv4 address.
+   */
+  private function ipv4($hostname) {
+    $records = dns_get_record($hostname, DNS_A);
+    if (empty($records)) {
+      return null;
+    }
+    // Pick a random A record if there are several in a roundrobin.
+    $record = $records[array_rand($records)];
+    return idx($record, 'ip');
+  }
+
+  /*
    * Given a domain (passed to the constructor), we need to use the tld of it
    * to connect to <tld>.whois-servers.net to get the real whois server.
    * Using this, we end up making two whois queries, but it's the cleanest
@@ -108,7 +121,7 @@ final class DaGdWhois {
 
       $this->trace_path[] = $default_server.':'.$default_port;
 
-      $transient_sock = fsockopen($default_server, $default_port);
+      $transient_sock = fsockopen($this->ipv4($default_server), $default_port);
       if (!$transient_sock) {
         return false;
       }
@@ -122,7 +135,7 @@ final class DaGdWhois {
         // above. This becomes the *transient* server.
         $generic_timeout = DaGdConfig::get('whois.generic_tld_timeout');
         $transient_sock = fsockopen(
-          $this->whois_server,
+          $this->ipv4($this->whois_server),
           $this->whois_port,
           $errno,
           $errstr,
@@ -141,7 +154,7 @@ final class DaGdWhois {
           $server_with_tld = str_replace('TLD', $this->tld(), $server['server']);
           $this->trace_path[] = $server_with_tld.':43';
           $transient_sock = fsockopen(
-            $server_with_tld,
+            $this->ipv4($server_with_tld),
             idx($server, 'port', 43),
             $errno,
             $errstr,
@@ -227,7 +240,7 @@ final class DaGdWhois {
     $errno = 0;
     $errstr = '';
     $sock = fsockopen(
-      $this->whois_server,
+      $this->ipv4($this->whois_server),
       (int)$this->whois_port,
       $errno,
       $errstr,
