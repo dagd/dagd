@@ -419,7 +419,7 @@ class DaGdConfig {
         // Same deal here: whois.nic.org times out. Fallback works, but let's
         // avoid needing it.
         'server' => 'org.whois-servers.net',
-        'query' => 'domain ',
+        'query' => '',
       ),
       'net' => array(
         // Yep.
