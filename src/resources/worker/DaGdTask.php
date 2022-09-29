@@ -84,8 +84,8 @@ abstract class DaGdTask {
    * Tasks start out as free and are marked as taken when a worker picks them
    * up.
    */
-  public function queue($input=null) {
-    $serialized = serialize($input);
+  public function queue() {
+    $serialized = serialize($this->getUnserializedInput());
     $task_class = $this->getTaskClass();
     $priority = $this->getPriority();
     $query = $this->dbh->prepare(
