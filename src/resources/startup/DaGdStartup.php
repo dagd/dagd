@@ -4,18 +4,17 @@
  * This class handles setting up dagd to handle a request.
  */
 final class DaGdStartup {
-  private $config_loaded = false;
 
   public function __construct() {
     $this->loadAllUtilities();
   }
 
-  public function isConfigLoaded() {
-    return $this->config_loaded;
+  public static function isConfigLoaded() {
+    return class_exists('DaGdConfig');
   }
 
-  public function ensureConfigLoaded() {
-    if (!$this->isConfigLoaded()) {
+  public static function ensureConfigLoaded() {
+    if (!self::isConfigLoaded()) {
       throw new Exception(
         'No configuration file has been loaded. Call DaGdStartup#loadConfig '.
         'first.');
@@ -46,7 +45,6 @@ final class DaGdStartup {
         !@include_once(dirname(dirname(dirname(__FILE__)))).'/'.$file) {
       throw new Exception("No configuration file could be loaded.");
     }
-    $this->config_loaded = true;
     return $this;
   }
 
@@ -55,7 +53,7 @@ final class DaGdStartup {
    * error message display.
    */
   public function establishGlobalState() {
-    $this->ensureConfigLoaded();
+    self::ensureConfigLoaded();
 
     $timezone = DaGdConfig::get('general.timezone');
     if ($timezone) {
@@ -77,7 +75,7 @@ final class DaGdStartup {
    * and their utility classes.
    */
   public function establishAutoloader() {
-    $this->ensureConfigLoaded();
+    self::ensureConfigLoaded();
     spl_autoload_register('DaGdStartup::__dagd_autoload', $throw = true);
   }
 
