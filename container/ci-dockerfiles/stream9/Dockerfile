@@ -1,21 +1,24 @@
-#FROM registry.access.redhat.com/ubi8/ubi-minimal
-FROM centos:7
+FROM quay.io/centos/centos:stream9
 
 MAINTAINER rick@elrod.me
 
-RUN yum install -y epel-release
+RUN dnf install -y epel-release
 
-RUN yum install -y \
+RUN dnf install -y \
         httpd \
         php \
         php-mysqlnd \
         php-gd \
-        php-pear-Net-DNS2 \
+        php-intl \
+        php-json \
+        php-pear \
         php-pecl-apcu \
         php-pecl-zendopcache \
         git \
         nc \
-        && yum clean all
+        tzdata \
+        && pear install Net_DNS2 \
+        && dnf clean all
 
 ENV DaGdConfigFile ../container/config.container.php
 

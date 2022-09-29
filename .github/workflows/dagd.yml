@@ -17,8 +17,8 @@ jobs:
       matrix:
         include:
           - dockerfile: rhel8
-            soft_fail: true
-          - dockerfile: centos7
+            soft_fail: false
+          - dockerfile: stream9
             soft_fail: false
     steps:
       - uses: actions/checkout@v2
