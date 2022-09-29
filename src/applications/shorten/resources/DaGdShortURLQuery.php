@@ -258,9 +258,9 @@ final class DaGdShortURLQuery {
    */
   public function disableIp($shorturl) {
     $query = $this->controller->getWriteDB()->prepare(
-      'update shorturls set enabled=0 where enabled=1 and owner_ip=('.
-      '  select B.owner_ip from ('.
-      '    select shorturl, owner_ip from shorturls) as B where B.shorturl=?)');
+      'update shorturls set enabled=0 where '.
+      'owner_ip=(select owner_ip from shorturls where shorturl=?) '.
+      'and enabled=1');
     $query->bind_param('s', $shorturl);
     $query->execute();
     $affected = $this->controller->getWriteDB()->affected_rows;
