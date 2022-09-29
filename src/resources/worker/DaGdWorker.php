@@ -14,11 +14,7 @@ final class DaGdWorker {
   }
 
   private function connect() {
-    return new mysqli(
-      DaGdConfig::get('mysql.host'),
-      DaGdConfig::get('mysql.user'),
-      DaGdConfig::get('mysql.password'),
-      DaGdConfig::get('mysql.database'));
+    return DaGdStartup::getWritableDbh();
   }
 
   private function getTimestampTime() {

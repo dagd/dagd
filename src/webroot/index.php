@@ -119,22 +119,7 @@ $request = id(new DaGdRequest())
   ->setServer($_SERVER)
   ->setRouteMatches($route_matches);
 
-$write_dbh = null;
-
-if ($debug) {
-  $write_dbh = new DaGdMySQLiDebug(
-    DaGdConfig::get('mysql.host'),
-    DaGdConfig::get('mysql.user'),
-    DaGdConfig::get('mysql.password'),
-    DaGdConfig::get('mysql.database'));
-} else {
-  $write_dbh = new mysqli(
-    DaGdConfig::get('mysql.host'),
-    DaGdConfig::get('mysql.user'),
-    DaGdConfig::get('mysql.password'),
-    DaGdConfig::get('mysql.database'));
-}
-
+$write_dbh = DaGdStartup::getWritableDbh($debug);
 $read_dbh = $write_dbh;
 $readonly_host = DaGdConfig::get('readonly_mysql.host');
 

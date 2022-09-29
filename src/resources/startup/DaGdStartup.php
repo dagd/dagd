@@ -100,4 +100,22 @@ final class DaGdStartup {
       }
     }
   }
+
+  public static function getWritableDbh($debug = false) {
+    self::ensureConfigLoaded();
+
+    if ($debug) {
+      return new DaGdMySQLiDebug(
+        DaGdConfig::get('mysql.host'),
+        DaGdConfig::get('mysql.user'),
+        DaGdConfig::get('mysql.password'),
+        DaGdConfig::get('mysql.database'));
+    }
+
+    return new mysqli(
+      DaGdConfig::get('mysql.host'),
+      DaGdConfig::get('mysql.user'),
+      DaGdConfig::get('mysql.password'),
+      DaGdConfig::get('mysql.database'));
+  }
 }
