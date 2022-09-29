@@ -19,7 +19,7 @@ jobs:
           - dockerfile: rhel8
             soft_fail: false
           - dockerfile: stream9
-            soft_fail: false
+            soft_fail: true
     steps:
       - uses: actions/checkout@v2
 
