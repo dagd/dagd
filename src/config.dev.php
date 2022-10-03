@@ -100,15 +100,6 @@ class DaGdConfig {
       '/break/?$' => array(
         'controller' => 'DaGdBreakController',
       ),
-      '/c/(store)/(.+?)/(.+?)/?$' => array(
-        'controller' => 'DaGdCommanderController',
-      ),
-      '/c/(.+?)(?:/| |%20)(.+?)/?$' => array(
-        'controller' => 'DaGdCommanderController',
-      ),
-      '/c/?(json|)?/?$' => array(
-        'controller' => 'DaGdCommanderController',
-      ),
       '/dns/(.+)/?$' => array(
         'controller' => 'DaGdDNSController',
       ),
