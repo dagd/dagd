@@ -118,4 +118,22 @@ final class DaGdStartup {
       DaGdConfig::get('mysql.password'),
       DaGdConfig::get('mysql.database'));
   }
+
+  public static function getReadableDbh($debug = false) {
+    self::ensureConfigLoaded();
+
+    if ($debug) {
+      return new DaGdMySQLiDebug(
+        DaGdConfig::get('readonly_mysql.host'),
+        DaGdConfig::get('readonly_mysql.user'),
+        DaGdConfig::get('readonly_mysql.password'),
+        DaGdConfig::get('readonly_mysql.database'));
+    }
+
+    return new mysqli(
+      DaGdConfig::get('readonly_mysql.host'),
+      DaGdConfig::get('readonly_mysql.user'),
+      DaGdConfig::get('readonly_mysql.password'),
+      DaGdConfig::get('readonly_mysql.database'));
+  }
 }
