@@ -1,7 +1,7 @@
 <?php
 
-final class DaGdImageController extends DaGdBaseClass {
-  public function getHelp() {
+final class DaGdImageController extends DaGdController {
+  public static function getHelp() {
     return array(
       'title' => 'image',
       'summary' => 'Generate almost-arbitrarily sized images.',
@@ -27,20 +27,12 @@ final class DaGdImageController extends DaGdBaseClass {
       ));
   }
 
-  public function configure() {
-    return $this
-      ->setEscape(false)
-      ->setWrapPre(false)
-      ->setTextHtmlStrip(false)
-      ->setTextContentType(false);
-  }
-
   private $width;
   private $height;
   private $bgcolor;
   private $filetype;
 
-  public function render() {
+  public function finalize() {
     $max_width = DaGdConfig::get('image.max_width');
     $max_height = DaGdConfig::get('image.max_height');
     $default_filetype = DaGdConfig::get('image.default_filetype');
@@ -49,28 +41,31 @@ final class DaGdImageController extends DaGdBaseClass {
     $bg_color_rgb = DaGdConfig::get('image.default_bg_rgb');
     $text_color_rgb = DaGdConfig::get('image.default_text_rgb');
 
-    $split = preg_split('@(?:x|\*)@', $this->route_matches[1]);
+    $split = preg_split('@(?:x|\*)@', $this->getRequest()->getRouteComponent(1));
     if (count($split) !== 2) {
-      error400('You must separate width and height with either * or x');
-      return false;
+      return $this
+        ->error(400, 'You must separate width and height with either * or x')
+        ->finalize();
     } else {
       $this->width = $split[0];
       $this->height = $split[1];
     }
 
     if ($this->width > $max_width || $this->height > $max_height) {
-      error400(
-        'The generated image should be less than '.$max_width.'x'.
-        $max_height.'.');
-      return false;
+      return $this
+        ->error(400, 'The generated image should be less than '.
+          $max_width.'x'.$max_height.'.')
+        ->finalize();
     }
 
-    if (count($this->route_matches) === 3) {
-      if (in_array($this->route_matches[2], array_keys($imagetypes))) {
-        $this->filetype = $this->route_matches[2];
+    if (count($this->getRequest()->getRouteMatches()) === 3) {
+      $filetypeComponent = $this->getRequest()->getRouteComponent(2);
+      if (in_array($filetypeComponent, array_keys($imagetypes))) {
+        $this->filetype = $filetypeComponent;
       } else {
-        error400('The image type you specified is not supported.');
-        return false;
+        return $this
+          ->error(400, 'The image type you specified is not supported.')
+          ->finalize();
       }
     } else {
       $this->filetype = $default_filetype;
@@ -98,7 +93,7 @@ final class DaGdImageController extends DaGdBaseClass {
       hexdec($b));
 
     // Generate the image.
-    header('Content-Type: '.$imagetypes[$this->filetype]['contenttype']);
+    $mimetype = $imagetypes[$this->filetype]['contenttype'];
     $image = imagecreate($this->width, $this->height);
     imagecolorallocate(
       $image,
@@ -123,7 +118,17 @@ final class DaGdImageController extends DaGdBaseClass {
 
     imagettftext($image, 30, 0, $center_x, $center_y, $color, $fontpath, $text);
 
+    ob_start();
     call_user_func($imagetypes[$this->filetype]['phpfunction'], $image);
+    $image_data = ob_get_contents();
+    ob_end_clean();
+
     imagedestroy($image);
+
+    return id(new DaGdCacheableResponse())
+      ->setRequest($this->getRequest())
+      ->addHeader('Content-Type', $mimetype)
+      ->addHeader('X-Content-Type-Options', 'nosniff')
+      ->setBody($image_data);
   }
 }
