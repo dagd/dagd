@@ -16,17 +16,21 @@ final class DaGdShortURLQuery {
   /**
    * @return DaGdShortURL or null
    */
-  public function fromShort($short_url) {
+  public function fromShort($short_url, $include_disabled = false) {
     $id = null;
     $long_url = null;
     $owner_ip = null;
+    $query_str = 'SELECT id, longurl, owner_ip FROM shorturls WHERE ';
+    $query_str .= 'shorturl=?';
+
+    if (!$include_disabled) {
+      $query_str .= ' AND enabled=1';
+    }
 
     $query = $this
       ->controller
       ->getReadDB()
-      ->prepare(
-        'SELECT id, longurl, owner_ip FROM shorturls '.
-        'WHERE shorturl=? AND enabled=1');
+      ->prepare($query_str);
     $query->bind_param('s', $short_url);
     $start = microtime(true);
     $query->execute();
@@ -257,11 +261,14 @@ final class DaGdShortURLQuery {
    * @return The number of affected rows.
    */
   public function disableIp($shorturl) {
+    $surl = $this->fromShort($shorturl, true);
+    if (!$surl) {
+      return null;
+    }
+    $owner_ip = $surl->getOwnerIp();
     $query = $this->controller->getWriteDB()->prepare(
-      'update shorturls set enabled=0 where '.
-      'owner_ip=(select owner_ip from shorturls where shorturl=?) '.
-      'and enabled=1');
-    $query->bind_param('s', $shorturl);
+      'update shorturls set enabled=0 where owner_ip=? and enabled=1');
+    $query->bind_param('s', $owner_ip);
     $query->execute();
     $affected = $this->controller->getWriteDB()->affected_rows;
     return $affected;
@@ -275,7 +282,7 @@ final class DaGdShortURLQuery {
    * @return true if the insert was successful, false if not.
    */
   public function banIp($shorturl) {
-    $surl = $this->fromShort($shorturl);
+    $surl = $this->fromShort($shorturl, true);
     if (!$surl) {
       return null;
     }
@@ -295,7 +302,7 @@ final class DaGdShortURLQuery {
    * @return true if the deletion was successful, false if not.
    */
   public function unbanIp($shorturl) {
-    $surl = $this->fromShort($shorturl);
+    $surl = $this->fromShort($shorturl, true);
     if (!$surl) {
       return null;
     }
