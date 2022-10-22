@@ -119,18 +119,6 @@ $request = id(new DaGdRequest())
   ->setServer($_SERVER)
   ->setRouteMatches($route_matches);
 
-$write_dbh = DaGdStartup::getWritableDbh($debug);
-$read_dbh = $write_dbh;
-$readonly_host = DaGdConfig::get('readonly_mysql.host');
-
-if (!empty($readonly_host)) {
-  $read_dbh = new mysqli(
-    DaGdConfig::get('readonly_mysql.host'),
-    DaGdConfig::get('readonly_mysql.user'),
-    DaGdConfig::get('readonly_mysql.password'),
-    DaGdConfig::get('readonly_mysql.database'));
-}
-
 // Temporary conditional, handle migration to DaGdController
 if ($instance instanceof DaGdController) {
   $instance->setRequest($request);
@@ -147,10 +135,7 @@ if ($instance instanceof DaGdController) {
 }
 
 // New and old controllers provide this same interface
-$response = $instance
-  ->setWriteDB($write_dbh)
-  ->setReadDB($read_dbh)
-  ->finalize();
+$response = $instance->finalize();
 
 $git_dir = escapeshellarg(dirname($_SERVER['SCRIPT_FILENAME']).'/../../.git/');
 $git_latest_commit = shell_exec(
