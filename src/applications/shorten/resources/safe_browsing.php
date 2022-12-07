@@ -1,14 +1,31 @@
 <?php
 
-function query_safe_browsing($urls) {
+function query_safe_browsing($urls, $is_create) {
   $client_id = DaGdConfig::get('shorten.safe_browsing_client_id');
   $client_version = DaGdConfig::get('shorten.safe_browsing_client_version');
   $threat_types = DaGdConfig::get('shorten.safe_browsing_threat_types');
   $platform_types = DaGdConfig::get('shorten.safe_browsing_platform_types');
-  $api_key = DaGdConfig::get('shorten.safe_browsing_api_key');
-  $agent = DaGdConfig::get('general.useragent');
   $timeout = DaGdConfig::get('shorten.safe_browsing_timeout');
   $default = DaGdConfig::get('shorten.safe_browsing_default_accept');
+
+  $api_key = null;
+  $prefix = 'shorten.safe_browsing_api_key';
+  if ($is_create && config_key_exists($prefix.'_create')) {
+    $api_key = DaGdConfig::get($prefix.'_create');
+  } else if (!$is_create && config_key_exists($prefix.'_access')) {
+    $api_key = DaGdConfig::get($prefix.'_access');
+  } else if (config_key_exists($prefix)) {
+    // Backwards compatibility with old 'shorten.safe_browsing_api_key'
+    $api_key = DaGdConfig::get($prefix);
+  }
+
+  $agent_suffix = '';
+  if ($is_create) {
+    $agent_suffix = 'shorturl-create';
+  } else {
+    $agent_suffix = 'shorturl-access';
+  }
+  $agent = DaGdConfig::get('general.useragent').' '.$agent_suffix;
 
   $payload = array();
   $payload['client'] = array();

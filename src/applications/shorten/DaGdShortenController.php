@@ -98,7 +98,7 @@ EOD;
     // working even if they don't host-parse.
     // If it's whitelisted, don't even bother checking dnsbl
     if (!$query->isWhitelisted($surl->getLongUrl()) &&
-        $query->isBlacklisted($surl->getLongUrl())) {
+        $query->isBlacklisted($surl->getLongUrl(), false)) {
       return null;
     }
 
@@ -330,7 +330,7 @@ EOD;
     // Is the long URL whitelisted or blacklisted?
     if (!$query->isWhitelisted($given_longurl)) {
       // It's not whitelisted...
-      if ($query->isBlacklisted($given_longurl)) {
+      if ($query->isBlacklisted($given_longurl, true)) {
         // ...but it *is* blacklisted.
         return $this
           ->error(400, 'Blacklisted long URL.')

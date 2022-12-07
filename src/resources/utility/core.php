@@ -25,3 +25,10 @@ function class_repr($obj) {
   }
   return $cls;
 }
+
+/**
+ * Return true if the key exists in config, false otherwise.
+ */
+function config_key_exists($key) {
+  return array_key_exists($key, DaGdConfig::$config);
+}

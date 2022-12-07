@@ -12,6 +12,16 @@ class Blacklist {
   protected $blacklist_source = '';
   protected $cache;
 
+  /**
+   * Is the query for a short URL that is being created?
+   *
+   * We use this because some services (cough, GSB) rate-limit us, but we can
+   * bypass the rate-limit (without violating any rules) by using a different
+   * project for a different purpose. So we use a different project for creating
+   * versus accessing short URLs.
+   */
+  protected $is_create = false;
+
   public function __construct($url) {
     $this->url = $url;
   }
@@ -41,6 +51,15 @@ class Blacklist {
 
   public function getCache() {
     return $this->cache;
+  }
+
+  public function setIsCreate($is_create) {
+    $this->is_create = $is_create;
+    return $this;
+  }
+
+  public function getIsCreate() {
+    return $this->is_create;
   }
 
   public function checkString() {
@@ -136,12 +155,12 @@ class Blacklist {
     $want_cache = DaGdConfig::get('shorten.safe_browsing_cache');
     // Allows this function to be used even if setCache() is never called.
     if ($this->getCache() && $want_cache) {
-      $gsb = new DaGdGoogleSafeBrowsing($this->url);
+      $gsb = new DaGdGoogleSafeBrowsing($this->url, $this->getIsCreate());
       $key = 'gsb_'.hash('sha256', $this->url);
       $seconds = DaGdConfig::get('shorten.safe_browsing_cache_expiry');
       $safe_url = $this->getCache()->getOrStore($key, $gsb, 60 * $seconds);
     } else {
-      $safe_url = query_safe_browsing($this->url);
+      $safe_url = query_safe_browsing($this->url, $this->getIsCreate());
     }
 
     if ($safe_url === false) {

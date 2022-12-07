@@ -326,8 +326,11 @@ class DaGdConfig {
       'ANY_PLATFORM',
     ),
 
-    // API key from Google Console.
-    'shorten.safe_browsing_api_key' => '',
+    // API key from Google Console (for short URL creations).
+    'shorten.safe_browsing_api_key_create' => '',
+
+    // API key from Google Console (for short URL access).
+    'shorten.safe_browsing_api_key_access' => '',
 
     // Should Safe Browsing requests be cached?
     'shorten.safe_browsing_cache' => true,
@@ -504,7 +507,7 @@ class DaGdConfig {
 
     // The list of people to email on exceptions.
     'exceptions.mail_to' => array(
-      'ricky@elrod.me',
+      'you@example.com',
     ),
 
     // MySQL settings - these can be used for reads *and* writes, but if
