@@ -332,6 +332,13 @@ class DaGdConfig {
     // API key from Google Console (for short URL access).
     'shorten.safe_browsing_api_key_access' => '',
 
+    // Should we use the hosted API or a local instance of sbserver?
+    'shorten.safe_browsing_use_hosted_api' => false,
+
+    // If using a local instance of sbserver, what is the URL?
+    // (Don't include the endpoint, just the base URL and port.)
+    'shorten.safe_browsing_sbserver_url' => 'http://localhost:8081',
+
     // Should Safe Browsing requests be cached?
     'shorten.safe_browsing_cache' => true,
 

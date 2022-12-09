@@ -7,16 +7,20 @@ function query_safe_browsing($urls, $is_create) {
   $platform_types = DaGdConfig::get('shorten.safe_browsing_platform_types');
   $timeout = DaGdConfig::get('shorten.safe_browsing_timeout');
   $default = DaGdConfig::get('shorten.safe_browsing_default_accept');
+  $hosted_api = DaGdConfig::get('shorten.safe_browsing_use_hosted_api');
 
   $api_key = null;
-  $prefix = 'shorten.safe_browsing_api_key';
-  if ($is_create && config_key_exists($prefix.'_create')) {
-    $api_key = DaGdConfig::get($prefix.'_create');
-  } else if (!$is_create && config_key_exists($prefix.'_access')) {
-    $api_key = DaGdConfig::get($prefix.'_access');
-  } else if (config_key_exists($prefix)) {
-    // Backwards compatibility with old 'shorten.safe_browsing_api_key'
-    $api_key = DaGdConfig::get($prefix);
+  if ($hosted_api) {
+    // API key only matters for hosted API.
+    $prefix = 'shorten.safe_browsing_api_key';
+    if ($is_create && config_key_exists($prefix.'_create')) {
+      $api_key = DaGdConfig::get($prefix.'_create');
+    } else if (!$is_create && config_key_exists($prefix.'_access')) {
+      $api_key = DaGdConfig::get($prefix.'_access');
+    } else if (config_key_exists($prefix)) {
+      // Backwards compatibility with old 'shorten.safe_browsing_api_key'
+      $api_key = DaGdConfig::get($prefix);
+    }
   }
 
   $agent_suffix = '';
@@ -50,8 +54,15 @@ function query_safe_browsing($urls, $is_create) {
       );
   }
 
-  $url = 'https://safebrowsing.googleapis.com/v4/threatMatches:find?key='.
-    $api_key;
+  $url = '';
+  if ($hosted_api) {
+    $url = 'https://safebrowsing.googleapis.com/v4/threatMatches:find?key='.
+      $api_key;
+  } else {
+    $url = DaGdConfig::get('shorten.safe_browsing_sbserver_url');
+    $url = rtrim($url, '/').'/v4/threatMatches:find';
+  }
+
   $payload_str = json_encode($payload);
 
   $curl = curl_init();
