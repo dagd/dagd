@@ -333,7 +333,7 @@ class DaGdConfig {
     'shorten.safe_browsing_api_key_access' => '',
 
     // Should we use the hosted API or a local instance of sbserver?
-    'shorten.safe_browsing_use_hosted_api' => false,
+    'shorten.safe_browsing_use_hosted_api' => true,
 
     // If using a local instance of sbserver, what is the URL?
     // (Don't include the endpoint, just the base URL and port.)
