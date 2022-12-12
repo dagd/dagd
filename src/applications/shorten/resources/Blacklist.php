@@ -121,7 +121,7 @@ class Blacklist {
         if ($want_cache && $cache = $this->getCache()) {
           $key = 'dnsbl_'.hash('sha256', $this->url);
           $seconds = DaGdConfig::get('shorten.dnsbl_cache_expiry');
-          $safe_url = $cache->getOrStore($key, $dnsbl, 60 * $seconds);
+          $safe_url = $cache->getOrStore($key, $dnsbl, $seconds);
         } else {
           $safe_url = $dnsbl->run();
         }
@@ -158,7 +158,7 @@ class Blacklist {
       $gsb = new DaGdGoogleSafeBrowsing($this->url, $this->getIsCreate());
       $key = 'gsb_'.hash('sha256', $this->url);
       $seconds = DaGdConfig::get('shorten.safe_browsing_cache_expiry');
-      $safe_url = $this->getCache()->getOrStore($key, $gsb, 60 * $seconds);
+      $safe_url = $this->getCache()->getOrStore($key, $gsb, $seconds);
     } else {
       $safe_url = query_safe_browsing($this->url, $this->getIsCreate());
     }
