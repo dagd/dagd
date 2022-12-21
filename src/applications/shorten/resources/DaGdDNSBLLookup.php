@@ -35,7 +35,10 @@ final class DaGdDNSBLLookup implements DaGdCacheMissCallback {
           // The response is NOT that we are being called out for checking an
           // IP. That means it's a legitimate response, and $domain is BAD.
           // Return false meaning that the domain should NOT be trusted.
-          return false;
+          return array(
+            'safe' => false,
+            'source' => $suffix,
+          );
         }
       } catch (Net_DNS2_Exception $e) {
         if ($e->getCode() == Net_DNS2_Lookups::RCODE_NXDOMAIN) {
@@ -43,6 +46,8 @@ final class DaGdDNSBLLookup implements DaGdCacheMissCallback {
         }
       }
     }
-    return true;
+    return array(
+      'safe' => true,
+    );
   }
 }

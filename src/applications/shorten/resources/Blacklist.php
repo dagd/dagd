@@ -10,6 +10,7 @@ class Blacklist {
   protected $url;
   protected $blacklisted = false;
   protected $blacklist_source = '';
+  protected $blacklist_reason = '';
   protected $cache;
 
   /**
@@ -44,6 +45,15 @@ class Blacklist {
     return $this->blacklist_source;
   }
 
+  public function setBlacklistReason($blacklist_reason) {
+    $this->blacklist_reason = $blacklist_reason;
+    return $this;
+  }
+
+  public function getBlacklistReason() {
+    return $this->blacklist_reason;
+  }
+
   public function setCache($cache) {
     $this->cache = $cache;
     return $this;
@@ -76,6 +86,7 @@ class Blacklist {
         statsd_bump('shorturl_blacklisted');
         $this->setBlacklisted(true);
         $this->setBlacklistSource('shorten.longurl_blacklist_strings');
+        $this->setBlacklistReason($string);
         return $this;
       }
     }
@@ -95,6 +106,7 @@ class Blacklist {
         statsd_bump('shorturl_blacklisted');
         $this->setBlacklisted(true);
         $this->setBlacklistSource('shorten.longurl_blacklist');
+        $this->setBlacklistReason('#'.$regex.'#i');
         return $this;
       }
     }
@@ -126,11 +138,12 @@ class Blacklist {
           $safe_url = $dnsbl->run();
         }
 
-        if ($safe_url === false) {
+        if (idx($safe_url, 'safe') === false) {
           statsd_bump('shorturl_blacklisted_dnsbl');
           statsd_bump('shorturl_blacklisted');
           $this->setBlacklisted(true);
           $this->setBlacklistSource('shorten.dnsbl');
+          $this->setBlacklistReason(idx($safe_url, 'source'));
           return $this;
         }
       }
@@ -168,6 +181,7 @@ class Blacklist {
       statsd_bump('shorturl_blacklisted');
       $this->setBlacklisted(true);
       $this->setBlacklistSource('shorten.safe_browsing');
+      $this->setBlacklistReason('Google Safe Browsing');
     }
 
     return $this;
