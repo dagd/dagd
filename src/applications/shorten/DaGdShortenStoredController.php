@@ -24,7 +24,7 @@ final class DaGdShortenStoredController extends DaGdController {
       $baseurl.'/'.$this->getShortUrl()->getShortUrl(),
       array(
         'href' => $this->getShortUrl()->getShortUrl(),
-        'style' => 'color: #888;',
+        'style' => 'color: #888; font-family: monospace;',
       )
     );
 
