@@ -2,41 +2,53 @@
 
 /**
  * This is the base of a DaGdCLIProgram, and exists primarily to provide helper
- * methods to DaGdCLIProgram. It's abstract and in theory could be extended by
- * programs wishing to implement their own argument parsing and such, but that
- * seems unlikely at best.
+ * methods to DaGdCLIProgram. In theory could be extended by programs wishing to
+ * implement their own argument parsing and such, but that seems unlikely in the
+ * normal use case.
  */
 abstract class DaGdCLI {
+  public function getColorEnabled() {
+    return true;
+  }
+
+  protected function wrapANSIColor($str, $color_code) {
+    if ($this->getColorEnabled()) {
+      return "\033[".$color_code.'m'.$str."\033[0m";
+    } else {
+      return $str;
+    }
+  }
+
   public function black($str) {
-    return "\033[30m".$str."\033[0m";
+    return $this->wrapANSIColor($str, '30');
   }
 
   public function red($str) {
-    return "\033[31m".$str."\033[0m";
+    return $this->wrapANSIColor($str, '31');
   }
 
   public function green($str) {
-    return "\033[32m".$str."\033[0m";
+    return $this->wrapANSIColor($str, '32');
   }
 
   public function yellow($str) {
-    return "\033[33m".$str."\033[0m";
+    return $this->wrapANSIColor($str, '33');
   }
 
   public function blue($str) {
-    return "\033[34m".$str."\033[0m";
+    return $this->wrapANSIColor($str, '34');
   }
 
   public function magenta($str) {
-    return "\033[35m".$str."\033[0m";
+    return $this->wrapANSIColor($str, '35');
   }
 
   public function cyan($str) {
-    return "\033[36m".$str."\033[0m";
+    return $this->wrapANSIColor($str, '36');
   }
 
   public function white($str) {
-    return "\033[37m".$str."\033[0m";
+    return $this->wrapANSIColor($str, '37');
   }
 
   public function reset() {
@@ -44,7 +56,7 @@ abstract class DaGdCLI {
   }
 
   public function bold($str) {
-    return "\033[1m".$str."\033[0m";
+    return $this->wrapANSIColor($str, '1');
   }
 
   public function status($str, $colored, $plain, $colors = true) {
