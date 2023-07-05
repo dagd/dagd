@@ -20,7 +20,8 @@ final class DaGdShortURLQuery {
     $id = null;
     $long_url = null;
     $owner_ip = null;
-    $query_str = 'SELECT id, longurl, owner_ip FROM shorturls WHERE ';
+    $enabled = null;
+    $query_str = 'SELECT id, longurl, owner_ip, enabled FROM shorturls WHERE ';
     $query_str .= 'shorturl=?';
 
     if (!$include_disabled) {
@@ -36,12 +37,12 @@ final class DaGdShortURLQuery {
     $query->execute();
     $end = microtime(true);
     statsd_time('query_time_getLongURL', ($end - $start) * 1000);
-    $query->bind_result($id, $long_url, $owner_ip);
+    $query->bind_result($id, $long_url, $owner_ip, $enabled);
     $query->fetch();
     $query->close();
 
     if (!empty($id) && !empty($long_url) && !empty($owner_ip)) {
-      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip);
+      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip, $enabled);
     }
 
     return null;
@@ -75,7 +76,7 @@ final class DaGdShortURLQuery {
     $query->close();
 
     if (!empty($id) && !empty($short_url) && !empty($owner_ip)) {
-      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip);
+      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip, true);
     }
 
     return null;
@@ -215,7 +216,7 @@ final class DaGdShortURLQuery {
 
     if ($res) {
       statsd_bump('shorturl_store');
-      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip);
+      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip, true);
     } else {
       statsd_bump('shorturl_store_fail');
       throw new DaGdShortenStoreException();
