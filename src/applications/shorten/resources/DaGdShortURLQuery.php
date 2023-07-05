@@ -155,7 +155,7 @@ final class DaGdShortURLQuery {
   /**
    * @return boolean
    */
-  public function isBlacklisted($long_url, $is_create) {
+  public function isBlacklisted($long_url, $is_create = false) {
     return id(new Blacklist($long_url))
       ->setIsCreate($is_create)
       ->setCache($this->controller->cache())
