@@ -226,7 +226,8 @@ abstract class DaGdResponse {
     // session cookie keys.
     foreach ($this->getRequest()->getCookies() as $rk => $rv) {
       if (strpos($rk, 'DaGdSession_') === 0) {
-        setcookie($rk, null, 86401, '/', '', false, true);
+        setcookie($rk, '', 1, '/', '', false, true);
+        unset($_COOKIE[$rk]);
       }
     }
 
