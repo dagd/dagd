@@ -30,6 +30,10 @@ final class DaGdTag {
   }
 
   protected function renderPotentialInnerTag($body) {
+    if ($body === null) {
+      return '';
+    }
+
     // This should let us compose tags that have already been constructed.
     if ($body instanceof DaGdTag) {
       return $body->renderSafe();
@@ -47,6 +51,17 @@ final class DaGdTag {
         $out .= $this->renderPotentialInnerTag($tag);
       }
       return $out;
+    }
+
+    if (!is_string($body)) {
+      if (is_numeric($body)) {
+        $body = (string)$body;
+      } else {
+        throw new Exception(
+          'Tag is not renderable. Body must be: null, DaGdTag, something that '.
+          'implements DaGdToTagInterface, a string, a number, or an array '.
+          'containing those things)');
+      }
     }
 
     if ($this->cdata) {
