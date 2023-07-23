@@ -192,6 +192,10 @@ final class TestCLI extends DaGdCLIProgram {
 
     /************ /up/xxxxxxx ************/
     $runner->arm(
+      id(new DaGdResponseCodeTest('/up/google.com', 200))
+        ->setAccept('text/html')
+        ->addGroup('up'));
+    $runner->arm(
       id(new DaGdRegexTest('/up/google.com', '@^200$@'))
         ->addGroup('up'));
     $runner->arm(
@@ -220,8 +224,8 @@ final class TestCLI extends DaGdCLIProgram {
     $runner->arm(
       id(new DaGdHeaderRegexTest(
         '/rhbz/1883609',
-	'Location',
-	'@^https://bugzilla\.redhat\.com/show_bug\.cgi\?id=1883609$@'))
+        'Location',
+        '@^https://bugzilla\.redhat\.com/show_bug\.cgi\?id=1883609$@'))
       ->addGroup('rhbz'));
     $runner->arm(
       id(new DaGdHeaderRegexTest(
@@ -547,6 +551,10 @@ final class TestCLI extends DaGdCLIProgram {
     /************ /roll/ ************/
     $runner->arm(
       id(new DaGdResponseCodeTest('/roll/3d', 404))
+        ->addGroup('roll'));
+    $runner->arm(
+      id(new DaGdResponseCodeTest('/roll/3d2', 200))
+        ->setAccept('text/html')
         ->addGroup('roll'));
     $runner->arm(
       id(new DaGdRegexTest('/roll/d9', '@^[0-9]$@'))
