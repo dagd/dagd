@@ -60,7 +60,7 @@ final class DaGdTag {
         throw new Exception(
           'Tag is not renderable. Body must be: null, DaGdTag, something that '.
           'implements DaGdToTagInterface, a string, a number, or an array '.
-          'containing those things)');
+          '(containing those things)');
       }
     }
 
