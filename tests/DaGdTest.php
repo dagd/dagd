@@ -14,6 +14,7 @@ abstract class DaGdTest {
   private $groups = array('default');
   private $results_callback;
   private $request_headers = array('accept' => '*/*');
+  private $runner;
 
   abstract public function run();
 
