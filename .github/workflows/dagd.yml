@@ -23,19 +23,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Start docker-compose
+      - name: Start docker compose
         env:
           GOOGLE_INSIGHTS_API: ${{ secrets.GOOGLE_INSIGHTS_API }}
         run: |
           pushd container
           sed -i 's/build: ci-dockerfiles.*/build: ci-dockerfiles\/${{ matrix.dockerfile }}/' docker-compose.yaml
-          docker-compose up -d
+          docker compose up -d
           popd
 
       - name: Wait for database initialization
         run: |
           while [[ ! -f .ready-for-ci ]]; do
-            echo 'waiting for docker-compose to spin up'
+            echo 'waiting for docker compose to spin up'
             sleep 1
           done
 
