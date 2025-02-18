@@ -10,7 +10,18 @@ class Blacklist {
   protected $url;
   protected $blacklisted = false;
   protected $blacklist_source = '';
+  protected $blacklist_reason = '';
   protected $cache;
+
+  /**
+   * Is the query for a short URL that is being created?
+   *
+   * We use this because some services (cough, GSB) rate-limit us, but we can
+   * bypass the rate-limit (without violating any rules) by using a different
+   * project for a different purpose. So we use a different project for creating
+   * versus accessing short URLs.
+   */
+  protected $is_create = false;
 
   public function __construct($url) {
     $this->url = $url;
@@ -34,6 +45,15 @@ class Blacklist {
     return $this->blacklist_source;
   }
 
+  public function setBlacklistReason($blacklist_reason) {
+    $this->blacklist_reason = $blacklist_reason;
+    return $this;
+  }
+
+  public function getBlacklistReason() {
+    return $this->blacklist_reason;
+  }
+
   public function setCache($cache) {
     $this->cache = $cache;
     return $this;
@@ -41,6 +61,15 @@ class Blacklist {
 
   public function getCache() {
     return $this->cache;
+  }
+
+  public function setIsCreate($is_create) {
+    $this->is_create = $is_create;
+    return $this;
+  }
+
+  public function getIsCreate() {
+    return $this->is_create;
   }
 
   public function checkString() {
@@ -57,6 +86,7 @@ class Blacklist {
         statsd_bump('shorturl_blacklisted');
         $this->setBlacklisted(true);
         $this->setBlacklistSource('shorten.longurl_blacklist_strings');
+        $this->setBlacklistReason($string);
         return $this;
       }
     }
@@ -76,6 +106,7 @@ class Blacklist {
         statsd_bump('shorturl_blacklisted');
         $this->setBlacklisted(true);
         $this->setBlacklistSource('shorten.longurl_blacklist');
+        $this->setBlacklistReason('#'.$regex.'#i');
         return $this;
       }
     }
@@ -102,16 +133,17 @@ class Blacklist {
         if ($want_cache && $cache = $this->getCache()) {
           $key = 'dnsbl_'.hash('sha256', $this->url);
           $seconds = DaGdConfig::get('shorten.dnsbl_cache_expiry');
-          $safe_url = $cache->getOrStore($key, $dnsbl, 60 * $seconds);
+          $safe_url = $cache->getOrStore($key, $dnsbl, $seconds);
         } else {
           $safe_url = $dnsbl->run();
         }
 
-        if ($safe_url === false) {
+        if (idx($safe_url, 'safe') === false) {
           statsd_bump('shorturl_blacklisted_dnsbl');
           statsd_bump('shorturl_blacklisted');
           $this->setBlacklisted(true);
           $this->setBlacklistSource('shorten.dnsbl');
+          $this->setBlacklistReason(idx($safe_url, 'source'));
           return $this;
         }
       }
@@ -136,12 +168,12 @@ class Blacklist {
     $want_cache = DaGdConfig::get('shorten.safe_browsing_cache');
     // Allows this function to be used even if setCache() is never called.
     if ($this->getCache() && $want_cache) {
-      $gsb = new DaGdGoogleSafeBrowsing($this->url);
+      $gsb = new DaGdGoogleSafeBrowsing($this->url, $this->getIsCreate());
       $key = 'gsb_'.hash('sha256', $this->url);
       $seconds = DaGdConfig::get('shorten.safe_browsing_cache_expiry');
-      $safe_url = $this->getCache()->getOrStore($key, $gsb, 60 * $seconds);
+      $safe_url = $this->getCache()->getOrStore($key, $gsb, $seconds);
     } else {
-      $safe_url = query_safe_browsing($this->url);
+      $safe_url = query_safe_browsing($this->url, $this->getIsCreate());
     }
 
     if ($safe_url === false) {
@@ -149,6 +181,7 @@ class Blacklist {
       statsd_bump('shorturl_blacklisted');
       $this->setBlacklisted(true);
       $this->setBlacklistSource('shorten.safe_browsing');
+      $this->setBlacklistReason('Google Safe Browsing');
     }
 
     return $this;

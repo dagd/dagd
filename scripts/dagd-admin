@@ -119,11 +119,7 @@ final class DaGdAdminCLI extends DaGdCLIProgram {
   public function run() {
     parent::run();
 
-    $this->dbh = new mysqli(
-      DaGdConfig::get('mysql.host'),
-      DaGdConfig::get('mysql.user'),
-      DaGdConfig::get('mysql.password'),
-      DaGdConfig::get('mysql.database'));
+    $this->dbh = DaGdStartup::getWritableDbh();
 
     $help = $this->param('--help');
     $repoint = $this->param('--repoint');

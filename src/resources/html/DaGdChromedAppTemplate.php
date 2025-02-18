@@ -7,14 +7,14 @@ class DaGdChromedAppTemplate extends DaGdAppTemplate {
   padding: 15px 0;
   height: 65px;
   line-height: 65px;
-  border-bottom: 1px solid #eee;
   font-family: "Proxima Nova", overpass, Ubuntu, sans-serif !important;
   font-weight: 300;
   font-size: 1.7em;
   margin-bottom: 10px;
 }
 .constraint { width: 85%; margin: 0 auto; max-width: 1080px; }
-#bar a, #bar a:active, #bar a:visited { color: #ccc; }
+#bar a, #bar a:active, #bar a:visited { color: #3a9; text-decoration: none; }
+#bar a:hover { color: #9C89B8; }
 input[type=text] { border: 1px solid #ccc; }
 .sitename { color: #333; float: left; font-weight: 500; }
 .lightmode .sitename { color: #3a9; }

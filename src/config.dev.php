@@ -100,15 +100,6 @@ class DaGdConfig {
       '/break/?$' => array(
         'controller' => 'DaGdBreakController',
       ),
-      '/c/(store)/(.+?)/(.+?)/?$' => array(
-        'controller' => 'DaGdCommanderController',
-      ),
-      '/c/(.+?)(?:/| |%20)(.+?)/?$' => array(
-        'controller' => 'DaGdCommanderController',
-      ),
-      '/c/?(json|)?/?$' => array(
-        'controller' => 'DaGdCommanderController',
-      ),
       '/dns/(.+)/?$' => array(
         'controller' => 'DaGdDNSController',
       ),
@@ -335,8 +326,18 @@ class DaGdConfig {
       'ANY_PLATFORM',
     ),
 
-    // API key from Google Console.
-    'shorten.safe_browsing_api_key' => '',
+    // API key from Google Console (for short URL creations).
+    'shorten.safe_browsing_api_key_create' => '',
+
+    // API key from Google Console (for short URL access).
+    'shorten.safe_browsing_api_key_access' => '',
+
+    // Should we use the hosted API or a local instance of sbserver?
+    'shorten.safe_browsing_use_hosted_api' => true,
+
+    // If using a local instance of sbserver, what is the URL?
+    // (Don't include the endpoint, just the base URL and port.)
+    'shorten.safe_browsing_sbserver_url' => 'http://localhost:8081',
 
     // Should Safe Browsing requests be cached?
     'shorten.safe_browsing_cache' => true,
@@ -419,7 +420,7 @@ class DaGdConfig {
         // Same deal here: whois.nic.org times out. Fallback works, but let's
         // avoid needing it.
         'server' => 'org.whois-servers.net',
-        'query' => 'domain ',
+        'query' => '',
       ),
       'net' => array(
         // Yep.
@@ -513,7 +514,7 @@ class DaGdConfig {
 
     // The list of people to email on exceptions.
     'exceptions.mail_to' => array(
-      'ricky@elrod.me',
+      'you@example.com',
     ),
 
     // MySQL settings - these can be used for reads *and* writes, but if

@@ -37,28 +37,34 @@ done
 
 set -e
 
-echo 0 > sql/current_schema
-./scripts/sql -a .
-cp -v container/dagd-httpd.conf /etc/httpd/conf.d/
+if [[ "$1" == "worker" ]]; then
+  # Wait for migrations to create the task table...
+  sleep 2
+  ./scripts/dagd-worker -w
+else
+  echo 0 > sql/current_schema
+  ./scripts/sql -a .
+  cp -v container/dagd-httpd.conf /etc/httpd/conf.d/
 
-# On RHEL8, where we default to php-fpm, start it up.
-if [[ -f /usr/sbin/php-fpm ]]; then
-  if [[ ! -d /run/php-fpm ]]; then
-    mkdir /run/php-fpm/
+  # On RHEL8, where we default to php-fpm, start it up.
+  if [[ -f /usr/sbin/php-fpm ]]; then
+    if [[ ! -d /run/php-fpm ]]; then
+      mkdir /run/php-fpm/
+    fi
+    php-fpm
   fi
-  php-fpm
+
+  # docker-compose DNS breaks on ubi8 in the following case:
+  #   dns_get_record('google.com', DNS_ALL);
+  # so add a fallback. We still need it for db access though.
+  # The net result here is a slowdown on /dns/ endpoints, but at least tests
+  # will pass.
+  echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+  echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+
+  # Immediately before we start, touch a file to tell CI that we are
+  # ready to start working.
+  touch .ready-for-ci
+
+  httpd -D FOREGROUND
 fi
-
-# docker-compose DNS breaks on ubi8 in the following case:
-#   dns_get_record('google.com', DNS_ALL);
-# so add a fallback. We still need it for db access though.
-# The net result here is a slowdown on /dns/ endpoints, but at least tests
-# will pass.
-echo "nameserver 8.8.8.8" >> /etc/resolv.conf
-echo "nameserver 8.8.4.4" >> /etc/resolv.conf
-
-# Immediately before we start, touch a file to tell CI that we are
-# ready to start working.
-touch .ready-for-ci
-
-httpd -D FOREGROUND

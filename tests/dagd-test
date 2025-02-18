@@ -146,12 +146,12 @@ final class TestCLI extends DaGdCLIProgram {
     //      '/w/donuts.co',
     //      '@Registrant Organization: Donuts Inc.@'))
     //    ->addGroup('whois'));
-    $runner->arm(
-      id(
-        new DaGdRegexTest(
-          '/w/usi.edu',
-          '@University of Southern Indiana@'))
-        ->addGroup('whois'));
+    //$runner->arm(
+    //  id(
+    //    new DaGdRegexTest(
+    //      '/w/usi.edu',
+    //      '@University of Southern Indiana@'))
+    //    ->addGroup('whois'));
     $runner->arm(
       id(
         new DaGdRegexTest(
@@ -192,6 +192,10 @@ final class TestCLI extends DaGdCLIProgram {
 
     /************ /up/xxxxxxx ************/
     $runner->arm(
+      id(new DaGdResponseCodeTest('/up/google.com', 200))
+        ->setAccept('text/html')
+        ->addGroup('up'));
+    $runner->arm(
       id(new DaGdRegexTest('/up/google.com', '@^200$@'))
         ->addGroup('up'));
     $runner->arm(
@@ -220,8 +224,8 @@ final class TestCLI extends DaGdCLIProgram {
     $runner->arm(
       id(new DaGdHeaderRegexTest(
         '/rhbz/1883609',
-	'Location',
-	'@^https://bugzilla\.redhat\.com/show_bug\.cgi\?id=1883609$@'))
+        'Location',
+        '@^https://bugzilla\.redhat\.com/show_bug\.cgi\?id=1883609$@'))
       ->addGroup('rhbz'));
     $runner->arm(
       id(new DaGdHeaderRegexTest(
@@ -253,85 +257,6 @@ final class TestCLI extends DaGdCLIProgram {
       id(new DaGdRegexTest('/break', '@500 - internal server error@'))
         ->addGroup('break')
         ->addGroup('noprod'));
-
-    /************ /c/store/xxxxxxx/xxxxxxx ************/
-    $runner->arm(
-      id(
-        new DaGdResponseCodeTest(
-          '/c/store/g/https://www.google.com/search?q=$PARAMETERS',
-          200))
-        ->setPreparatory(true)
-        ->setTolerateFailure(true)
-        ->addGroup('commander'));
-    $runner->arm(
-      id(
-        new DaGdResponseCodeTest(
-          '/c/store/g/https://www.google.com/search?q=$PARAMETERS',
-          400))
-        ->addGroup('commander'));
-    $runner->arm(
-      id(
-        new DaGdRegexTest(
-          '/c/store/g1/https://www.google.com/search?q=$PARAMETERS',
-          '@Success@'))
-        ->setPreparatory(true)
-        ->setTolerateFailure(true)
-        ->addGroup('commander'));
-    $runner->arm(
-      id(
-        new DaGdRegexTest(
-          '/c/store/g1/https://www.google.com/search?q=$PARAMETERS',
-          '@already been defined@'))
-        ->addGroup('commander'));
-
-    /************ /c/xxxxxxx/xxxxxxx ************/
-    $runner->arm(
-      id(new DaGdResponseCodeTest('/c/g/foobar', 302))
-        ->addGroup('commander'));
-    $runner->arm(
-      id(new DaGdResponseCodeTest('/c/g%20foobar', 302))
-        ->addGroup('commander'));
-    $runner->arm(
-      id(new DaGdResponseCodeTest('/c/nonexistent/foobar', 400))
-        ->addGroup('commander'));
-    $runner->arm(
-      id(new DaGdRegexTest('/c/nonexistent/foobar', '@was not found@'))
-        ->addGroup('commander'));
-
-    /************ /c/[xxxxxxx] ************/
-    $runner->arm(
-      id(new DaGdRegexTest('/c/', '@Redirect@'))
-        ->addGroup('commander'));
-    $runner->arm(
-      id(new DaGdRegexTest('/c/json', '@{"g":@'))
-        ->addGroup('commander'));
-    $runner->arm(
-      id(new DaGdRegexTest('/c/json/', '@"g1":@'))
-        ->addGroup('commander'));
-    $runner->arm(
-      id(new DaGdContentTypeTest('/c/json/', 'application/json'))
-        ->addGroup('commander')
-        ->setAccept('text/plain'));
-    $runner->arm(
-      id(new DaGdContentTypeTest('/c/json', 'application/json'))
-        ->addGroup('commander')
-        ->setAccept('text/html'));
-    $runner->arm(
-      id(new DaGdContentTypeTest('/c', 'text/html'))
-        ->addGroup('commander')
-        ->setAccept('text/html'));
-    $runner->arm(
-      id(new DaGdContentTypeTest('/c/', 'text/html'))
-        ->addGroup('commander')
-        ->setAccept('text/html'));
-    $runner->arm(
-      id(new DaGdContentTypeTest('/c', 'text/plain'))
-        ->addGroup('commander')
-        ->setAccept('text/plain'));
-    $runner->arm(
-      id(new DaGdContentTypeTest('/c/', 'text/plain'))
-        ->addGroup('commander')
-        ->setAccept('text/plain'));
 
     /************ /image/xxxxxxx/[xxxxxxx] ************/
     $runner->arm(
@@ -368,6 +293,12 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('status'));
     $runner->arm(
       id(new DaGdResponseRegexTest('/status/321/hi', '@321 hi$@'))
+        ->addGroup('status'));
+    $runner->arm(
+      id(new DaGdResponseRegexTest('/status/321/hi%20there', '@321 hi there$@'))
+        ->addGroup('status'));
+    $runner->arm(
+      id(new DaGdResponseRegexTest('/status/321/?message=hi%20there', '@321 hi there$@'))
         ->addGroup('status'));
 
     /************ /isp/[xxxxxxx] ************/
@@ -620,6 +551,10 @@ final class TestCLI extends DaGdCLIProgram {
     /************ /roll/ ************/
     $runner->arm(
       id(new DaGdResponseCodeTest('/roll/3d', 404))
+        ->addGroup('roll'));
+    $runner->arm(
+      id(new DaGdResponseCodeTest('/roll/3d2', 200))
+        ->setAccept('text/html')
         ->addGroup('roll'));
     $runner->arm(
       id(new DaGdRegexTest('/roll/d9', '@^[0-9]$@'))

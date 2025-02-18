@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    build: ci-dockerfiles/centos7
+    build: ci-dockerfiles/stream9
     ports:
       - "8080:80"
     depends_on:
@@ -14,6 +14,16 @@ services:
     #  - 8.8.4.4
     environment:
       - GOOGLE_INSIGHTS_API
+  worker:
+    build: ci-dockerfiles/stream9
+    entrypoint:
+      - bash
+      - ./container/entrypoint.sh
+      - worker
+    depends_on:
+      - db
+    volumes:
+      - ..:/srv/dagd:Z
   db:
     image: mariadb:latest
     restart: always

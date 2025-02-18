@@ -54,8 +54,22 @@ class DaGdRequest {
     return $this->route_matches;
   }
 
-  public function getRouteComponent($idx, $default = null) {
-    return idx($this->route_matches, $idx, $default);
+  public function getRouteComponent($idx, $default = null, $urldecode = false) {
+    $val = idx($this->route_matches, $idx, $default);
+    if ($val === null) {
+      // It's reasonable that we might get null here, possibly as a default.
+      // We special case it. But if we get something "fancier" back (that isn't
+      // a string) we'll throw below, because it's probably a bug.
+      return $val;
+    }
+    if ($urldecode) {
+      if (is_string($val)) {
+        return urldecode($val);
+      } else {
+        throw new Exception('Cannot urldecode non-string route component.');
+      }
+    }
+    return $val;
   }
 
   public function getSession() {

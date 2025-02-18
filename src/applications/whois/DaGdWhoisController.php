@@ -28,6 +28,9 @@ final class DaGdWhoisController extends DaGdController {
       id(new DaGdCard())
         ->setTitle('whois referral trace')
         ->setBody(tag('pre', $result['trace'])));
+    if ($result['data'] === false) {
+      return 'Did not get a successful result from the whois server.';
+    }
     return $result['data'];
   }
 }

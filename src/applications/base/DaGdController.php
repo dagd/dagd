@@ -27,6 +27,18 @@ abstract class DaGdController {
   }
 
   public function getReadDB() {
+    if ($this->read_db) {
+      return $this->read_db;
+    }
+
+    $readonly_host = DaGdConfig::get('readonly_mysql.host');
+
+    if (empty($readonly_host)) {
+      return $this->getWriteDB();
+    }
+
+    $debug = DaGdConfig::get('general.debug');
+    $this->read_db = DaGdStartup::getReadableDbh($debug);
     return $this->read_db;
   }
 
@@ -36,6 +48,12 @@ abstract class DaGdController {
   }
 
   public function getWriteDB() {
+    if ($this->write_db) {
+      return $this->write_db;
+    }
+
+    $debug = DaGdConfig::get('general.debug');
+    $this->write_db = DaGdStartup::getWritableDbh($debug);
     return $this->write_db;
   }
 

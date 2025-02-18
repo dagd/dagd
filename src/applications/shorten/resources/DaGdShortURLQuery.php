@@ -16,28 +16,33 @@ final class DaGdShortURLQuery {
   /**
    * @return DaGdShortURL or null
    */
-  public function fromShort($short_url) {
+  public function fromShort($short_url, $include_disabled = false) {
     $id = null;
     $long_url = null;
     $owner_ip = null;
+    $enabled = null;
+    $query_str = 'SELECT id, longurl, owner_ip, enabled FROM shorturls WHERE ';
+    $query_str .= 'shorturl=?';
+
+    if (!$include_disabled) {
+      $query_str .= ' AND enabled=1';
+    }
 
     $query = $this
       ->controller
       ->getReadDB()
-      ->prepare(
-        'SELECT id, longurl, owner_ip FROM shorturls '.
-        'WHERE shorturl=? AND enabled=1');
+      ->prepare($query_str);
     $query->bind_param('s', $short_url);
     $start = microtime(true);
     $query->execute();
     $end = microtime(true);
     statsd_time('query_time_getLongURL', ($end - $start) * 1000);
-    $query->bind_result($id, $long_url, $owner_ip);
+    $query->bind_result($id, $long_url, $owner_ip, $enabled);
     $query->fetch();
     $query->close();
 
     if (!empty($id) && !empty($long_url) && !empty($owner_ip)) {
-      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip);
+      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip, $enabled);
     }
 
     return null;
@@ -71,7 +76,7 @@ final class DaGdShortURLQuery {
     $query->close();
 
     if (!empty($id) && !empty($short_url) && !empty($owner_ip)) {
-      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip);
+      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip, true);
     }
 
     return null;
@@ -150,8 +155,9 @@ final class DaGdShortURLQuery {
   /**
    * @return boolean
    */
-  public function isBlacklisted($long_url) {
+  public function isBlacklisted($long_url, $is_create = false) {
     return id(new Blacklist($long_url))
+      ->setIsCreate($is_create)
       ->setCache($this->controller->cache())
       ->check();
   }
@@ -210,7 +216,7 @@ final class DaGdShortURLQuery {
 
     if ($res) {
       statsd_bump('shorturl_store');
-      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip);
+      return new DaGdShortURL($id, $short_url, $long_url, $owner_ip, true);
     } else {
       statsd_bump('shorturl_store_fail');
       throw new DaGdShortenStoreException();
@@ -257,11 +263,14 @@ final class DaGdShortURLQuery {
    * @return The number of affected rows.
    */
   public function disableIp($shorturl) {
+    $surl = $this->fromShort($shorturl, true);
+    if (!$surl) {
+      return null;
+    }
+    $owner_ip = $surl->getOwnerIp();
     $query = $this->controller->getWriteDB()->prepare(
-      'update shorturls set enabled=0 where enabled=1 and owner_ip=('.
-      '  select B.owner_ip from ('.
-      '    select shorturl, owner_ip from shorturls) as B where B.shorturl=?)');
-    $query->bind_param('s', $shorturl);
+      'update shorturls set enabled=0 where owner_ip=? and enabled=1');
+    $query->bind_param('s', $owner_ip);
     $query->execute();
     $affected = $this->controller->getWriteDB()->affected_rows;
     return $affected;
@@ -275,7 +284,7 @@ final class DaGdShortURLQuery {
    * @return true if the insert was successful, false if not.
    */
   public function banIp($shorturl) {
-    $surl = $this->fromShort($shorturl);
+    $surl = $this->fromShort($shorturl, true);
     if (!$surl) {
       return null;
     }
@@ -295,7 +304,7 @@ final class DaGdShortURLQuery {
    * @return true if the deletion was successful, false if not.
    */
   public function unbanIp($shorturl) {
-    $surl = $this->fromShort($shorturl);
+    $surl = $this->fromShort($shorturl, true);
     if (!$surl) {
       return null;
     }

@@ -98,7 +98,7 @@ EOD;
     // working even if they don't host-parse.
     // If it's whitelisted, don't even bother checking dnsbl
     if (!$query->isWhitelisted($surl->getLongUrl()) &&
-        $query->isBlacklisted($surl->getLongUrl())) {
+        $query->isBlacklisted($surl->getLongUrl(), false)) {
       return null;
     }
 
@@ -161,7 +161,12 @@ EOD;
     $url = $this->getRequest()->param('url', '');
 
     // Allow /s?url=... to work, but all other /<foo>?url= should ignore url.
-    if (strlen($url) > 0 && ($shorturl == 's' || !$shorturl)) {
+    if ($shorturl == 's' || !$shorturl) {
+      if (strlen($url) == 0) {
+        return $this
+          ->error(400, 'Long URL cannot be empty')
+          ->finalize();
+      }
       return $this->storeShortUrl($response);
     }
 
@@ -315,7 +320,6 @@ EOD;
         $max = DaGdConfig::get('shorten.random_max_length');
         $given_shorturl = randstr(rand($min, $max));
         while (!$query->isFreeShortURL($given_shorturl)) {
-          debug('Hash collision', 'Calling randstr again');
           statsd_bump('shorturl_random_hash_collision');
           $given_shorturl = randstr(rand($min, $max));
         }
@@ -326,7 +330,7 @@ EOD;
     // Is the long URL whitelisted or blacklisted?
     if (!$query->isWhitelisted($given_longurl)) {
       // It's not whitelisted...
-      if ($query->isBlacklisted($given_longurl)) {
+      if ($query->isBlacklisted($given_longurl, true)) {
         // ...but it *is* blacklisted.
         return $this
           ->error(400, 'Blacklisted long URL.')

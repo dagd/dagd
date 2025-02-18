@@ -36,6 +36,12 @@ abstract class DaGdResponse {
     return $this;
   }
 
+  public function setContentType($mimetype) {
+    $this->addHeader('Content-type', $mimetype);
+    $this->addHeader('X-Content-Type-Options', 'nosniff');
+    return $this;
+  }
+
   public function removeHeader($key) {
     // If we set the header to null, getHeaders() will remove it before
     // returning headers, even if it was defined earlier in the hierarchy (e.g.
@@ -220,7 +226,8 @@ abstract class DaGdResponse {
     // session cookie keys.
     foreach ($this->getRequest()->getCookies() as $rk => $rv) {
       if (strpos($rk, 'DaGdSession_') === 0) {
-        setcookie($rk, null, 86401, '/', '', false, true);
+        setcookie($rk, '', 1, '/', '', false, true);
+        unset($_COOKIE[$rk]);
       }
     }
 

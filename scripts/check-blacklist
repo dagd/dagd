@@ -16,7 +16,8 @@ final class BlacklistCLI extends DaGdCLIProgram {
     }
 
     echo $this->error('The URL is blacklisted');
-    echo 'Blacklist source: '.$bl->getBlacklistSource()."\n";
+    echo 'Blacklist source: '.$bl->getBlacklistSource().' ';
+    echo '['.$this->bold($bl->getBlacklistReason()).']'.PHP_EOL;
     exit(0);
   }
 }

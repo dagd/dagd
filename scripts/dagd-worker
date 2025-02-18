@@ -1,0 +1,126 @@
+#!/usr/bin/env php
+<?php
+
+// Activate the autoloader
+require_once dirname(dirname(__FILE__)).'/src/resources/global_resources.php';
+
+final class DaGdTestTask extends DaGdTask {
+  public function shouldStoreResult() {
+    return true;
+  }
+
+  public function run($input) {
+    sleep(rand(1, 15));
+    return 'Hello, world! I slept for 5 seconds.';
+  }
+}
+
+final class DaGdTestTimeoutTask extends DaGdTask {
+  public function shouldStoreResult() {
+    return true;
+  }
+
+  public function getTimeout() {
+    return 3;
+  }
+
+  public function run($input) {
+    sleep(5);
+    return 'never reached';
+  }
+}
+
+final class DaGdTestFailTask extends DaGdTask {
+  public function shouldStoreResult() {
+    return true;
+  }
+
+  public function run($input) {
+    sleep(rand(1, 30));
+    throw new Exception('I failed!');
+  }
+}
+
+final class DaGdWorkerCLI extends DaGdCLIProgram {
+  private $dbh;
+
+  private function spawnWorker() {
+    $worker = new DaGdWorker();
+    echo "Worker is armed, waiting for work...\n";
+    $worker->loop();
+  }
+
+  private function test($priority = 50, $fail = false) {
+    $task = null;
+    if ($fail) {
+      $task = new DaGdTestFailTask($this->dbh);
+    } else {
+      $task = new DaGdTestTask($this->dbh);
+    }
+    $task->setPriority($priority);
+    $task->queue();
+  }
+
+  public function run() {
+    parent::run();
+
+    $this->dbh = DaGdStartup::getWritableDbh();
+
+    $help = $this->param('--help');
+    $work = $this->param('--work');
+    $test = $this->param('--test');
+    $test_hp = $this->param('--test-high-priority');
+    $test_failed = $this->param('--test-failed');
+    $test_timeout = $this->param('--test-timeout');
+
+    if ($work->getGiven()) {
+      $this->spawnWorker();
+    } else if ($test->getGiven()) {
+      $this->test();
+    } else if ($test_hp->getGiven()) {
+      $this->test(1);
+    } else if ($test_failed->getGiven()) {
+      $this->test(1, true);
+    } else if ($test_timeout->getGiven()) {
+      $task = new DaGdTestTimeoutTask($this->dbh);
+      $task->queue();
+    } else {
+      $this->showUsage();
+    }
+  }
+}
+
+$cli = new DaGdWorkerCLI();
+$cli->setName('dagd-worker');
+$cli->setDescription('Spawn a worker that eats tasks');
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--work')
+    ->setShortname('-w')
+    ->setDescription('Do work'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--test')
+    ->setShortname('-t')
+    ->setDescription('Add a test task to the queue'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--test-high-priority')
+    ->setShortname('-T')
+    ->setDescription('Add a high-priority test task to the queue'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--test-failed')
+    ->setShortname('-F')
+    ->setDescription('Add a failed test task to the queue'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--test-timeout')
+    ->setShortname('-O')
+    ->setDescription('Add a test task that times out to the queue'));
+$cli->addParameter(
+  id(new DaGdCLIFlag)
+    ->setName('--help')
+    ->setShortname('-h')
+    ->setDescription('Show program help'));
+$cli->execute($argv);
