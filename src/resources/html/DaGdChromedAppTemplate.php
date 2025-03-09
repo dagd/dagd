@@ -72,7 +72,7 @@ EOD;
         array('href' => 'https://github.com/dagd/dagd')
       ),
       $darkmode_link,
-      tag('a', 'donate', array('href' => 'https://www.patreon.com/relrod')),
+      tag('a', 'donate', array('href' => 'https://buymeacoffee.com/relrod')),
     );
 
     return $links;
