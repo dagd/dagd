@@ -1,6 +1,7 @@
 <?php
 
 final class DaGdSessionRegexTest extends DaGdTest {
+  private $key;
   private $regex;
   private $invert;
 

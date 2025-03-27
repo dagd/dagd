@@ -1,6 +1,7 @@
 <?php
 
 final class DaGdHeaderRegexTest extends DaGdTest {
+  private $header_key;
   private $regex;
   private $invert;
 
