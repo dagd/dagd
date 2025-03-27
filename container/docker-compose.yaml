@@ -1,6 +1,7 @@
 version: '3'
 services:
   app:
+    container_name: dagd-app
     build: ci-dockerfiles/stream9
     ports:
       - "8080:80"
