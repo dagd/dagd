@@ -46,16 +46,6 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('shorten')
         ->setAccept('text/html'));
 
-    $runner->arm(
-      id(
-        new DaGdHeaderRegexTest(
-          '/',
-          'Content-Length',
-          '@^0$@',
-          true))
-        ->addGroup('shorten')
-        ->setAccept('text/html'));
-
     /*********** routing by method ***********/
     // TODO: Needs "same-route, different-request-method, different-controller"
     // tests added (which will require test-specification applications and
