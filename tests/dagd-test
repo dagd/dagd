@@ -650,12 +650,12 @@ EOD;
         ->setAccept('text/html'));
 
     $runner->arm(
-      id(new DaGdRegexTest('/break?cow=foo@', '@500\.@'))
+      id(new DaGdRegexTest('/break?cow=foo@', '@Could not set cow@'))
         ->addGroup('cow')
         ->setAccept('text/html'));
 
     $runner->arm(
-      id(new DaGdRegexTest('/break?cow=foo@', '@500 - internal server error@'))
+      id(new DaGdRegexTest('/break?cow=foo@', '@Could not set cow@'))
         ->addGroup('cow')
         ->setAccept('text/plain'));
 

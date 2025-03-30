@@ -193,7 +193,13 @@ abstract class DaGdController {
   public function renderCow($response) {
     $cs = new DaGdCowsay();
     if ($cow = $this->getRequest()->getParamOrDefault('cow')) {
-      $cs->setCow($cow);
+      try {
+        $cs->setCow($cow);
+      } catch (Exception $ex) {
+        return $this
+          ->error(400, 'Could not set cow to the specified value.')
+          ->finalize();
+      }
     }
     $cs->setMessage($this->execute($response));
     return $response

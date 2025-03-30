@@ -32,4 +32,12 @@ abstract class DaGdErrorController extends DaGdController {
   public function getHtmlMessage($default = null) {
     return $this->html_message ? $this->html_message : $default;
   }
+
+  /**
+   * Disallow cows because errors raised in the cow logic (when being used)
+   * would cause us to not be able to render anything at all.
+   */
+  public function allowCow() {
+    return false;
+  }
 }

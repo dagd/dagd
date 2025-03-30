@@ -16,24 +16,29 @@ class DaGdCowsay {
     $this->setCow('default');
   }
 
-  public function setCow($cow) {
-    $cow = str_replace('.cow', '', $cow);
+  public function setCow($cow_name) {
+    $cow_name = str_replace('.cow', '', $cow_name);
     // This logic looks weird, but it's safer to hardcode this than to risk
     // getting the regex wrong (now or later) and end up open to directory
     // traversal attacks.
     $custom_cow = false;
-    if (strpos($cow, 'dagd/') === 0) {
+    if (strpos($cow_name, 'dagd/') === 0) {
       $custom_cow = true;
-      $cow = str_replace('dagd/', '', $cow);
+      $cow_name = str_replace('dagd/', '', $cow_name);
     }
-    if (!preg_match('/^[0-9a-z\-]+$/i', $cow)) {
+    if (!preg_match('/^[0-9a-z\-]+$/i', $cow_name)) {
       throw new Exception('Cow name must only include 0-9, a-z, A-Z, -');
     }
+    $cow_path = '';
     if ($custom_cow) {
-      $cow = file_get_contents(dirname(__FILE__).'/dagd/'.$cow.'.cow');
+      $cow_path = dirname(__FILE__).'/dagd/'.$cow_name.'.cow';
     } else {
-      $cow = file_get_contents(dirname(__FILE__).'/'.$cow.'.cow');
+      $cow_path = dirname(__FILE__).'/'.$cow_name.'.cow';
     }
+    if (!file_exists($cow_path)) {
+      throw new Exception('Specified cow does not exist.');
+    }
+    $cow = file_get_contents($cow_path);
     $this->cow = $cow;
     return $this;
   }
