@@ -52,6 +52,8 @@ else
       mkdir /run/php-fpm/
     fi
     php-fpm
+    touch /var/log/php-fpm/www-error.log
+    tail -f -n 100 /var/log/php-fpm/www-error.log &
   fi
 
   # docker-compose DNS breaks on ubi8 in the following case:
