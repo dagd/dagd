@@ -429,6 +429,24 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('coshorten'));
 
     $runner->arm(
+      id(
+        new DaGdRegexTest(
+          '/coshorten/doesNotExistHtml',
+          '@<h3>Page not found.@'))
+        ->setAccept('text/html')
+        ->addGroup('shorten')
+        ->addGroup('coshorten'));
+
+    $runner->arm(
+      id(
+        new DaGdRegexTest(
+          '/coshorten/doesNotExistPlain',
+          '@route not found@'))
+        ->setAccept('text/plain')
+        ->addGroup('shorten')
+        ->addGroup('coshorten'));
+
+    $runner->arm(
       id(new DaGdResponseCodeTest('/g', 302))
         ->addGroup('shorten'));
     $runner->arm(
@@ -650,12 +668,12 @@ EOD;
         ->setAccept('text/html'));
 
     $runner->arm(
-      id(new DaGdRegexTest('/break?cow=foo@', '@Could not set cow@'))
+      id(new DaGdRegexTest('/ua?cow=foo@', '@Could not set cow@'))
         ->addGroup('cow')
         ->setAccept('text/html'));
 
     $runner->arm(
-      id(new DaGdRegexTest('/break?cow=foo@', '@Could not set cow@'))
+      id(new DaGdRegexTest('/ua?cow=foo@', '@Could not set cow@'))
         ->addGroup('cow')
         ->setAccept('text/plain'));
 

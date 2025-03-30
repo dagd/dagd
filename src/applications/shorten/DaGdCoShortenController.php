@@ -21,13 +21,13 @@ class DaGdCoShortenController extends DaGdController {
     if ($query->isRouteMapConflict($shorturl)) {
       // If a routemap change trumped an existing shorturl, don't allow the old
       // shorturl to be coshortened. Do this before we hit the db.
-      return $this->error(404)->execute($response);
+      return $this->error(404)->finalize();
     }
 
     $surl = $query->fromShort($shorturl);
 
     if ($surl === null) {
-      return $this->error(404)->execute($response);
+      return $this->error(404)->finalize();
     }
 
     $text = $surl->getLongUrl();

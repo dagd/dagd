@@ -175,7 +175,8 @@ abstract class DaGdController {
   }
 
   /**
-   * A string version of the response.
+   * A string version of the response. If a DaGdResponse is returned
+   * instead, it is expected that that response rules.
    *
    * This is used for simple controllers where the main difference between
    * response types is just the boilerplate around their bodies.
@@ -191,6 +192,10 @@ abstract class DaGdController {
   }
 
   public function renderCow($response) {
+    $executed = $this->execute($response);
+    if ($executed instanceof DaGdResponse) {
+      return $executed;
+    }
     $cs = new DaGdCowsay();
     if ($cow = $this->getRequest()->getParamOrDefault('cow')) {
       try {
@@ -201,20 +206,27 @@ abstract class DaGdController {
           ->finalize();
       }
     }
-    $cs->setMessage($this->execute($response));
+    $cs->setMessage($executed);
     return $response
       ->setBody($cs->render())
       ->setTrailingNewline(true);
   }
 
   public function renderText(DaGdTextResponse $response) {
-    $body = $this->execute($response);
-    return $response->setBody($body);
+    $executed = $this->execute($response);
+    if ($executed instanceof DaGdResponse) {
+      return $executed;
+    }
+    return $response->setBody($executed);
   }
 
   public function render(DaGdHTMLResponse $response) {
+    $executed = $this->execute($response);
+    if ($executed instanceof DaGdResponse) {
+      return $executed;
+    }
     // By default we wrap things in <pre> tags and wrap a template around it.
-    $body = tag('pre', $this->execute($response));
+    $body = tag('pre', $executed);
     $template = $this->getBaseTemplate()->setBody($body)->getHtmlTag();
     return $response->setBody($template);
   }
@@ -295,7 +307,6 @@ abstract class DaGdController {
       ->setAlerts($this->getAlerts(true));
   }
 
-  // TODO: Probably add some instanceof checks here
   protected function chooseRenderer() {
     $request = $this->getRequest();
 
