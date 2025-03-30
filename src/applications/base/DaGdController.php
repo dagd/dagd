@@ -85,6 +85,10 @@ abstract class DaGdController {
     return $this->debug_cards;
   }
 
+  public function allowCow() {
+    return true;
+  }
+
   public function setAlerts($alerts) {
     $session = $this->getRequest()->getSession();
     $session->set('dagd-alerts', $alerts);
@@ -289,7 +293,7 @@ abstract class DaGdController {
   protected function chooseRenderer() {
     $request = $this->getRequest();
 
-    if ($request->wantsCow()) {
+    if ($request->wantsCow() && $this->allowCow()) {
       return $this->renderCow(new DaGdTextResponse());
     }
 

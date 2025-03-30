@@ -12,6 +12,10 @@ final class DaGd500Controller extends DaGdErrorController {
     $this->exception = $ex;
   }
 
+  public function allowCow() {
+    return false;
+  }
+
   public function render(DaGdHTMLResponse $response) {
     $this->setup($response);
 

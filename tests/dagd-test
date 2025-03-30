@@ -649,6 +649,16 @@ EOD;
         ->addGroup('cow')
         ->setAccept('text/html'));
 
+    $runner->arm(
+      id(new DaGdRegexTest('/break?cow=foo@', '@500\.@'))
+        ->addGroup('cow')
+        ->setAccept('text/html'));
+
+    $runner->arm(
+      id(new DaGdRegexTest('/break?cow=foo@', '@500 - internal server error@'))
+        ->addGroup('cow')
+        ->setAccept('text/plain'));
+
     /************ Tag unit tests ************/
     $runner->arm(
       id(
