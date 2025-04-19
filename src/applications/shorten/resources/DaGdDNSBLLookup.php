@@ -11,7 +11,11 @@ final class DaGdDNSBLLookup implements DaGdCacheMissCallback {
 
   public function run($key = null) {
     statsd_bump('shorturl_blacklist_query_dnsbl');
-    return $this->query($this->domain);
+    $start = microtime(true);
+    $result = $this->query($this->domain);
+    $end = microtime(true);
+    statsd_time('blacklist_dnsbl_cumulative_query_time', ($end - $start) * 1000);
+    return $result;
   }
 
   // Queries all dnsbl servers in the config. Returns true if the domain is
