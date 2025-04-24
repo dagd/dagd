@@ -2,6 +2,7 @@
 
 final class DaGd401Controller extends DaGdErrorController {
   private function setup($response) {
+    statsd_bump('status,code=401');
     $response->setCode(401);
   }
 
