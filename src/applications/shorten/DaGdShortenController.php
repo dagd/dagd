@@ -318,11 +318,14 @@ EOD;
         // random string to use.
         $min = DaGdConfig::get('shorten.random_min_length');
         $max = DaGdConfig::get('shorten.random_max_length');
+        $start = microtime(true);
         $given_shorturl = randstr(rand($min, $max));
         while (!$query->isFreeShortURL($given_shorturl)) {
           statsd_bump('shorturl_random_hash_collision');
           $given_shorturl = randstr(rand($min, $max));
         }
+        $end = microtime(true);
+        statsd_time('shorturl_duration_to_find_random', ($end - $start) * 1000);
       }
       statsd_bump('shorturl_new_random');
     }
