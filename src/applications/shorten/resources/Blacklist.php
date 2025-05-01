@@ -8,6 +8,7 @@ require_once dirname(__FILE__).'/safe_browsing.php';
 // Blacklist->check() will run all checks in default order.
 class Blacklist {
   protected $url;
+  protected $referral;
   protected $blacklisted = false;
   protected $blacklist_source = '';
   protected $blacklist_reason = '';
@@ -25,6 +26,15 @@ class Blacklist {
 
   public function __construct($url) {
     $this->url = $url;
+  }
+
+  public function setReferral($referral) {
+    $this->referral = $referral;
+    return $this;
+  }
+
+  public function getReferral() {
+    return $this->referral;
   }
 
   private function setBlacklisted($blacklisted) {
@@ -87,7 +97,7 @@ class Blacklist {
         $this->setBlacklisted(true);
         $this->setBlacklistSource('shorten.longurl_blacklist_strings');
         $this->setBlacklistReason($string);
-        return $this;
+        break;
       }
     }
 
@@ -107,7 +117,7 @@ class Blacklist {
         $this->setBlacklisted(true);
         $this->setBlacklistSource('shorten.longurl_blacklist');
         $this->setBlacklistReason('#'.$regex.'#i');
-        return $this;
+        break;
       }
     }
 
@@ -187,12 +197,38 @@ class Blacklist {
     return $this;
   }
 
+  public function checkReferral() {
+    // Skip this test if:
+    //
+    // 1. If we're already blacklisted
+    // 2. We didn't get the referral header for some reason
+    // 3. We're creating a URL (not accessing it)
+    if ($this->getBlacklisted() || !$this->getReferral() || $this->getIsCreate()) {
+      return $this;
+    }
+
+    $blacklisted_refs = DaGdConfig::get('shorten.referral_blacklist_strings');
+    foreach ($blacklist_refs as $string) {
+      if (strpos($this->referral, $string) !== false) {
+        statsd_bump('shorturl_blacklisted_referral_string');
+        statsd_bump('shorturl_blacklisted');
+        $this->setBlacklisted(true);
+        $this->setBlacklistSource('shorten.referral_blacklist_strings');
+        $this->setBlacklistReason($string);
+        break;
+      }
+    }
+
+    return $this;
+  }
+
   /**
    * Run all checks and return $this.
    */
   public function checkAll() {
     return $this
       ->checkString()
+      ->checkReferral()
       ->checkRegex()
       ->checkDNSBL()
       ->checkSafeBrowsing();

@@ -493,6 +493,12 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('noprod'));
 
     $runner->arm(
+      id(new DaGdResponseCodeTest('/g', 404))
+        ->setRequestHeader('Referer', 'https://example.tld/hey')
+        ->addGroup('shorten')
+        ->addGroup('noprod'));
+
+    $runner->arm(
       id(new DaGdResponseCodeTest('/s?url=https://some.spam.url', 400))
         ->addGroup('shorten')
         ->addGroup('noprod'));
