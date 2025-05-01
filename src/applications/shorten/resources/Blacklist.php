@@ -208,7 +208,7 @@ class Blacklist {
     }
 
     $blacklisted_refs = DaGdConfig::get('shorten.referral_blacklist_strings');
-    foreach ($blacklist_refs as $string) {
+    foreach ($blacklisted_refs as $string) {
       if (strpos($this->referral, $string) !== false) {
         statsd_bump('shorturl_blacklisted_referral_string');
         statsd_bump('shorturl_blacklisted');
