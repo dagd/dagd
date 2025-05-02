@@ -57,11 +57,6 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('routing'));
 
     $runner->arm(
-      id(new DaGdResponseCodeTest('/ec/Test', 405))
-        ->setMethod('PUT')
-        ->addGroup('routing'));
-
-    $runner->arm(
       id(new DaGdResponseCodeTest('/ua', 200))
         ->setMethod('HEAD')
         ->addGroup('routing'));
@@ -88,18 +83,6 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('ua')
         ->setUserAgent('monkey')
         ->setAccept('text/html'));
-
-    /*********** /ec/CodeBlock ***********/
-
-    $runner->arm(
-      id(new DaGdRegexTest('/ec/CodeBlock', '@^[0-9]+$@'))
-        ->addGroup('ec'));
-    $runner->arm(
-      id(new DaGdRegexTest('/ec/CodeBlock?lang=en', '@^[0-9]+$@'))
-        ->addGroup('ec'));
-    $runner->arm(
-      id(new DaGdRegexTest('/ec/CodeBlock?lang=fr', '@^[0-9]+$@'))
-        ->addGroup('ec'));
 
     /************ /w/xxxxxxx ************/
 
