@@ -85,9 +85,6 @@ class DaGdConfig {
       '/w(?:/?$|/(?P<query>.+))' => array(
         'controller' => 'DaGdWhoisController',
       ),
-      '/ec/(?P<username>.+)/?$' => array(
-        'controller' => 'DaGdEditCountController',
-      ),
       '/up(?:/?$|/(.+)/?$)' => array(
         'controller' => 'DaGdIsItUpController',
       ),
