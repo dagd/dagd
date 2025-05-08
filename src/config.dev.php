@@ -259,6 +259,15 @@ class DaGdConfig {
       'some.spam.url',
     ),
 
+    // We prevent redirects from other URL shorteners based on referral.
+    // This is the list of substrings we block on. Currently we only support
+    // substrings here because the primary usecase is to block other known URL
+    // shorteners.
+    'shorten.referral_blacklist_strings' => array(
+      // A non-existent default, mainly for integration tests
+      '/example.tld/',
+    ),
+
     // Regexes we whitelist on to avoid checking dnsbl.
     'shorten.longurl_whitelist' => array(),
 

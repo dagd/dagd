@@ -156,8 +156,12 @@ final class DaGdShortURLQuery {
    * @return boolean
    */
   public function isBlacklisted($long_url, $is_create = false) {
+    $request = $this->controller->getRequest();
+    $referral = $request->getHeader('referer');
+
     return id(new Blacklist($long_url))
       ->setIsCreate($is_create)
+      ->setReferral($referral)
       ->setCache($this->controller->cache())
       ->check();
   }
