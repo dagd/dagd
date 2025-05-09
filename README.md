@@ -2,7 +2,7 @@
 
 ## What is da.gd?
 
-![dagd-test](https://github.com/dagd/dagd/workflows/dagd-test/badge.svg?branch=master)
+![dagd-test](https://github.com/dagd/dagd/actions/workflows/dagd.yml/badge.svg)
 
 da.gd is both a URL shortener and a collection of quick-info tools, written in
 PHP and backed by a custom, lightweight framework.
