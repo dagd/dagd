@@ -147,4 +147,59 @@ EOD;
     return $this->getChrome();
   }
 
+  public function getFaviconTag() {
+    // Completely abuse DaGdTag to make an SVG that we can inline.
+    $svg = tag(
+      'svg',
+      array(
+        tag(
+          'circle',
+          null,
+          array(
+            'cx' => '32',
+            'cy' => '32',
+            'r' => '31',
+            'fill' => '#333333',
+          )
+        ),
+        tag(
+          'text',
+          'da.',
+          array(
+            'x' => '16',
+            'y' => '26',
+            'font-family' => 'Proxima Nova, sans-serif',
+            'font-size' => '24',
+            'fill' => '#3399aa',
+          )
+        ),
+        tag(
+          'text',
+          'gd',
+          array(
+            'x' => '16',
+            'y' => '50',
+            'font-family' => 'Proxima Nova, sans-serif',
+            'font-size' => '24',
+            'fill' => '#3399aa',
+          )
+        ),
+      ),
+      array(
+        'xmlns' => 'http://www.w3.org/2000/svg',
+        'width' => '64',
+        'height' => '64',
+      )
+    )->renderSafe();
+
+    // And then inline it.
+    return tag(
+      'link',
+      null,
+      array(
+        'rel' => 'icon',
+        'href' => 'data:image/svg+xml,'.rawurlencode($svg),
+      )
+    );
+  }
 }

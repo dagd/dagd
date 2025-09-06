@@ -177,6 +177,10 @@ abstract class DaGdTemplate {
     return $this->alerts;
   }
 
+  public function getFaviconTag() {
+    return null;
+  }
+
   public function getHeadTag() {
     return tag(
       'head',
@@ -203,6 +207,7 @@ abstract class DaGdTemplate {
             'content' => 'The da.gd URL shortening service',
           )
         ),
+        $this->getFaviconTag(),
         $this->getTitleTag(),
         $this->stylesheetsToTags(),
         $this->getStyleTag(),
