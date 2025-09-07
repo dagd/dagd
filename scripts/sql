@@ -107,11 +107,38 @@ final class SQLCLI extends DaGdCLIProgram {
     }
   }
 
-  private function applyFileOrAbort($file) {
+  private function applyFileOrAbort($file, $next_schema = null) {
     $sql = file_get_contents(realpath($file));
     if ($sql === false) {
       echo $this->error('Failed to read file: '.$file);
       exit(1);
+    }
+    $assume_yes = $this->param('--yes')->getGiven();
+    if ($next_schema !== 1 && !$assume_yes) {
+      // Only warn about destructive schema changes if we already have a schema.
+      if (startswith($sql, '-- DESTRUCTIVE')) {
+        echo $this->important('About to apply a DESTRUCTIVE schema change.');
+        echo $this->important('You MAY LOSE DATA as a result.');
+        echo $this->important('The query to be applied is:');
+        echo $this->important('');
+        $sql_lines = explode("\n", $sql);
+        foreach ($sql_lines as $line) {
+          if (startswith($line, '-- ')) {
+            echo $this->important('    '.$this->green($line));
+          } else {
+            echo $this->important('    '.$this->red($line));
+          }
+        }
+        echo $this->important('...from migration file: '.$file);
+        echo $this->important(
+          'You can type "y" below to apply the change as normal.');
+        echo $this->important('You can type "n" below to abort.');
+        $continue = $this->prompt('Continue? [y/N]: ');
+        if ($continue != 'y' && $continue != 'Y') {
+          echo $this->error('Aborting.');
+          exit(1);
+        }
+      }
     }
     if ($this->patch($sql)) {
       echo $this->ok('Applied '.$file.' successfully. :-)');
@@ -174,7 +201,7 @@ final class SQLCLI extends DaGdCLIProgram {
     $file = $this->param('--file');
     if ($file->getGiven()) {
       $file = $file->getValue();
-      $this->applyFileOrAbort($file);
+      $this->applyFileOrAbort($file, null);
       echo $this->important(
         'Using --file (-f) means the SQL file gets applied but the schema ID '.
         'does not get altered.');
@@ -207,7 +234,7 @@ final class SQLCLI extends DaGdCLIProgram {
         $pnumber = (int)$pfile_ex[0];
         if ($pnumber >= $next_schema) {
           $already_up_to_date = false;
-          $this->applyFileOrAbort($pfile);
+          $this->applyFileOrAbort($pfile, $next_schema);
           // The above will abort if it fails. If we are still here, the patch
           // applied successfully. If we're setting up a new install, db_state
           // won't exist yet. In this case only record state at the very end. In
