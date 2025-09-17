@@ -46,6 +46,10 @@ final class TestCLI extends DaGdCLIProgram {
         ->addGroup('shorten')
         ->setAccept('text/html'));
 
+    $runner->arm(
+      id(new DaGdResponseCodeTest('/ip', 200))
+        ->setRequestHeader('DaGdSession_0', 'foobar'));
+
     /*********** routing by method ***********/
     // TODO: Needs "same-route, different-request-method, different-controller"
     // tests added (which will require test-specification applications and

@@ -10,7 +10,17 @@ class DaGdRequest {
 
   public function setCookies($cookies) {
     $this->cookies = $cookies;
-    $this->session = id(new DaGdSession())->loadSession($this);
+    try {
+      $this->session = id(new DaGdSession())->loadSession($this);
+    } catch (Exception $ex) {
+      // If we fail to initialize the session, it is likely that someone
+      // manipulated the session cookies in some way. Continue without using
+      // the session, let DaGdResponse clear out the old cookies, and start
+      // anew.
+      statsd_bump('setCookies_manipulated_session');
+      error_log($ex);
+      $this->session = new DaGdSession();
+    }
     return $this;
   }
 
