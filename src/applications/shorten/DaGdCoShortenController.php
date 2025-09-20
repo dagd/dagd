@@ -4,12 +4,17 @@ class DaGdCoShortenController extends DaGdController {
   public static function getHelp() {
     return array(
       'title' => 'coshorten',
-      'summary' => 'The dual of a short url is a long url. This gets us back to the original URL.',
-      'path' => 'coshorten',
+      'summary' => 'Render the original (long) URL associated with a short URL.',
+      'path' => '',
       'examples' => array(
         array(
-          'arguments' => array('g'),
-          'summary' => 'An example short URL with a custom suffix'),
+          'arguments' => array('g+'),
+          'summary' => 'Simply append + to any short URL'
+        ),
+        array(
+          'arguments' => array('coshorten/g'),
+          'summary' => 'Alternative with /coshorten',
+        ),
       ));
   }
 
