@@ -103,8 +103,7 @@ EOD;
     }
 
     $logger = new DaGdShortURLAccessLogger($this, $surl);
-    // It's fine if getHeader() is false -- the column is nullable.
-    $logger->log($this->getRequest()->getHeader('user-agent'));
+    $logger->log();
 
     // TODO: Move build_given_querystring() to DaGdRequest.
     $qs = build_given_querystring();

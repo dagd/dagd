@@ -12,17 +12,19 @@ final class DaGdShortURLAccessLogger {
   /**
    * @return boolean - true if successful, false if not.
    */
-  public function log($useragent) {
+  public function log() {
     $id = $this->surl->getId();
     $query = $this
       ->controller
       ->getWriteDB()
       ->prepare(
-        'INSERT INTO shorturl_access(shorturl_id, useragent) VALUES(?,?)');
+        'INSERT INTO shorturl_access_buckets '.
+        '(shorturl_id, access_hour, access_count) '.
+        'VALUES (?, DATE_FORMAT(NOW(), \'%Y-%m-%d %H:00:00\'), 1) '.
+        'ON DUPLICATE KEY UPDATE access_count = access_count + 1');
     $query->bind_param(
-      'is',
-      $id,
-      $useragent);
+      'i',
+      $id);
 
     $start = microtime(true);
     $res = $query->execute();

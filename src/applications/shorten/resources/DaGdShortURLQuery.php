@@ -333,49 +333,41 @@ final class DaGdShortURLQuery {
    */
   public function dailyAccess($shorturl, $days) {
     $out = array();
+    // We subtract one day because today is included in the range.
+    $start_date = new DateTime();
+    $start_date->sub(new DateInterval('P'.($days - 1).'D'));
+    $start_date->setTime(0, 0, 0);
+    // The end date should be tomorrow to include today in the range.
+    $end_date = new DateTime('tomorrow');
 
-    $date = null;
+    $interval = new DateInterval('P1D');
+    $daterange = new DatePeriod($start_date, $interval, $end_date);
+
+    foreach ($daterange as $date) {
+      $out[$date->getTimestamp()] = 0;
+    }
+
+    $date_ts = null;
     $count = 0;
 
     $query = $this
       ->controller
       ->getReadDB()
       ->prepare(
-        'select access_dt, count(*) from shorturl_access where '.
-        'shorturl_id=(select id from shorturls where shorturl=?) '.
-        'and access_dt >= date_sub(now(), interval ? day) group by '.
-        'year(access_dt), month(access_dt), day(access_dt) order by '.
-        'access_dt asc');
+        'SELECT UNIX_TIMESTAMP(DATE(access_hour)), SUM(access_count) '.
+        'FROM shorturl_access_buckets '.
+        'JOIN shorturls ON shorturls.id = shorturl_access_buckets.shorturl_id '.
+        'WHERE shorturls.shorturl = ? '.
+        'AND access_hour >= DATE_SUB(NOW(), INTERVAL ? DAY) '.
+        'GROUP BY DATE(access_hour)');
     $query->bind_param('si', $shorturl, $days);
     $query->execute();
-    $query->bind_result($date, $count);
+    $query->bind_result($date_ts, $count);
 
-    // Special-case the first fetch so we can use it to prepare $out.
-    if (!$query->fetch()) {
-      // There is no work to do, bail out early
-      return array();
-    }
-
-    $now_date = date('Y-m-d');
-    $iter_date = date('Y-m-d', strtotime($date));
-    $first_date = $iter_date;
-    // We want to start with the first date in the result.
-    while ($iter_date != $now_date) {
-      // Store the epoch for the start of the day.
-      $key = strtotime($iter_date);
-      $out[$key] = 0;
-      $iter_date = date('Y-m-d', strtotime($iter_date.' + 1 day'));
-    }
-
-    // And fill in the first one that we got with the fetch() above so we don't
-    // drop any data.
-    $key = strtotime($first_date);
-    $out[$key] = $count;
-
-    // Now fetch the rest of the rows.
     while ($query->fetch()) {
-      $date_epoch = strtotime(date('Y-m-d', strtotime($date)));
-      $out[$date_epoch] = $count;
+      if (array_key_exists($date_ts, $out)) {
+        $out[$date_ts] = $count;
+      }
     }
 
     $query->close();
