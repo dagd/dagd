@@ -297,7 +297,8 @@ final class DaGdShortURLQuery {
   }
 
   /**
-   * Disable all shorturls whose owner_ip is the same as the given shorturl.
+   * Disable all shorturls whose owner_ip is the same as the given shorturl
+   * and then clear the cache for each of the disabled shorturls.
    *
    * Requires UPDATE privileges on the `shorturls` table.
    *
@@ -309,11 +310,36 @@ final class DaGdShortURLQuery {
       return null;
     }
     $owner_ip = $surl->getOwnerIp();
-    $query = $this->controller->getWriteDB()->prepare(
-      'update shorturls set enabled=0 where owner_ip=? and enabled=1');
-    $query->bind_param('s', $owner_ip);
-    $query->execute();
-    $affected = $this->controller->getWriteDB()->affected_rows;
+
+    $disabling = array();
+    $current_shorturl = null;
+    $select = $this->controller->getReadDB()->prepare(
+      'select shorturl from shorturls where owner_ip=? and enabled=1');
+    $select->bind_param('s', $owner_ip);
+    $select->execute();
+    $select->bind_result($current_shorturl);
+    while ($select->fetch()) {
+      $disabling[] = $current_shorturl;
+    }
+    $select->close();
+
+    $affected = 0;
+    if (!empty($disabling)) {
+      $placeholders = implode(',', array_fill(0, count($disabling), '?'));
+      $types = str_repeat('s', count($disabling));
+      $update = $this->controller->getWriteDB()->prepare(
+        'update shorturls set enabled=0 where shorturl in ('.$placeholders.')');
+      $bind_params = array_merge(array($types), $disabling);
+      call_user_func_array(array($update, 'bind_param'), $bind_params);
+      $update->execute();
+      $affected = $this->controller->getWriteDB()->affected_rows;
+      $update->close();
+
+      foreach ($disabling as $surl) {
+        $this->clearFromCache($surl);
+      }
+    }
+
     return $affected;
   }
 
