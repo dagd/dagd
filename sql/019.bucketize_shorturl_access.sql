@@ -16,7 +16,7 @@ INSERT INTO shorturl_access_buckets (shorturl_id, access_hour, access_count)
 SELECT
   shorturl_id,
   STR_TO_DATE(
-    DATE_FORMAT(access_time, '%Y-%m-%d %H:00:00'),
+    DATE_FORMAT(access_dt, '%Y-%m-%d %H:00:00'),
     '%Y-%m-%d %H:%i:%s'
   ) as access_hour,
   COUNT(*) as access_count
