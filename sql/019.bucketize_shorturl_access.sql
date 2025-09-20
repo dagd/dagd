@@ -21,4 +21,10 @@ SELECT
   ) as access_hour,
   COUNT(*) as access_count
 FROM shorturl_access
-GROUP BY shorturl_id, access_hour;
+GROUP BY
+  shorturl_id,
+  STR_TO_DATE(
+    DATE_FORMAT(access_dt, '%Y-%m-%d %H:00:00'),
+    '%Y-%m-%d %H:%i:%s'
+  )
+ON DUPLICATE KEY UPDATE access_count = access_count + VALUES(access_count);
