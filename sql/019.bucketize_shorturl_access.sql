@@ -12,6 +12,8 @@ CREATE TABLE `shorturl_access_buckets` (
   UNIQUE KEY `shorturl_id_access_hour` (`shorturl_id`, `access_hour`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE INDEX idx_access_hour_shorturl_id ON shorturl_access_buckets (access_hour, shorturl_id);
+
 INSERT INTO shorturl_access_buckets (shorturl_id, access_hour, access_count)
 SELECT
   shorturl_id,
