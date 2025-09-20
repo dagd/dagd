@@ -29,7 +29,7 @@ EOD;
   public function execute(DaGdResponse $response) {
     $shorturl = $this->getRequest()->getRouteComponent(1);
     $query = new DaGdShortURLQuery($this);
-    if ($query->fromShort($shorturl)) {
+    if ($query->fromShortCached($shorturl)) {
       return 'text-based stats endpoint coming soon';
     } else {
       return $this->error(404)->execute($response);

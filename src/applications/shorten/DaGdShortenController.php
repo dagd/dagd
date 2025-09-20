@@ -88,7 +88,7 @@ EOD;
       return null;
     }
 
-    $surl = $query->fromShort($matches[1]);
+    $surl = $query->fromShortCached($matches[1]);
 
     if (!$surl) {
       return null;

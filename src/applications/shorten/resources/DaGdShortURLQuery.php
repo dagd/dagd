@@ -48,6 +48,33 @@ final class DaGdShortURLQuery {
     return null;
   }
 
+  public function fromShortCached($short_url, $include_disabled = false) {
+    $ttl = DaGdConfig::get('shorten.cache_ttl');
+    if ($ttl <= 0) {
+      return $this->fromShort($short_url, $include_disabled);
+    }
+
+    $cache = $this->controller->cache();
+    if (!$cache) {
+      return $this->fromShort($short_url, $include_disabled);
+    }
+
+    $key = 'shorturl:'.$short_url.':'.(int)$include_disabled;
+    $callback = new DaGdShortURLCacheMiss(
+      $this,
+      $short_url,
+      $include_disabled);
+    return $cache->getOrStore($key, $callback, $ttl);
+  }
+
+  public function clearFromCache($shorturl) {
+    $cache = $this->controller->cache();
+    if ($cache) {
+      $cache->delete('shorturl:'.$shorturl.':0');
+      $cache->delete('shorturl:'.$shorturl.':1');
+    }
+  }
+
   /**
    * Hashes a given long URL and tries to match the hash to an existing row
    * in the shorturls table.
@@ -240,7 +267,12 @@ final class DaGdShortURLQuery {
     $query->bind_param('s', $shorturl);
     $query->execute();
     $affected = $this->controller->getWriteDB()->affected_rows;
-    return ($affected !== 0);
+    if ($affected !== 0) {
+      $this->clearFromCache($shorturl);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -256,7 +288,12 @@ final class DaGdShortURLQuery {
     $query->bind_param('s', $shorturl);
     $query->execute();
     $affected = $this->controller->getWriteDB()->affected_rows;
-    return ($affected !== 0);
+    if ($affected !== 0) {
+      $this->clearFromCache($shorturl);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /**

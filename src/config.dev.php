@@ -351,6 +351,9 @@ class DaGdConfig {
     // If so, for how long? (in seconds, default: 30 minutes)
     'shorten.safe_browsing_cache_expiry' => 1800,
 
+    // How long to cache short URLs for, in seconds. Set to 0 to disable.
+    'shorten.cache_ttl' => 86400,
+
     // Should stats pages show screenshots when possible?
     'shorten.stats_screenshots' => true,
 
