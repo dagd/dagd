@@ -300,6 +300,9 @@ class DaGdConfig {
     // If so, for how long? (in seconds, default: 30 minutes)
     'shorten.dnsbl_cache_expiry' => 1800,
 
+    // How long should each DNSBL query be permitted to take, in seconds?
+    'shorten.dnsbl_timeout' => 1,
+
     // Should we send URLs to Google Safe Browsing? This check will take place
     // both on URL storing and on URL access.
     'shorten.safe_browsing' => false,

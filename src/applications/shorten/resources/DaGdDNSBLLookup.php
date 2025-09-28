@@ -23,11 +23,13 @@ final class DaGdDNSBLLookup implements DaGdCacheMissCallback {
   private function query($domain) {
     $dnsbl_servers = DaGdConfig::get('shorten.dnsbl');
     $dnsbl_query_via = DaGdConfig::get('shorten.blacklist_via');
+    $dnsbl_timeout = DaGdConfig::get('shorten.dnsbl_timeout');
 
     foreach ($dnsbl_servers as $suffix) {
       $resolver = new Net_DNS2_Resolver(
         array(
           'nameservers' => $dnsbl_query_via,
+          'timeout' => $dnsbl_timeout,
         )
       );
 
