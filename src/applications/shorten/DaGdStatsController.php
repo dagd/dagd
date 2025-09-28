@@ -41,12 +41,13 @@ EOD;
 
     $query = new DaGdShortURLQuery($this);
 
-    // Daily access graph
-    $accesses = $query->dailyAccess($shorturl, 60);
-
-    if (count($accesses) == 0) {
+    $surl = $query->fromShortCached($query);
+    if ($surl === null) {
       return $this->error(404)->finalize();
     }
+
+    // Daily access graph
+    $accesses = $query->dailyAccess($shorturl, 60);
 
     $dates = array();
     $counts = array();
