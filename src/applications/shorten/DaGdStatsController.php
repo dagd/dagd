@@ -41,7 +41,7 @@ EOD;
 
     $query = new DaGdShortURLQuery($this);
 
-    $surl = $query->fromShortCached($query);
+    $surl = $query->fromShortCached($shorturl);
     if ($surl === null) {
       return $this->error(404)->finalize();
     }
