@@ -1,8 +1,11 @@
 # da.gd
 
-## What is da.gd?
+### Note
 
-![dagd-test](https://github.com/dagd/dagd/actions/workflows/dagd.yml/badge.svg)
+The da.gd upstream has moved to [Codeberg](https://codeberg.org/dagd/dagd). The
+GitHub repository remains a read-only mirror as of June, 2026.
+
+## What is da.gd?
 
 da.gd is both a URL shortener and a collection of quick-info tools, written in
 PHP and backed by a custom, lightweight framework.
