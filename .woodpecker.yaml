@@ -1,0 +1,51 @@
+when:
+  - event: push
+    branch: master
+  - event: [pull_request, manual, cron]
+
+workspace:
+  base: /srv
+  path: dagd
+
+services:
+  - name: db
+    image: docker.io/library/mariadb:latest
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: dagd
+
+steps:
+  - name: test
+    image: registry.access.redhat.com/ubi8/ubi-minimal
+    environment:
+      DaGdConfigFile: ../container/config.container.php
+    commands:
+      - rm -f .ready-for-ci
+      - rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+      - >-
+        microdnf install -y httpd php php-mysqlnd php-gd php-intl php-json
+        php-pear php-pecl-apcu php-pecl-zendopcache git nc
+      - microdnf reinstall -y tzdata || microdnf update -y tzdata
+      - pear install Net_DNS2
+      - microdnf clean all
+      - bash ./container/entrypoint.sh &
+      - bash ./container/entrypoint.sh worker &
+      - |
+        for i in $(seq 1 60); do
+          [ -f .ready-for-ci ] && break
+          echo "waiting for app to become ready..."
+          sleep 2
+        done
+        test -f .ready-for-ci
+      - php --info
+      - ./tests/dagd-test -u http://localhost
+      - ./scripts/dagd-admin g | grep State | grep enabled
+      - './scripts/dagd-admin g | grep Accesses: | grep 7d'
+      - ./scripts/dagd-admin g | grep "defaulting to \-\-status"
+      - ./scripts/dagd-admin g -d | grep "Updated in"
+      - ./scripts/dagd-admin g | grep State | grep disabled
+      - ./scripts/dagd-admin g -e | grep "Updated in"
+      - ./scripts/dagd-admin g | grep State | grep enabled
+      - ./scripts/dagd-admin g -r https://wikipedia.org/ | grep "Updated in"
+      - ./scripts/dagd-admin g -S | grep wikipedia
+      - ./scripts/dagd-admin g -r https://google.com/ | grep "Updated in"
