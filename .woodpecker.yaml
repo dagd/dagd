@@ -38,7 +38,7 @@ steps:
         done
         test -f .ready-for-ci
       - php --info
-      - ./tests/dagd-test -u http://localhost
+      - ./tests/dagd-test -u http://127.0.0.1
       - ./scripts/dagd-admin g | grep State | grep enabled
       - './scripts/dagd-admin g | grep Accesses: | grep 7d'
       - ./scripts/dagd-admin g | grep "defaulting to \-\-status"
