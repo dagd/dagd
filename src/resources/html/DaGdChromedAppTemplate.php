@@ -5,22 +5,56 @@ class DaGdChromedAppTemplate extends DaGdAppTemplate {
     $style = <<<EOD
 #bar {
   padding: 15px 0;
-  height: 65px;
-  line-height: 65px;
+  min-height: 65px;
   font-family: "Proxima Nova", overpass, Ubuntu, sans-serif !important;
   font-weight: 300;
   font-size: 1.7em;
   margin-bottom: 10px;
 }
 .constraint { width: 85%; margin: 0 auto; max-width: 1080px; }
+#bar .constraint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand-name { line-height: 1.1; }
 #bar a, #bar a:active, #bar a:visited { color: #3a9; text-decoration: none; }
 #bar a:hover { color: #9C89B8; }
 input[type=text] { border: 1px solid #ccc; }
-.sitename { color: #333; float: left; font-weight: 500; }
+.sitename { color: #333; font-weight: 500; }
 .lightmode .sitename { color: #3a9; }
 .darkmode .sitename { color: #39a; }
-.appname { color: #888; }
+.appname {
+  font-family: "SF Mono", "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  font-weight: 400;
+  color: #888;
+  margin-left: 6px;
+  letter-spacing: -0.02em;
+}
+.appname-dot { color: #9C89B8; margin-right: 6px; font-weight: 700; }
 .darkmode #bar { border-color: #555; }
+.navlinks { display: flex; align-items: center; }
+#bar a.navlink, #bar a.navlink:active, #bar a.navlink:visited {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 1.2;
+  font-size: 14px;
+  margin-left: 20px;
+}
+.navlink svg { display: block; }
+.navlabel { margin-top: 3px; }
+.tagline {
+  color: #888;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 0.62em;
+  margin-top: 3px;
+  line-height: 1.2;
+}
 .flex-1 { flex: 1; }
 .ml5 { margin-left: 5px; }
 .mr5 { margin-right: 5px; }
@@ -28,8 +62,8 @@ input[type=text] { border: 1px solid #ccc; }
 .mb10 { margin-bottom: 10px; }
 .ow-bw { overflow-wrap: break-word; }
 .b { font-weight: bold; }
-body.darkmode { background-color: #333; color: #ddd; }
-body.lightmode { background-color: #f6f5f4; }
+body.darkmode { background-color: #1a1825; color: #aaa; }
+body.lightmode { background-color: #f4f3f8; }
 body.darkmode a, body.darkmode a:active, body.darkmode a:visited { color: #ccc; }
 body, .sitename { margin: 0; padding: 0; }
 #app { font-family: "Proxima Nova", overpass, Ubuntu, sans-serif; clear: both; box-sizing: border-box; }
@@ -55,24 +89,93 @@ EOD;
     return array_merge(parent::getStyle(), array($style));
   }
 
-  protected function getLinksArray() {
-    $darkmode_link = tag(
+  /**
+   * Icons in this file are from Feather (https://feathericons.com/), taken
+   * from a revision predating commit
+   * 044aff80341bef1a228053b9e7810ef45c7acb4b, at which point the project still
+   * granted use without an attribution/license requirement. We attribute them
+   * here voluntarily. Each icon is the SVG body of the like-named Feather icon.
+   */
+  private function featherIcon($name) {
+    switch ($name) {
+      case 'help-circle':
+        $body =
+          '<circle cx="12" cy="12" r="10"></circle>'.
+          '<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>'.
+          '<line x1="12" y1="17" x2="12.01" y2="17"></line>';
+        break;
+      case 'code':
+        $body =
+          '<polyline points="16 18 22 12 16 6"></polyline>'.
+          '<polyline points="8 6 2 12 8 18"></polyline>';
+        break;
+      case 'moon':
+        $body =
+          '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+        break;
+      case 'sun':
+        $body =
+          '<circle cx="12" cy="12" r="5"></circle>'.
+          '<line x1="12" y1="1" x2="12" y2="3"></line>'.
+          '<line x1="12" y1="21" x2="12" y2="23"></line>'.
+          '<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>'.
+          '<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>'.
+          '<line x1="1" y1="12" x2="3" y2="12"></line>'.
+          '<line x1="21" y1="12" x2="23" y2="12"></line>'.
+          '<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>'.
+          '<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+        break;
+      case 'coffee':
+        $body =
+          '<path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>'.
+          '<path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>'.
+          '<line x1="6" y1="1" x2="6" y2="4"></line>'.
+          '<line x1="10" y1="1" x2="10" y2="4"></line>'.
+          '<line x1="14" y1="1" x2="14" y2="4"></line>';
+        break;
+      default:
+        throw new Exception('Unknown feather icon: '.$name);
+    }
+
+    return
+      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" '.
+      'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '.
+      'stroke-linecap="round" stroke-linejoin="round">'.$body.'</svg>';
+  }
+
+  private function navLink($href, $label, $icon_name) {
+    // The icon is a raw SVG string, so render the anchor as CDATA (unescaped).
+    $body =
+      $this->featherIcon($icon_name).
+      tag('span', $label, array('class' => 'navlabel'))->renderSafe();
+
+    return tag(
       'a',
-      $this->getDarkmode() ? 'light mode' : 'dark mode',
+      $body,
       array(
-        'href' => $this->getDarkmode() ? '?darkmode=0' : '?darkmode=1',
-      )
+        'href' => $href,
+        'class' => 'navlink',
+      ),
+      true
     );
+  }
+
+  protected function getLinksArray() {
+    $darkmode = $this->getDarkmode();
 
     $links = array(
-      tag('a', 'help', array('href' => '/help')),
-      tag(
-        'a',
+      $this->navLink('/help', 'help', 'help-circle'),
+      $this->navLink(
+        'https://codeberg.org/dagd/dagd',
         'open source',
-        array('href' => 'https://github.com/dagd/dagd')
+        'code'
       ),
-      $darkmode_link,
-      tag('a', 'donate', array('href' => 'https://buymeacoffee.com/relrod')),
+      $this->navLink(
+        $darkmode ? '?darkmode=0' : '?darkmode=1',
+        $darkmode ? 'light mode' : 'dark mode',
+        $darkmode ? 'sun' : 'moon'
+      ),
+      $this->navLink('https://buymeacoffee.com/relrod', 'donate', 'coffee'),
     );
 
     return $links;
@@ -89,25 +192,65 @@ EOD;
     );
     $title = $this->getTitle();
     if ($title) {
-      $out[] = tag('span', ':'.$title, array('class' => 'appname'));
+      $out[] = tag(
+        'span',
+        array(
+          tag('span', '·', array('class' => 'appname-dot')),
+          $title,
+        ),
+        array(
+          'class' => 'appname',
+        )
+      );
     }
     return $out;
   }
 
   protected function getChrome() {
-    $sitename = $this->getSiteName();
-    $links = intersperse(' / ', $this->getLinksArray());
+    // The brand is a left-hand stack: name + appname on top, tagline beneath.
+    $brand_rows = array(
+      tag(
+        'div',
+        $this->getSiteName(),
+        array(
+          'class' => 'brand-name',
+        )
+      ),
+    );
+
+    $tagline = $this->getTagline();
+    if ($tagline) {
+      $brand_rows[] = tag(
+        'div',
+        $tagline,
+        array(
+          'class' => 'tagline',
+        )
+      );
+    }
+
+    $brand = tag(
+      'div',
+      $brand_rows,
+      array(
+        'class' => 'brand',
+      )
+    );
+
     $links_div = tag(
       'div',
-      $links,
+      $this->getLinksArray(),
       array(
-        'style' => 'float: right; display: inline;',
+        'class' => 'navlinks',
       )
     );
 
     $navbar = tag(
       'div',
-      array_merge($sitename, array($links_div)),
+      array(
+        $brand,
+        $links_div,
+      ),
       array(
         'class' => 'constraint',
       )

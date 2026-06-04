@@ -285,6 +285,7 @@ abstract class DaGdBaseClass {
 
       $template = id(new DaGdChromedAppTemplate())
         ->setTitle(idx($help, 'title', 'Welcome!'))
+        ->setTagline('Your simple, private, and open-source URL shortener since 2011.')
         ->setStyle($style)
         ->setEscape($this->getEscape())
         ->setDarkmode($this->getDarkmode())

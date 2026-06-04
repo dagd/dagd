@@ -42,15 +42,21 @@ class DaGdShortenController extends DaGdController {
   font-size: 2em;
 }
 .darkmode #app input.textinput, .darkmode #app #shorturl_label {
-  background-color: #666;
+  background-color: #131320;
+  color: inherit;
 }
 .lightmode #app input#shorturl, .lightmode #app input#url {
   background-color: #fff;
 }
 #app input#url {
-  border-radius: 3px;
+  border-radius: 4px;
   border: 2px solid #ddd;
   width: 100%;
+}
+.darkmode #app input#url {
+  border-color: #3d3555;
+  background-color: #131320;
+  color: inherit;
 }
 #app input.textinput:focus, #app #flex:focus-within {
   border-color: #3a9 !important;
@@ -58,7 +64,7 @@ class DaGdShortenController extends DaGdController {
 }
 #app #shorturl_label {
   box-sizing: border-box;
-  padding: 20px;
+  padding: 25px;
   padding-right: 0;
   font-size: 2.5em;
   background-color: #fff;
@@ -69,6 +75,20 @@ class DaGdShortenController extends DaGdController {
 }
 #app #flex {
   border: 1px solid #ddd;
+}
+.darkmode #app #flex {
+  border-color: #3d3555
+}
+@media (max-width: 600px) {
+  #app input.textinput, #app #shorturl_label {
+    font-size: 1.2em;
+    padding: 12px;
+  }
+  #app #shorturl_label {
+    padding: 12px;
+    padding-right: 0;
+    font-size: 1.2em;
+  }
 }
 EOD;
 
@@ -355,8 +375,6 @@ EOD;
   }
 
   private function form() {
-    $branding = tag('h1', 'Private. Simple. Open.');
-
     $longurl_field = tag(
       'input',
       null,
@@ -456,7 +474,6 @@ EOD;
     $app = tag(
       'div',
       array(
-        $branding,
         $form,
         $abuse,
       )

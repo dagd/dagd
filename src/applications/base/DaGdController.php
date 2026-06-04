@@ -302,6 +302,7 @@ abstract class DaGdController {
     return id(new DaGdChromedAppTemplate())
       ->setStyle($this->getStyle())
       ->setTitle(idx($help, 'title', 'Welcome!'))
+      ->setTagline('Your simple, private, and open-source URL shortener since 2011.')
       ->setDebugBody($debug_body)
       ->setDarkmode($this->getDarkmode())
       ->setAlerts($this->getAlerts(true));

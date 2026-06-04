@@ -2,6 +2,7 @@
 
 abstract class DaGdTemplate {
   private $title = '';
+  private $tagline = '';
   private $style = array();
   private $stylesheets = array();
   private $javascripts = array();
@@ -18,6 +19,15 @@ abstract class DaGdTemplate {
 
   public function getTitle() {
     return $this->title;
+  }
+
+  public function setTagline($tagline) {
+    $this->tagline = $tagline;
+    return $this;
+  }
+
+  public function getTagline() {
+    return $this->tagline;
   }
 
   public function getTitleTag() {
@@ -189,6 +199,14 @@ abstract class DaGdTemplate {
           'meta',
           null,
           array('charset' => 'utf-8')
+        ),
+        tag(
+          'meta',
+          null,
+          array(
+            'name' => 'viewport',
+            'content' => 'width=device-width, initial-scale=1',
+          )
         ),
         tag(
           'meta',
